@@ -5,6 +5,7 @@ function App() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm({
     mode: 'onChange',
@@ -13,6 +14,7 @@ function App() {
   const onSubmit = (data) => {
     console.log(data);
     alert('¡Formulario enviado con éxito!');
+    reset();
   };
 
   return (
