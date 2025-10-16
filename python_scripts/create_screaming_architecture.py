@@ -56,4 +56,4 @@ if __name__ == "__main__":
 
 
 ## py C:\Users\TuUsuario\Desktop\create_screaming_architecture.py
-## py C:\Users\luchi\Desktop\ecommerce\python_scripts\create_screaming_architecture.py
+## py C:\Users\gabom\Desktop\dswGit\ecommerce\python_scripts\create_screaming_architecture.py

@@ -1,3 +1,11 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2c2f36; /* fondo oscuro */
+}
+
 *{
   margin: 0;
   padding: 0;
@@ -17,6 +25,7 @@ form {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 15px;
   width: 100%;
   max-width: 350px;
@@ -41,4 +50,17 @@ button:disabled {
   color: #888;          /* Un color de texto más claro y apagado */
   cursor: not-allowed;   /* Cambia el cursor para mostrar que no se puede hacer clic */
   border-color: #444;    /* Opcional: ajusta el borde también */
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: #2c2f36; /* color de fondo general */
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

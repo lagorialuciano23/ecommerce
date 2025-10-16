@@ -19,6 +19,7 @@ function App() {
 
   return (
     <>
+    <div className="container">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor='user'>Usuario</label>
@@ -52,6 +53,7 @@ function App() {
         </div>
         <button type='submit' disabled={!isValid}>Enviar</button>
       </form>
+    </div>
     </>
   );
 }
