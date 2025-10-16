@@ -5,9 +5,9 @@ function App() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
-    mode: 'onTouched',
+    mode: 'onChange',
   });
 
   const onSubmit = (data) => {
@@ -48,7 +48,7 @@ function App() {
           {/* Mostramos error para el campo de contraseña también */}
           {errors.password && <p className='error-message'>{errors.password.message}</p>}
         </div>
-        <button type='submit'>Enviar</button>
+        <button type='submit' disabled={!isValid}>Enviar</button>
       </form>
     </>
   );
