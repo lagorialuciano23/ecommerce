@@ -60,6 +60,8 @@ def generate_secure_password(min_lenght=9, max_lenght=16):
 
 
 # --- Uso del Script ---
+# Ejecutar el script:
+# py create_password.py en la terminal
 
 generated_password = generate_secure_password()
 
