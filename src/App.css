@@ -35,3 +35,10 @@ label, button {
 button {
   cursor: pointer;
 }
+
+button:disabled {
+  background-color: #555; /* Un gris más oscuro para indicar inactividad */
+  color: #888;          /* Un color de texto más claro y apagado */
+  cursor: not-allowed;   /* Cambia el cursor para mostrar que no se puede hacer clic */
+  border-color: #444;    /* Opcional: ajusta el borde también */
+}
