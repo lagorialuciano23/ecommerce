@@ -18,7 +18,7 @@ function Login() {
 
   return (
     <>
-      <div className="container">
+      <div className="login-container">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label htmlFor='user'>Usuario</label>
