@@ -1,6 +1,10 @@
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -13,6 +17,7 @@ function Login() {
   const onSubmit = (data) => {
     console.log(data);
     alert('¡Formulario enviado con éxito!');
+    navigate('/products', {replace : true});
     reset();
   };
 
@@ -50,7 +55,7 @@ function Login() {
             {/* Mostramos error para el campo de contraseña también */}
             {errors.password && <p className='error-message'>{errors.password.message}</p>}
           </div>
-          <button type='submit' disabled={!isValid}>Enviar</button>
+          <button className='button-login' type='submit' disabled={!isValid}>Enviar</button>
         </form>
       </div>
     </>

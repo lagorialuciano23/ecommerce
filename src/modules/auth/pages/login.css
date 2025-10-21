@@ -41,14 +41,14 @@ input {
   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
-label, button {
+label {
   color: white;
 }
 
-button {
+.button-login {
   cursor: pointer;
-  background-color: aliceblue;
-  color: #444;
+  background-color: rgb(230, 229, 227);
+  color: #141313;
 }
 
 button:disabled {
