@@ -26,7 +26,7 @@ function NotFoundPage() {
     }}>
       <h1>Error 404</h1>
       <p style={{ fontSize: '1.2rem', marginBottom: '20px' }}>
-        ¡Página no encontrada! 😔
+        ¡Página no encontrada!
       </p>
       <button
         onClick={handleRedirect}

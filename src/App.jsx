@@ -12,7 +12,6 @@ function App() {
       {/*Rutas publicas*/}
       <Route path='/' element={<Navigate to='/login' />} />
       <Route path="/login" element={<Login />} />
-      <Route path="*" element={<Error />} />
       <Route path="*" element={<NotFoundPage />} />
       {/* Rutas Protegidas: Solo se renderizarán si isLoggedIn es true.
         De lo contrario, ProtectedRoute redirigirá a /login.

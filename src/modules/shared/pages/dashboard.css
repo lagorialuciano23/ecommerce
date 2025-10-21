@@ -73,3 +73,18 @@
     background-color: #9c9c9c;
   }
 }
+
+
+.logout-button {
+  padding: 8px 15px; 
+  cursor: pointer;
+  background-color: #ff4d4f; /* Color distintivo para el botón de salir */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #e03c3c;
+}
