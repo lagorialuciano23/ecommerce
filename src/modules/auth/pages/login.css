@@ -3,72 +3,60 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
+  background:
+    linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
+    url('/images/login-banner-utn.png') center/cover no-repeat fixed;
 }
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* reset básico */
+* { 
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+ }
 
-.error-message {
-  color: #d32f2f; /* Un color rojo para destacar el error */
-  font-size: 0.8rem;
-  margin-top: 4px;
-}
+ .error-message{
+  color: red;
+  padding-top: 10px;
+ }
 
-/* Estilos adicionales para que el formulario se vea un poco mejor */
 form {
-   background: rgba(108, 110, 230, 0.1); /* color base con transparencia */
-  backdrop-filter: blur(8px);        
+  background: rgba(108,110,230,.1);
+  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: 2rem;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 20px;
   width: 100%;
   max-width: 350px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,.37);
+  border: 1px solid rgba(255,255,255,.2);
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-}
 
-label {
-  color: white;
-}
+label { 
+  display:block;
+  color:#fff;
+  margin-bottom:10px; }
 
-.button-login {
-  cursor: pointer;
-  background-color: rgb(230, 229, 227);
-  color: #141313;
-}
+input { 
+  width:100%;
+  padding:10px;
+  border-radius:10px; 
+  background:#fbfbfb;
+ }
 
-button:disabled {
-  background-color: #717070; /* Un gris más oscuro para indicar inactividad */
-  color: #888;          /* Un color de texto más claro y apagado */
-  cursor: not-allowed;   /* Cambia el cursor para mostrar que no se puede hacer clic */
-  border-color: #444;    /* Opcional: ajusta el borde también */
+.button-login { 
+  cursor:pointer; 
+  background:#e6e5e3; 
+  color:#141313;
+  border-radius:10px;
+  padding:10px; 
 }
-
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('/images/login-banner-utn.png') center/cover no-repeat fixed;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+button:disabled { 
+  background:#717070;
+  color:#888;
+  cursor:not-allowed; 
+  border-color:#444; }

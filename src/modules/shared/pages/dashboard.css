@@ -1,37 +1,38 @@
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('/images/login-banner-utn.png') center/cover no-repeat fixed;
-}
-
 .dashboard-container {
   display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: 60px 1fr;
-  min-height: 100vh;
+  grid-template-columns:1fr;
+  grid-template-rows: 100px 1fr 30px;
+  grid-template-areas: 
+    "header"
+    "main"
+    "footer";
+  height: 100dvh;
 }
 
-.sidebar {
-  grid-row: span 2;
-  background-color: #1e1e58;
-  color: white;
-  padding: 1rem;
+.dashboard-container nav{
+ position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  background-color: #9a9999; 
+  border-right: 1px solid #ddd; 
+  left: -200px;
 }
 
-.header {
+.dashboard-container header {
+  grid-area: header;
   background-color: #263e77;
   color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  align-content: center;
   padding: 0 1rem;
 }
 
-.main {
-  background-color: #12121e;
+.dashboard-container main {
+  grid-area: main;
+  background-color: #9c9c9c;
   color: white;
   padding: 1rem;
   display: grid;
@@ -43,4 +44,32 @@ html, body, #root {
   background-color: #1e1e58;
   border-radius: 8px;
   padding: 1rem;
+}
+
+.dashboard-container footer{
+  grid-area: footer;
+  display: flex;
+  padding: 10px;
+  background-color: aliceblue;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (min-width: 600px) {
+  .dashboard-container {
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 80px 1fr auto;
+    grid-template-areas: 
+      "header header"
+      "nav main"
+      "footer footer";
+  }
+
+  .dashboard-container nav{
+     grid-area: nav;
+    position: static;
+    left: 0;
+    height: auto;
+    background-color: #9c9c9c;
+  }
 }

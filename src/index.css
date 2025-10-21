@@ -1,5 +1,11 @@
-* {
+html, body, #root {
+  height: 100%;
+  width: 100%;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+}
+
+body, #root {
+  display: block;         /* <- quita el flex global */
+  background: #0f1115;    /* fondo neutro para toda la app */
+  font-family: 'Inter', sans-serif;
 }

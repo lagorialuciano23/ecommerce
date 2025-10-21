@@ -9,7 +9,7 @@ import Error from './modules/products/pages/Error.jsx';
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login/>}/>
+      <Route path="/" element={<Login/>}/>
       <Route path="/dashboard" element={<Dashboard/>}/>
       <Route path="/products" element={<ProductsPage/>}/>
       <Route path="*" element={<Error/>}/>
