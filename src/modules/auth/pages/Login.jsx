@@ -17,7 +17,7 @@ function Login() {
   const onSubmit = (data) => {
     console.log(data);
     alert('¡Formulario enviado con éxito!');
-    navigate('/products', {replace : true});
+    navigate('/dashboard', {replace : true});
     reset();
   };
 
