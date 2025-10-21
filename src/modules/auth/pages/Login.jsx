@@ -1,10 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
 
 function Login() {
 
   const navigate = useNavigate();
-
+  //Obtener la funcion login del contexto
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -17,7 +19,11 @@ function Login() {
   const onSubmit = (data) => {
     console.log(data);
     alert('¡Formulario enviado con éxito!');
-    navigate('/dashboard', {replace : true});
+    // 1. Marcar al usuario como logueado
+    login(); //
+
+    // 2. Redirigir a la ruta protegida
+    navigate('/dashboard', { replace : true }); //
     reset();
   };
 
@@ -47,6 +53,7 @@ function Login() {
                   message: 'La contraseña debe tener al menos 9 caracteres',
                 },
                 pattern: {
+                  // eslint-disable-next-line no-useless-escape
                   value: /^(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=\[{\]};:'",<.>/?\\|`~]).{8,}$/,
                   message: 'Debe incluir al menos una mayúscula y un carácter especial.',
                 },
