@@ -3,7 +3,7 @@ import './modules/auth/pages/login.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProductsPage from './modules/products/pages/ProductsPage.jsx';
 import Dashboard from './modules/shared/pages/Dashboard.jsx';
-import Error from './modules/products/pages/Error.jsx';
+import NotFoundPage from './modules/shared/pages/NotFoundPage.jsx';
 import { ProtectedRoute } from './modules/auth/helpers/ProtectedRoute.jsx';
 
 function App() {
@@ -13,6 +13,7 @@ function App() {
       <Route path='/' element={<Navigate to='/login' />} />
       <Route path="/login" element={<Login />} />
       <Route path="*" element={<Error />} />
+      <Route path="*" element={<NotFoundPage />} />
       {/* Rutas Protegidas: Solo se renderizarán si isLoggedIn es true.
         De lo contrario, ProtectedRoute redirigirá a /login.
       */}
