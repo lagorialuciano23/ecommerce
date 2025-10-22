@@ -1,53 +1,78 @@
-import './dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/useAuth';
 
 function Dashboard() {
   const navigate = useNavigate();
-  // Extraemos la función logout del contexto
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    // Llamamos a la función de logout para actualizar el estado
     logout();
-    // Redirigimos al usuario a la página de login
     navigate('/login', { replace: true });
   };
 
   return (
-    <div className="dashboard-container">
-      <nav>
-        <ul>
-          <li>hola</li>
-          <li>como</li>
-          <li>estas</li>
-        </ul>
-      </nav>
-      <header>
-        Header
-        {/* Añadimos el botón de Cerrar Sesión en el Header */}
+    <div
+      className="
+        grid min-h-screen bg-[#12121e] text-white
+        grid-rows-[60px_1fr_50px]          /* mobile: 3 filas */
+        md:grid-rows-[60px_1fr_50px]       /* md+: idem filas */
+        md:grid-cols-[200px_1fr]           /* md+: 2 columnas */
+        gap-0
+      "
+    >
+      {/* HEADER - va primero en el DOM */}
+      <header
+        className="
+          bg-[#263e77] flex items-center justify-between px-4
+          md:col-span-2 md:row-start-1 md:col-start-1
+        "
+      >
+        <h1 className="text-lg font-semibold">Dashboard</h1>
         <button
           onClick={handleLogout}
-          // Usamos una clase simple o la definimos en dashboard.css
-          className='logout-button'
-          style={{
-            padding: '8px 15px',
-            cursor: 'pointer',
-            backgroundColor: '#ff4d4f', // Color distintivo para el botón de salir
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-          }}
+          className="rounded-md bg-red-500 px-4 py-2 font-medium hover:bg-red-600 transition"
         >
           Cerrar Sesión
         </button>
       </header>
-      <main>
-        <div className="card">Card 1</div>
-        <div className="card">Card 2</div>
-        <div className="card">Card 3</div>
+
+      {/* NAV - ocupa la columna izquierda en md+ */}
+      <nav
+        className="
+          bg-gray-200 text-black p-4
+          md:row-start-2 md:col-start-1
+        "
+      >
+        <ul className="space-y-2">
+          <li>products</li>
+          <li>orders</li>
+          <li>users</li>
+        </ul>
+      </nav>
+
+      {/* MAIN - ocupa la columna derecha en md+ */}
+      <main
+        className="
+          p-6
+          md:row-start-2 md:col-start-2
+        "
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-[#1e1e58] p-6 rounded-xl shadow">Card 1</div>
+          <div className="bg-[#1e1e58] p-6 rounded-xl shadow">Card 2</div>
+          <div className="bg-[#1e1e58] p-6 rounded-xl shadow">Card 3</div>
+        </div>
       </main>
-      <footer>Mi footer</footer>
+
+      {/* FOOTER - ocupa ambas columnas abajo */}
+      <footer
+        className="
+          bg-[#263e77] flex items-center justify-center text-sm
+          md:col-span-2 md:row-start-3 md:col-start-1
+        "
+      >
+        Mi footer
+      </footer>
     </div>
   );
 }
