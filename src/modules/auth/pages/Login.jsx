@@ -20,12 +20,20 @@ function Login() {
 
   const onSubmit = (data) => {
     console.log(data);
-    setToastOpen(true);
-    console.log(toastOpen);
     // 1. Marcar al usuario como logueado
     login(); //
-    // 2. Redirigir a la ruta protegida
-    navigate('/dashboard', { replace: true }); //
+    // 2. Abrir el Toast
+    setToastOpen(true);
+
+    // IMPORTANTE: Eliminamos la redirección inmediata de aquí.
+    // La redirección se ejecutará en el onClose del Toast.
+  };
+
+  const handleToastClose = () => {
+    // 1. Cerrar el toast
+    setToastOpen(false);
+    // 2. Redirigir a la ruta protegida solo DESPUÉS de que el toast se cierre
+    navigate('/dashboard', { replace: true });
   };
 
   return (
@@ -87,7 +95,7 @@ function Login() {
             open={toastOpen}
             title="¡Formulario enviado con éxito!"
             message="Bienvenido 👋"
-            onClose={() => setToastOpen(false)}
+            onClose={handleToastClose}
           />
         </form>
       </div>
