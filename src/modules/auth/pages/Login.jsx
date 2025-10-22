@@ -1,16 +1,18 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-
+import { useState } from 'react';
+import Toast from '../../shared/components/Toast';
 function Login() {
 
   const navigate = useNavigate();
   //Obtener la funcion login del contexto
   const { login } = useAuth();
+  const [toastOpen, setToastOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isValid },
   } = useForm({
     mode: 'onChange',
@@ -18,13 +20,12 @@ function Login() {
 
   const onSubmit = (data) => {
     console.log(data);
-    alert('¡Formulario enviado con éxito!');
+    setToastOpen(true);
+    console.log(toastOpen);
     // 1. Marcar al usuario como logueado
     login(); //
-
     // 2. Redirigir a la ruta protegida
-    navigate('/dashboard', { replace : true }); //
-    reset();
+    navigate('/dashboard', { replace: true }); //
   };
 
   return (
@@ -81,6 +82,13 @@ function Login() {
             type='submit'
             disabled={!isValid}
           >Enviar</button>
+
+          <Toast
+            open={toastOpen}
+            title="¡Formulario enviado con éxito!"
+            message="Bienvenido 👋"
+            onClose={() => setToastOpen(false)}
+          />
         </form>
       </div>
     </>
