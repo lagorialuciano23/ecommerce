@@ -29,23 +29,36 @@ function Login() {
 
   return (
     <>
-      <div className="login-container">
-        <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Reemplaza .login-container por clases de Tailwind */}
+      {/* min-h-screen, flex, justify-center, items-center (fondo con gradiente no lo podemos migrar a clases simples de Tailwind sin usar utilitys personalizados o CSS) */}
+      <div className="min-h-screen flex justify-center items-center bg-gray-900 bg-cover bg-fixed bg-center" style={{ backgroundImage: "linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('/images/login-banner-utn.png')" }}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className='bg-gray-800 bg-opacity-10 backdrop-blur-md p-8 rounded-xl flex flex-col gap-5 w-full max-w-sm shadow-xl border border-white border-opacity-20'
+        >
           <div>
-            <label htmlFor='user'>Usuario</label>
-            <input {...register('user', {
-              required: 'El usuario es obligatorio',
-              minLength: { value: 6, message: 'El usuario debe tener al menos 6 caracteres' },
-            })} />
-            {/* Mostramos error para el campo de usuario también */}
-            {errors.user && <p className='error-message'>{errors.user.message}</p>}
+            {/* Reemplaza la etiqueta .label con clases de Tailwind */}
+            <label htmlFor='user' className="block text-white mb-2">Usuario</label>
+            {/* Reemplaza el input con clases de Tailwind */}
+            <input
+              className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register('user', {
+                required: 'El usuario es obligatorio',
+                minLength: { value: 6, message: 'El usuario debe tener al menos 6 caracteres' },
+              })} />
+            {/* Usa la clase de error de Tailwind (text-red-500) */}
+            {errors.user && <p className='text-red-500 pt-2 text-sm'>{errors.user.message}</p>}
           </div>
 
           <div>
-            <label htmlFor='password'>Contraseña</label>
+            {/* Reemplaza la etiqueta .label con clases de Tailwind */}
+            <label htmlFor='password'
+              className='block text-white mb-2'
+            >Contraseña</label>
             <input
               id='password'
               type='password'
+              className='w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500'
               {...register('password', {
                 required: 'La contraseña es obligatoria.',
                 minLength: {
@@ -60,9 +73,14 @@ function Login() {
               })}
             />
             {/* Mostramos error para el campo de contraseña también */}
-            {errors.password && <p className='error-message'>{errors.password.message}</p>}
+            {errors.password && <p className='text-red-500 pt-2 text-sm'>{errors.password.message}</p>}
           </div>
-          <button className='button-login' type='submit' disabled={!isValid}>Enviar</button>
+          {/* Reemplaza el botón con clases de Tailwind. Usamos group y focus para el estado :disabled. */}
+          <button
+            className='w-full cursor-pointer bg-gray-200 text-gray-900 rounded-lg p-3 transition-colors duration-200 hover:bg-gray-300 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed'
+            type='submit'
+            disabled={!isValid}
+          >Enviar</button>
         </form>
       </div>
     </>

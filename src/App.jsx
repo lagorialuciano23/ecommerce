@@ -1,5 +1,4 @@
 import Login from './modules/auth/pages/Login';
-import './modules/auth/pages/login.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProductsPage from './modules/products/pages/ProductsPage.jsx';
 import Dashboard from './modules/shared/pages/Dashboard.jsx';
