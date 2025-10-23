@@ -91,13 +91,13 @@ function Login() {
             disabled={!isValid}
           >Enviar</button>
 
-          <Toast
-            open={toastOpen}
-            title="¡Formulario enviado con éxito!"
-            message="Bienvenido 👋"
-            onClose={handleToastClose}
-          />
         </form>
+        <Toast
+          open={toastOpen}
+          title="¡Formulario enviado con éxito!"
+          message="Bienvenido 👋"
+          onClose={handleToastClose}
+        />
       </div>
     </>
   );
