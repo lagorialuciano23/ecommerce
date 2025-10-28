@@ -40,10 +40,21 @@ function Login() {
     <>
       {/* Reemplaza .login-container por clases de Tailwind */}
       {/* min-h-screen, flex, justify-center, items-center (fondo con gradiente no lo podemos migrar a clases simples de Tailwind sin usar utilitys personalizados o CSS) */}
-      <div className="min-h-screen flex justify-center items-center bg-gray-900 bg-cover bg-fixed bg-center" style={{ backgroundImage: "linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('/images/login-banner-utn.png')" }}>
+      <div className="min-h-screen 
+         flex flex-col items-stretch  
+         justify-center items-center 
+         bg-gray-900 bg-cover bg-fixed bg-center" 
+         style={{ backgroundImage: "linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('/images/login-banner-utn.png')" }}>
+          
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className='bg-gray-800 bg-opacity-10 backdrop-blur-md p-8 rounded-xl flex flex-col gap-5 w-full max-w-sm shadow-xl border border-white border-opacity-20'
+          className='bg-gray-800 bg-opacity-10 backdrop-blur-md p-8 rounded-xl 
+          flex flex-col 
+          p-6 md:p-8
+          gap-4 md:gap-8
+          w-full 
+          md:max-w-sm mx-auto
+          shadow-xl border border-white border-opacity-20'
         >
           <div>
             {/* Reemplaza la etiqueta .label con clases de Tailwind */}
@@ -92,13 +103,14 @@ function Login() {
           >Enviar</button>
 
         </form>
-        <Toast
+      </div>
+
+      <Toast
           open={toastOpen}
           title="¡Formulario enviado con éxito!"
           message="Bienvenido 👋"
           onClose={handleToastClose}
         />
-      </div>
     </>
   );
 }
