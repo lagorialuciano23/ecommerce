@@ -7,22 +7,22 @@
 // admin: Gabriel GabrielMoeykens7# / user:FranciscoVicente FranciscoVicente1.
 
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/useAuth';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Toast from '../../shared/components/Toast';
 import Input from '../components/Input';
 import Button from '../components/Button';
-//Importamos el servicios
-import { loginService } from '../services/login';
+//Custom Hook
+import { useLogin } from '../hooks/useLogin';
 
 function Login() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const [toastOpen, setToastOpen] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Extraemos toda la lógica del Hook
+  const {
+    isLoading,
+    apiError,
+    toastOpen,
+    handleLoginSubmit,
+    handleToastClose,
+  } = useLogin();
 
   const {
     register,
@@ -31,43 +31,6 @@ function Login() {
   } = useForm({
     mode: 'onChange',
   });
-
-  // Convertimos onSubmit en una función asíncrona
-  const onSubmit = async (data) => {
-    console.log('Datos a enviar (hook-form):', data);
-    setApiError(null);
-    setIsLoading(true);
-    try {
-      // 3. Llamamos al servicio con los datos del formulario
-      const responseData = await loginService(data.user, data.password);
-
-      // 4. Procesamos la respuesta exitosa
-      // Corregimos el bug del token que venía como Task<string> (objeto 'Result')
-      const tokenString = responseData.token.Result || responseData.token;
-
-      // Creamos un usuario temporal si el backend no lo devuelve
-      const userObject = responseData.user || { username: data.user };
-
-      console.log('Token recibido (string):', tokenString);
-
-      // 5. Llamamos al 'login' del AuthContext para guardar la sesión
-      login(userObject, tokenString);
-
-      setToastOpen(true);
-
-    } catch (error) {
-      // 6. Si el servicio lanzó un error, lo mostramos
-      setApiError(error.message);
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleToastClose = () => {
-    setToastOpen(false);
-    navigate('/dashboard', { replace: true });
-  };
 
   return (
     <>
@@ -78,7 +41,7 @@ function Login() {
       style={{ backgroundImage: "linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('/images/login-banner-utn.png')" }}>
 
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleLoginSubmit)}
           className='bg-gray-800 bg-opacity-10 backdrop-blur-md p-8 rounded-xl
           flex flex-col
           p-6 md:p-8
@@ -88,12 +51,10 @@ function Login() {
           shadow-xl border border-white border-opacity-20'
         >
 
-          {/* 2. REEMPLAZAMOS los inputs antiguos por el nuevo componente */}
-
           <Input
             label="Usuario"
             id="Username"
-            name="user" // El 'name' para react-hook-form
+            name="user"
             register={register}
             errors={errors}
             autoComplete="username"
@@ -106,7 +67,7 @@ function Login() {
           <Input
             label="Contraseña"
             id="Password"
-            name="password" // El 'name' para react-hook-form
+            name="password"
             type="password"
             register={register}
             errors={errors}
@@ -120,7 +81,6 @@ function Login() {
             }}
           />
 
-          {/* 3. El resto del formulario (error y botón) sigue igual */}
           {apiError && (
             <p className='text-red-400 p-2 bg-red-900 bg-opacity-50 rounded-lg text-center text-sm'>
               {apiError}
