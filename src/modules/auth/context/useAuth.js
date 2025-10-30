@@ -5,7 +5,6 @@ export const AuthContext = createContext(null);
 
 // Exportar el hook de consumo aquí
 export function useAuth() {
-  //Aqui iria la lógica para comprobar si está dentro de un AuthProvider
   const context = useContext(AuthContext);
 
   if (!context) {
