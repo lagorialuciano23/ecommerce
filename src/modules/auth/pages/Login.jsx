@@ -2,7 +2,9 @@
 //   "Username": "dybalux",
 //   "Email": "luchicapo@gmail.com",
 //   "Password": "StarPlatinum2!"
+//    Es usuario Admin
 // }
+// admin: Gabriel GabrielMoeykens7# / user:FranciscoVicente FranciscoVicente1.
 
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -73,6 +75,11 @@ function Login() {
 
       // 3. Si la respuesta SÍ fue exitosa (ej. 200 OK)
       const responseData = await response.json();
+
+      // Extraemos el token del objeto 'Result'
+      const tokenString = responseData.token.Result;
+
+      console.log('Token recibido (string):', tokenString);
 
       // 4. Llamamos a la función login del AuthContext
 
