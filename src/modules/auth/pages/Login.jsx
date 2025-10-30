@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { useState } from 'react';
 import Toast from '../../shared/components/Toast';
+import { login } from '../services/authService';
+
 function Login() {
 
   const navigate = useNavigate();
-  //Obtener la funcion login del contexto
-  const { login } = useAuth();
+  const [error, setError] = useState('');
+  
   const [toastOpen, setToastOpen] = useState(false);
 
   const {
@@ -18,15 +20,22 @@ function Login() {
     mode: 'onChange',
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // 1. Marcar al usuario como logueado
-    login(); //
-    // 2. Abrir el Toast
+  const onSubmit = async (formData) => {
+    
+    const { data, error } = await login(formData.user, formData.password); 
+    
+    if (error) {
+      setError(error.frontendErrorMessage);
+      console.error(error);
+      return;
+    }
+
+    localStorage.setItem('token', data);
+
+    console.log('Login exitoso', data);
+
     setToastOpen(true);
 
-    // IMPORTANTE: Eliminamos la redirección inmediata de aquí.
-    // La redirección se ejecutará en el onClose del Toast.
   };
 
   const handleToastClose = () => {

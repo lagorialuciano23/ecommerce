@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   /// 2. Definimos las funciones de acción de autenticación
-  const login = () => {
+  const loginA = () => {
     // Implementación del login (marcar como logueado)
     setIsLoggedIn(true);
   };
@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
   //Ahora exponemos isLoggedIn, login y logout
   const authValue = useMemo(() => ({
     isLoggedIn,
-    login,
+    loginA,
     logout,
   }), [isLoggedIn]);
 
