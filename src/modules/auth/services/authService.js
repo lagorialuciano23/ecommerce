@@ -35,7 +35,7 @@ export const login = async (username, password) => {
       };
     }
     const responseToken = await response.json();
-    
+    console.log('responseToken:', responseToken);
     // verifica si token es un objeto o string
     const token = typeof responseToken.token === 'string' 
       ? responseToken.token 
