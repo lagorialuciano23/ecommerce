@@ -1,18 +1,20 @@
+// {
+//   "Username": "dybalux",
+//   "Email": "luchicapo@gmail.com",
+//   "Password": "StarPlatinum2!"
+// }
+
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { useState } from 'react';
 import Toast from '../../shared/components/Toast';
-function Login() {
 
+function Login() {
   const navigate = useNavigate();
-  // 'login' ahora es la función que espera (userData, userToken)
   const { login } = useAuth();
   const [toastOpen, setToastOpen] = useState(false);
-  // Nuevos Estados
-  // Estado para manejar errores devueltos por el backend
   const [apiError, setApiError] = useState(null);
-  // Estado para saber si la petición está en curso
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -22,49 +24,73 @@ function Login() {
   } = useForm({
     mode: 'onChange',
   });
+
   // Convertimos onSubmit en una función asíncrona
   const onSubmit = async (data) => {
-    console.log('Datos a enviar:', data);
+    console.log('Datos a enviar (hook-form):', data);
     setApiError(null);
     setIsLoading(true);
 
+    const requestBody = {
+      Username: data.user,
+      Password: data.password,
+    };
+
     try {
-      // 1. Llamamos al Backend usando fetch.
-      // Usamos '/api/...' para que Vite use el proxy definido en vite.config.js
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username: data.user,
-          password: data.password,
-        }),
+        body: JSON.stringify(requestBody), // Enviamos el body corregido
       });
 
-      // 2. Verificamos si la respuesta NO fue exitosa (ej. 401, 404, 500)
+      // --- MANEJO DE ERRORES MEJORADO ---
       if (!response.ok) {
-        // Intentamos leer el mensaje de error del backend
-        const errorData = await response.json();
+        let errorText = `Error ${response.status}: ${response.statusText}`; // Mensaje por defecto
 
-        throw new Error(errorData.message || 'Credenciales incorrectas o error del servidor.');
+        const contentType = response.headers.get('content-type');
+
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+
+          // Tu backend devuelve un string simple en caso de 401, no un JSON
+          // Lo ajustamos para leer 'errorData' directamente si es un string
+          if (typeof errorData === 'string') {
+            errorText = errorData; // Ej: "Usuario o Contraseña Incorrectos"
+          } else {
+            errorText = errorData.message || 'Credenciales incorrectas.';
+          }
+        } else if (response.status === 401) {
+          errorText = 'Usuario o Contraseña Incorrectos.';
+        } else {
+          errorText = `Error ${response.status}: Falla interna del servidor. Revisa la consola del backend.`;
+        }
+
+        throw new Error(errorText);
       }
+      // --- FIN DEL MANEJO DE ERRORES ---
 
       // 3. Si la respuesta SÍ fue exitosa (ej. 200 OK)
       const responseData = await response.json();
 
-      // Asumimos que el backend devuelve un objeto como:
-      // { user: { id: 1, name: '...' }, token: 'jwt.token.aqui' }
+      // 4. Llamamos a la función login del AuthContext
 
-      // 4. Llamamos a la función login del AuthContext con los datos recibidos
-      login(responseData.user, responseData.token);
+      const userFromToken = { username: data.user }; // Objeto temporal
+
+      login(responseData.user || userFromToken, responseData.token);
 
       // 5. Mostramos el Toast de éxito
       setToastOpen(true);
 
     } catch (error) {
       // 6. Si hubo un error (de red o del 'throw' de arriba)
-      setApiError(error.message);
+      const message = error.message.includes('Failed to fetch')
+        ? 'No se pudo conectar con el servidor. Revisa la consola.'
+        : error.message;
+
+      setApiError(message);
+      console.error(error);
     } finally {
       // 7. Pase lo que pase, dejamos de cargar
       setIsLoading(false);
@@ -78,8 +104,6 @@ function Login() {
 
   return (
     <>
-      {/* Reemplaza .login-container por clases de Tailwind */}
-      {/* min-h-screen, flex, justify-center, items-center (fondo con gradiente no lo podemos migrar a clases simples de Tailwind sin usar utilitys personalizados o CSS) */}
       <div className="min-h-screen
          flex flex-col items-stretch
          justify-center items-center
@@ -97,21 +121,18 @@ function Login() {
           shadow-xl border border-white border-opacity-20'
         >
           <div>
-            {/* Reemplaza la etiqueta .label con clases de Tailwind */}
             <label htmlFor='Username' className="block text-white mb-2">Usuario</label>
-            {/* Reemplaza el input con clases de Tailwind */}
             <input
+              id='Username'
               className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register('user', {
+              {...register('user', { // 'user' (minúscula) es el nombre para react-hook-form
                 required: 'El usuario es obligatorio',
                 minLength: { value: 6, message: 'El usuario debe tener al menos 6 caracteres' },
               })} />
-            {/* Usa la clase de error de Tailwind (text-red-500) */}
             {errors.user && <p className='text-red-500 pt-2 text-sm'>{errors.user.message}</p>}
           </div>
 
           <div>
-            {/* Reemplaza la etiqueta .label con clases de Tailwind */}
             <label htmlFor='Password'
               className='block text-white mb-2'
             >Contraseña</label>
@@ -119,27 +140,24 @@ function Login() {
               id='Password'
               type='password'
               className='w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500'
-              {...register('password', {
+              {...register('password', { // 'password' (minúscula) es el nombre para react-hook-form
                 required: 'La contraseña es obligatoria.',
                 minLength: {
                   value: 9,
                   message: 'La contraseña debe tener al menos 9 caracteres',
                 },
-                // pattern: {
-                //   // eslint-disable-next-line no-useless-escape
-                //   value: /^(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=\[{\]};:'",<.>/?\\|`~]).{8,}$/,
-                //   message: 'Debe incluir al menos una mayúscula y un carácter especial.',
-                // },
               })}
             />
-            {/* Mostramos error para el campo de contraseña también */}
             {errors.password && <p className='text-red-500 pt-2 text-sm'>{errors.password.message}</p>}
           </div>
+
+          {/* Mostrar error de la API */}
           {apiError && (
             <p className='text-red-400 p-2 bg-red-900 bg-opacity-50 rounded-lg text-center text-sm'>
               {apiError}
             </p>
           )}
+
           <button
             className='w-full cursor-pointer bg-gray-200 text-gray-900 rounded-lg p-3 transition-colors duration-200 hover:bg-gray-300 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed'
             type='submit'
@@ -148,11 +166,6 @@ function Login() {
             {isLoading ? 'Verificando...' : 'Enviar'}
           </button>
         </form>
-        {errors && (
-          <div className='mt-4 p-3 bg-red-800 rounded-lg text-white text-center w-full md:max-w-sm mx-auto'>
-            {errors}
-          </div>
-        )}
       </div>
 
       <Toast

@@ -23,17 +23,20 @@ export function AuthProvider({ children }) {
 
   //Usamos useEffect para sincronizar el estado con localStorage
   useEffect(() => {
+    // Lógica del Token (Independiente)
     if (token) {
       localStorage.setItem('token', token);
     } else {
       localStorage.removeItem('token');
+    }
 
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-      } else {
-        localStorage.removeItem('user');
-      }
-    } }, [token, user]); // Se ejecuta cuando token o user cambian
+    // Lógica del Usuario (Independiente)
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [token, user]); // Se ejecuta cuando token o user cambian
 
   //Modificamos las funciones de login y logout
   const login = (userData, userToken) => {
