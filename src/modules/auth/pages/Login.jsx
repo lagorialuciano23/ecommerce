@@ -80,6 +80,9 @@ function Login() {
 
       login(responseData.user || userFromToken, responseData.token);
 
+      //Muestro el token por consola
+      console.log('Token recibido:', responseData.token);
+
       // 5. Mostramos el Toast de éxito
       setToastOpen(true);
 
