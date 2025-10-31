@@ -1,29 +1,74 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 //Importo el contexto
 import { AuthContext } from './useAuth';
 
 export function AuthProvider({ children }) {
-  // 1. Definimos un estado booleano simple para la autenticación
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //Estado para el token y el usuario
+  //Intentamos leerlo desde loal storage al cargar la aplicacion
+  const [token, setToken] = useState(() => localStorage.getItem('token') || null);
+  const [user, setUser] = useState(() =>{
+    try {
+      return JSON.parse(localStorage.getItem('user')) || null;
+    } catch (event) {
+      console.error('Error al obtener el usuario del localStorage:', event);
 
+<<<<<<< HEAD
   /// 2. Definimos las funciones de acción de autenticación
   const loginA = () => {
     // Implementación del login (marcar como logueado)
     setIsLoggedIn(true);
-  };
+=======
+      return null;
+    }
+  });
 
+  //'isLoggedIn' ahora es un valor derivado:
+  // El usuario ESTÁ logueado si existe un token.
+
+  const isLoggedIn = !!token;
+
+  //Usamos useEffect para sincronizar el estado con localStorage
+  useEffect(() => {
+    // Lógica del Token (Independiente)
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+
+    // Lógica del Usuario (Independiente)
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [token, user]); // Se ejecuta cuando token o user cambian
+
+  //Modificamos las funciones de login y logout
+  const login = (userData, userToken) => {
+    // Esta función será llamada por Login.jsx con los datos del backend
+    setUser(userData);
+    setToken(userToken);
+    // El useEffect de arriba se encargará de guardar en localStorage
+>>>>>>> luciano
+  };
   const logout = () => {
-    // Implementación del logout (marcar como deslogueado)
-    setIsLoggedIn(false);
+    setUser(null);
+    setToken(null);
+    // El useEffect de arriba se encargará de limpiar localStorage
   };
-
-  // 3. Empaquetamos todo en un objeto memoizado para el contexto
-  //Ahora exponemos isLoggedIn, login y logout
+  //Exponemos los nuevos valores en el contexto
   const authValue = useMemo(() => ({
     isLoggedIn,
+<<<<<<< HEAD
     loginA,
+=======
+    token,
+    user,
+    login,
+>>>>>>> luciano
     logout,
-  }), [isLoggedIn]);
+  }), [isLoggedIn, token, user]); // Actualizamos las dependencias del 'useMemo'
 
   return (
     <AuthContext.Provider value={authValue}>
