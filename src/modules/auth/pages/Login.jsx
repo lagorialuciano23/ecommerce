@@ -14,109 +14,24 @@ import Button from '../components/Button';
 //Custom Hook
 import { useLogin } from '../hooks/useLogin';
 
-function Login() {  
-  // Extraemos toda la lógica del Hook
-  const {
-    isLoading,
-    apiError,
-    toastOpen,
-    handleLoginSubmit,
-    handleToastClose,
-  } = useLogin();
+function Login() {  
+  // 1. Extraemos toda la lógica del Hook (¡ESTO ES TODO LO QUE NECESITAS!)
+  const {
+    isLoading,
+    apiError,
+    toastOpen,
+    handleLoginSubmit, // <-- Esta función ya hace el fetch, llama al AuthContext, etc.
+    handleToastClose,  // <-- Esta función ya cierra el toast y navega
+  } = useLogin();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({
-    mode: 'onChange',
-  });
-
-  // Convertimos onSubmit en una función asíncrona
-  const onSubmit = async (data) => {
-    console.log('Datos a enviar (hook-form):', data);
-    setApiError(null);
-    setIsLoading(true);
-
-    const requestBody = {
-      Username: data.user,
-      Password: data.password,
-    };
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody), // Enviamos el body corregido
-      });
-
-      // --- MANEJO DE ERRORES MEJORADO ---
-      if (!response.ok) {
-        let errorText = `Error ${response.status}: ${response.statusText}`; // Mensaje por defecto
-
-        const contentType = response.headers.get('content-type');
-
-        if (contentType && contentType.includes('application/json')) {
-          const errorData = await response.json();
-
-          // Tu backend devuelve un string simple en caso de 401, no un JSON
-          // Lo ajustamos para leer 'errorData' directamente si es un string
-          if (typeof errorData === 'string') {
-            errorText = errorData; // Ej: "Usuario o Contraseña Incorrectos"
-          } else {
-            errorText = errorData.message || 'Credenciales incorrectas.';
-          }
-        } else if (response.status === 401) {
-          errorText = 'Usuario o Contraseña Incorrectos.';
-        } else {
-          errorText = `Error ${response.status}: Falla interna del servidor. Revisa la consola del backend.`;
-        }
-
-        throw new Error(errorText);
-      }
-      // --- FIN DEL MANEJO DE ERRORES ---
-
-      // 3. Si la respuesta SÍ fue exitosa (ej. 200 OK)
-      const responseData = await response.json();
-
-      // Extraemos el token del objeto 'Result'
-      const tokenString = responseData.token.Result;
-
-      console.log('Token recibido (string):', tokenString);
-
-      // 4. Llamamos a la función login del AuthContext
-
-      const userFromToken = { username: data.user }; // Objeto temporal
-
-      login(responseData.user || userFromToken, tokenString);
-
-      //Muestro el token por consola
-      console.log('Token recibido:', responseData.token);
-
-      // 5. Mostramos el Toast de éxito
-      setToastOpen(true);
-
-    } catch (error) {
-      // 6. Si hubo un error (de red o del 'throw' de arriba)
-      const message = error.message.includes('Failed to fetch')
-        ? 'No se pudo conectar con el servidor. Revisa la consola.'
-        : error.message;
-
-      setApiError(message);
-      console.error(error);
-    } finally {
-      // 7. Pase lo que pase, dejamos de cargar
-      setIsLoading(false);
-    }
-  };
-
-  const handleToastClose = () => {
-    setToastOpen(false);
-    navigate('/dashboard', { replace: true });
-  };
-
+  // 2. Lógica de react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: 'onChange',
+  });
 
   return (
     <>
