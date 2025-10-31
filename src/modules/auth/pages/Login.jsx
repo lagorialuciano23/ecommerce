@@ -1,15 +1,3 @@
-// {
-//   "Username": "dybalux",
-//   "Email": "luchicapo@gmail.com",
-//   "Password": "StarPlatinum2!"
-//    Es usuario Admin
-// }
-// {
-//   "Username": "milo",
-//   "Email": "milo@milo.com",
-//   "Password": "StarPlatinum23!"
-// }
-
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import Toast from '../../shared/components/Toast';
@@ -18,24 +6,24 @@ import Button from '../components/Button';
 //Custom Hook
 import { useLogin } from '../hooks/useLogin';
 
-function Login() {  
-  // 1. Extraemos toda la lógica del Hook (¡ESTO ES TODO LO QUE NECESITAS!)
-  const {
-    isLoading,
-    apiError,
-    toastOpen,
-    handleLoginSubmit, // <-- Esta función ya hace el fetch, llama al AuthContext, etc.
-    handleToastClose,  // <-- Esta función ya cierra el toast y navega
-  } = useLogin();
+function Login() {
+  // 1. Extraemos toda la lógica del Hook (¡ESTO ES TODO LO QUE NECESITAS!)
+  const {
+    isLoading,
+    apiError,
+    toastOpen,
+    handleLoginSubmit, // <-- Esta función ya hace el fetch, llama al AuthContext, etc.
+    handleToastClose,  // <-- Esta función ya cierra el toast y navega
+  } = useLogin();
 
-  // 2. Lógica de react-hook-form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({
-    mode: 'onChange',
-  });
+  // 2. Lógica de react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: 'onChange',
+  });
 
   return (
     <>
@@ -101,7 +89,7 @@ function Login() {  
 
           <div className="text-center text-white text-sm mt-4">
             ¿No tenés cuenta?{' '}
-            <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
+            <Link to="/signup" className="font-medium text-blue-400 hover:text-blue-300">
               Registrate
             </Link>
           </div>
