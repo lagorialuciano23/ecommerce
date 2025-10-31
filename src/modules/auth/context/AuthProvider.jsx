@@ -4,7 +4,7 @@ import { AuthContext } from './useAuth';
 
 export function AuthProvider({ children }) {
   //Estado para el token y el usuario
-  //Intentamos leerlo desde loal storage al cargar la aplicacion
+  //Intentamos leerlo desde local storage al cargar la aplicacion
   const [token, setToken] = useState(() => localStorage.getItem('token') || null);
   const [user, setUser] = useState(() =>{
     try {
@@ -12,12 +12,6 @@ export function AuthProvider({ children }) {
     } catch (event) {
       console.error('Error al obtener el usuario del localStorage:', event);
 
-<<<<<<< HEAD
-  /// 2. Definimos las funciones de acción de autenticación
-  const loginA = () => {
-    // Implementación del login (marcar como logueado)
-    setIsLoggedIn(true);
-=======
       return null;
     }
   });
@@ -50,7 +44,6 @@ export function AuthProvider({ children }) {
     setUser(userData);
     setToken(userToken);
     // El useEffect de arriba se encargará de guardar en localStorage
->>>>>>> luciano
   };
   const logout = () => {
     setUser(null);
@@ -60,13 +53,9 @@ export function AuthProvider({ children }) {
   //Exponemos los nuevos valores en el contexto
   const authValue = useMemo(() => ({
     isLoggedIn,
-<<<<<<< HEAD
-    loginA,
-=======
     token,
     user,
     login,
->>>>>>> luciano
     logout,
   }), [isLoggedIn, token, user]); // Actualizamos las dependencias del 'useMemo'
 
