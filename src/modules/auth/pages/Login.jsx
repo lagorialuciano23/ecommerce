@@ -4,7 +4,11 @@
 //   "Password": "StarPlatinum2!"
 //    Es usuario Admin
 // }
-// admin: Gabriel GabrielMoeykens7# / user:FranciscoVicente FranciscoVicente1.
+// {
+//   "Username": "milo",
+//   "Email": "milo@milo.com",
+//   "Password": "StarPlatinum23!"
+// }
 
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -60,7 +64,7 @@ function Login() {
             autoComplete="username"
             validationRules={{
               required: 'El usuario es obligatorio',
-              minLength: { value: 6, message: 'El usuario debe tener al menos 6 caracteres' },
+              minLength: { value: 3, message: 'El usuario debe tener al menos 3 caracteres' },
             }}
           />
 
@@ -75,8 +79,13 @@ function Login() {
             validationRules={{
               required: 'La contraseña es obligatoria.',
               minLength: {
-                value: 9,
-                message: 'La contraseña debe tener al menos 9 caracteres',
+                value: 8,
+                message: 'La contraseña debe tener al menos 8 caracteres',
+              },
+              pattern:{
+                // eslint-disable-next-line no-useless-escape
+                value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/,
+                message: 'Debe incluir al menos 1 mayúscula, 1 número y 1 carácter especial.',
               },
             }}
           />
