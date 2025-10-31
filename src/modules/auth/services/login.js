@@ -39,6 +39,7 @@ export async function loginService(username, password) {
         } else {
           errorText = `Error ${response.status}: Falla interna del servidor.`;
         }
+      // eslint-disable-next-line no-unused-vars
       } catch (e) {
         // Si response.json() falla o no hay 'content-type'
         errorText = `Error ${response.status}: No se pudo leer la respuesta del servidor.`;

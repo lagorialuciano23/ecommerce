@@ -28,6 +28,7 @@ export function useLogin() {
       const tokenString = responseData.token.Result || responseData.token;
       const userObject = responseData.user || { username: data.user };
 
+      console.log('Token recibido (string):', tokenString);
       saveAuth(userObject, tokenString);
       setToastOpen(true); // Abre el toast en caso de éxito
 
