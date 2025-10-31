@@ -51,14 +51,6 @@ export default function ProductsPage() {
   // Caso 3: Éxito (mostrar tabla de productos)
   return (
     <div className="container mx-auto p-4 text-white">
-      <div className="mb-4">
-        <Link
-          to="/dashboard"
-          className="inline-block rounded-md bg-gray-600 px-4 py-2 font-medium text-white hover:bg-gray-700 transition"
-        >
-          &larr; Volver al Dashboard
-        </Link>
-      </div>
       <h1 className="text-3xl font-bold mb-6">Gestión de Productos</h1>
 
       <div className="overflow-x-auto bg-[#1e1e58] rounded-xl shadow-lg">
