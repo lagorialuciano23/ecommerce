@@ -45,7 +45,7 @@ export function useLogin() {
    */
   const handleToastClose = () => {
     setToastOpen(false);
-    navigate('/dashboard', { replace: true });
+    navigate('/admin', { replace: true });
   };
 
   // Exponemos los estados y las funciones que el componente necesita

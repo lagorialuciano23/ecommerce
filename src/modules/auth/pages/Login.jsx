@@ -18,23 +18,24 @@ import Button from '../components/Button';
 //Custom Hook
 import { useLogin } from '../hooks/useLogin';
 
-function Login() {
-  // Extraemos toda la lógica del Hook
-  const {
-    isLoading,
-    apiError,
-    toastOpen,
-    handleLoginSubmit,
-    handleToastClose,
-  } = useLogin();
+function Login() {  
+  // 1. Extraemos toda la lógica del Hook (¡ESTO ES TODO LO QUE NECESITAS!)
+  const {
+    isLoading,
+    apiError,
+    toastOpen,
+    handleLoginSubmit, // <-- Esta función ya hace el fetch, llama al AuthContext, etc.
+    handleToastClose,  // <-- Esta función ya cierra el toast y navega
+  } = useLogin();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({
-    mode: 'onChange',
-  });
+  // 2. Lógica de react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: 'onChange',
+  });
 
   return (
     <>
