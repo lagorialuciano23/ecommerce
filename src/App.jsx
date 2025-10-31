@@ -1,60 +1,37 @@
-import { useForm } from 'react-hook-form';
-import './App.css';
+import Login from './modules/auth/pages/Login';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import ProductsPage from './modules/products/pages/ProductsPage.jsx';
+import Dashboard from './modules/shared/pages/Dashboard.jsx';
+import NotFoundPage from './modules/shared/pages/NotFoundPage.jsx';
+import { ProtectedRoute } from './modules/auth/helpers/ProtectedRoute.jsx';
 
 function App() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isValid },
-  } = useForm({
-    mode: 'onChange',
-  });
-
-  const onSubmit = (data) => {
-    console.log(data);
-    alert('¡Formulario enviado con éxito!');
-    reset();
-  };
-
   return (
-    <>
-    <div className="container">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor='user'>Usuario</label>
-          <input {...register('user', {
-            required: 'El usuario es obligatorio',
-            minLength: { value: 6, message: 'El usuario debe tener al menos 6 caracteres' },
-          })} />
-          {/* Mostramos error para el campo de usuario también */}
-          {errors.user && <p className='error-message'>{errors.user.message}</p>}
-        </div>
-
-        <div>
-          <label htmlFor='password'>Contraseña</label>
-          <input
-            id='password'
-            type='password'
-            {...register('password', {
-              required: 'La contraseña es obligatoria.',
-              minLength: {
-                value: 9,
-                message: 'La contraseña debe tener al menos 9 caracteres',
-              },
-              pattern: {
-                value: /^(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=\[{\]};:'",<.>/?\\|`~]).{8,}$/,
-                message: 'Debe incluir al menos una mayúscula y un carácter especial.',
-              },
-            })}
-          />
-          {/* Mostramos error para el campo de contraseña también */}
-          {errors.password && <p className='error-message'>{errors.password.message}</p>}
-        </div>
-        <button type='submit' disabled={!isValid}>Enviar</button>
-      </form>
-    </div>
-    </>
+    <Routes>
+      {/*Rutas publicas*/}
+      <Route path='/' element={<Navigate to='/login' />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={<NotFoundPage />} />
+      {/* Rutas Protegidas: Solo se renderizarán si isLoggedIn es true.
+        De lo contrario, ProtectedRoute redirigirá a /login.
+      */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products"
+        element={
+          <ProtectedRoute>
+            <ProductsPage />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
 

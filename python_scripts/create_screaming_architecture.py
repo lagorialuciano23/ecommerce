@@ -34,6 +34,21 @@ def create_screaming_architecture(nombre_carpeta_padre):
             os.makedirs(ruta_completa, exist_ok=True)
             print(f"  -> Subcarpeta '{carpeta}' creada.")
 
+        # Modificación: Crear un archivo .gitkeep en cada subcarpeta vacía.
+            # Esto asegura que Git pueda rastrear la estructura de carpetas
+            # aunque no contengan otros archivos.
+            #
+            # 1. Definimos la ruta completa del archivo .gitkeep.
+            ruta_gitkeep = os.path.join(ruta_completa, '.gitkeep')
+            
+            # 2. Creamos el archivo vacío.
+            #    open(ruta, 'w') abre un archivo para escribir (y lo crea si no existe).
+            #    .close() lo cierra inmediatamente, dejándolo con 0 bytes.
+            open(ruta_gitkeep, 'w').close()
+            print(f"     + Archivo '.gitkeep' añadido a '{carpeta}'.")
+            #
+            # --- FIN DE LA MODIFICACIÓN ---
+
         print("\nEstructura de carpetas creada exitosamente!")
 
     except OSError as e:
