@@ -85,7 +85,7 @@ function Login() {
 
       const userFromToken = { username: data.user }; // Objeto temporal
 
-      login(responseData.user || userFromToken, responseData.token);
+      login(responseData.user || userFromToken, tokenString);
 
       //Muestro el token por consola
       console.log('Token recibido:', responseData.token);

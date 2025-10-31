@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-// 1. Importamos nuestro servicio de API
-import { api } from '../../shared/services/api';
+import { productsService } from '../services/productsService.js';
 
 export default function ProductsPage() {
   // 2. Creamos estados para guardar los productos, el estado de carga y los errores
@@ -17,7 +16,7 @@ export default function ProductsPage() {
         setError(null);
 
         // 4. Usamos nuestro servicio 'api' (que ya incluye el token)
-        const response = await api.get('/api/products');
+        const response = await productsService.getAll();
 
         // El backend devuelve los productos
         setProducts(response);
@@ -85,21 +84,21 @@ export default function ProductsPage() {
           <tbody className="divide-y divide-gray-700">
             {products.length > 0 ? (
               products.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-700 transition-colors">
+                <tr key={product.Id} className="hover:bg-gray-700 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-200">
-                    {product.sku}
+                    {product.Sku}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {product.name}
+                    {product.Name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    ${product.currentUnitPrice.toFixed(2)}
+                    ${product.CurrentUnitPrice.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {product.stockQuantity}
+                    {product.StockQuantity}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {product.isActive ? (
+                    {product.IsActive ? (
                       <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-800 text-green-100">
                         Activo
                       </span>
