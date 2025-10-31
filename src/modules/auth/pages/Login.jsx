@@ -7,17 +7,22 @@
 // admin: Gabriel GabrielMoeykens7# / user:FranciscoVicente FranciscoVicente1.
 
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/useAuth';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Toast from '../../shared/components/Toast';
+import Input from '../components/Input';
+import Button from '../components/Button';
+//Custom Hook
+import { useLogin } from '../hooks/useLogin';
 
-function Login() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const [toastOpen, setToastOpen] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+function Login() {  
+  // Extraemos toda la lógica del Hook
+  const {
+    isLoading,
+    apiError,
+    toastOpen,
+    handleLoginSubmit,
+    handleToastClose,
+  } = useLogin();
 
   const {
     register,
@@ -112,6 +117,7 @@ function Login() {
     navigate('/dashboard', { replace: true });
   };
 
+
   return (
     <>
       <div className="min-h-screen
@@ -121,7 +127,7 @@ function Login() {
       style={{ backgroundImage: "linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('/images/login-banner-utn.png')" }}>
 
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleLoginSubmit)}
           className='bg-gray-800 bg-opacity-10 backdrop-blur-md p-8 rounded-xl
           flex flex-col
           p-6 md:p-8
@@ -130,51 +136,51 @@ function Login() {
           md:max-w-sm mx-auto
           shadow-xl border border-white border-opacity-20'
         >
-          <div>
-            <label htmlFor='Username' className="block text-white mb-2">Usuario</label>
-            <input
-              id='Username'
-              className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register('user', { // 'user' (minúscula) es el nombre para react-hook-form
-                required: 'El usuario es obligatorio',
-                minLength: { value: 6, message: 'El usuario debe tener al menos 6 caracteres' },
-              })} />
-            {errors.user && <p className='text-red-500 pt-2 text-sm'>{errors.user.message}</p>}
-          </div>
 
-          <div>
-            <label htmlFor='Password'
-              className='block text-white mb-2'
-            >Contraseña</label>
-            <input
-              id='Password'
-              type='password'
-              className='w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500'
-              {...register('password', { // 'password' (minúscula) es el nombre para react-hook-form
-                required: 'La contraseña es obligatoria.',
-                minLength: {
-                  value: 9,
-                  message: 'La contraseña debe tener al menos 9 caracteres',
-                },
-              })}
-            />
-            {errors.password && <p className='text-red-500 pt-2 text-sm'>{errors.password.message}</p>}
-          </div>
+          <Input
+            label="Usuario"
+            id="Username"
+            name="user"
+            register={register}
+            errors={errors}
+            autoComplete="username"
+            validationRules={{
+              required: 'El usuario es obligatorio',
+              minLength: { value: 6, message: 'El usuario debe tener al menos 6 caracteres' },
+            }}
+          />
 
-          {/* Mostrar error de la API */}
+          <Input
+            label="Contraseña"
+            id="Password"
+            name="password"
+            type="password"
+            register={register}
+            errors={errors}
+            autoComplete="current-password"
+            validationRules={{
+              required: 'La contraseña es obligatoria.',
+              minLength: {
+                value: 9,
+                message: 'La contraseña debe tener al menos 9 caracteres',
+              },
+            }}
+          />
+
           {apiError && (
             <p className='text-red-400 p-2 bg-red-900 bg-opacity-50 rounded-lg text-center text-sm'>
               {apiError}
             </p>
           )}
 
-          <button
-            className='w-full cursor-pointer bg-gray-200 text-gray-900 rounded-lg p-3 transition-colors duration-200 hover:bg-gray-300 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed'
-            type='submit'
-            disabled={!isValid || isLoading}
-          >
-            {isLoading ? 'Verificando...' : 'Enviar'}
-          </button>
+          <Button isLoading={isLoading} isValid={isValid} text="Enviar" />
+
+          <div className="text-center text-white text-sm mt-4">
+            ¿No tenés cuenta?{' '}
+            <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
+              Registrate
+            </Link>
+          </div>
         </form>
       </div>
 
