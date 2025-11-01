@@ -4,6 +4,7 @@ import Toast from '../../shared/components/Toast';
 import AuthInput from '../components/Input';
 import AuthSubmitButton from '../components/Button';
 import { useRegister } from '../hooks/useRegister';
+import AuthSelect from '../components/AuthSelect';
 
 function Register() {
   const {
@@ -28,6 +29,11 @@ function Register() {
     control,
     name: 'password',
   });
+
+  const roleOptions = [
+    { value: 'User', label: 'Usuario' },
+    { value: 'Admin', label: 'Administrador' },
+  ];
 
   return (
     <>
@@ -79,22 +85,15 @@ function Register() {
               },
             }}
           />
-
-          <div>
-            <label htmlFor="Role" className="block text-white mb-2">Rol</label>
-            <select
-              id="Role"
-              className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register('role', { required: 'Debe seleccionar un rol' })}
-            >
-              <option value="">Seleccione una opción</option>
-              <option value="User">Usuario</option>
-              <option value="Admin">Administrador</option>
-            </select>
-            {errors.role && (
-              <p className='text-red-500 pt-2 text-sm'>{errors.role.message}</p>
-            )}
-          </div>
+          <AuthSelect
+            label="Rol"
+            id="Role"
+            name="role"
+            register={register}
+            errors={errors}
+            options={roleOptions}
+            validationRules={{ required: 'Debe seleccionar un rol' }}
+          />
           <AuthInput
             label="Contraseña"
             id="Password"
