@@ -138,11 +138,9 @@ function Register() {
             }}
           />
 
-          {apiError.length > 0 && (
+          {apiError && (
             <div className='text-red-400 p-2 bg-red-900 bg-opacity-50 rounded-lg text-center text-sm'>
-              {apiError.map((message, index) => (
-                <p key={index}>{message}</p>
-              ))}
+              <p>{apiError}</p>
             </div>
           )}
 

@@ -27,52 +27,16 @@ export async function registerService(username, email, password, role) {
     });
 
     if (!response.ok) {
-      let errorText = `Error ${response.status}: ${response.statusText}`;
-      let errorMessages = []; // <-- Array para guardar los errores
+      let errorText;
 
       try {
+        // 1. Ahora SIEMPRE esperamos un JSON simple: { message: "..." }
         const errorData = await response.json();
 
-        // El backend ahora envía un array de errores YA TRADUCIDOS
-        if (Array.isArray(errorData) && errorData.length > 0) {
-
-          // 1. Mapeamos y traducimos CADA error
-          errorMessages = errorData.map(error => { // <-- Asignamos al array
-            const desc = error.Description; // 'Description' (con D mayúscula)
-
-            // Traducción de errores comunes de Identity
-            if (desc.includes('is already taken')) {
-              return desc.includes('Username')
-                ? 'Ese nombre de usuario ya está en uso.'
-                : 'Ese email ya está en uso.';
-            }
-
-            if (desc.includes('Passwords must be at least')) {
-              return 'La contraseña debe tener al menos 8 caracteres.';
-            }
-
-            // ... (todas las demás traducciones)
-            if (desc.includes('Passwords must have at least one non alphanumeric')) {
-              return 'La contraseña debe tener al menos un carácter especial.';
-            }
-
-            return desc;
-          });
-          // 2. Lanzamos un error personalizado que CONTIENE el array
-          const apiError = new Error('Errores de validación del backend.');
-
-          apiError.isApiError = true;
-          apiError.messages = errorMessages; // Adjuntamos el array
-          throw apiError;
-
-        } else if (errorData.message) {
-          errorText = errorData.message;
-        } else {
-          errorText = 'Error desconocido al registrar el usuario.';
-        }
-
+        errorText = errorData.message;
+      // eslint-disable-next-line no-unused-vars
       } catch (e) {
-        console.error('No se pudo parsear la respuesta de error como JSON:', e);
+        // 2. Si falla el JSON (por un 500 o un 400 genérico), mostramos esto
         errorText = `Error ${response.status}: Falla interna del servidor.`;
       }
 

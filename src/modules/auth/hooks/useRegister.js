@@ -7,7 +7,7 @@ import { registerService } from '../services/register.js';
  */
 export function useRegister() {
   const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState([]);
+  const [apiError, setApiError] = useState();
   const [toastOpen, setToastOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export function useRegister() {
    */
   const handleRegisterSubmit = async (data) => {
     setIsLoading(true);
-    setApiError([]);
+    setApiError(null);
 
     try {
       // Llamamos al servicio con los 3 campos
@@ -29,14 +29,8 @@ export function useRegister() {
     } catch (error) {
       console.error(error);
 
-      // Manejamos el nuevo tipo de error
-      if (error.isApiError && Array.isArray(error.messages)) {
-        // Si es nuestro error con un array de mensajes
-        setApiError(error.messages);
-      } else {
-        // Si es un error genérico (de red, etc.)
-        setApiError([error.message]); // Lo envolvemos en un array
-      }
+      // 3. Guardamos el 'error.message' (que ahora es un string)
+      setApiError(error.message);
     } finally {
       setIsLoading(false);
     }
