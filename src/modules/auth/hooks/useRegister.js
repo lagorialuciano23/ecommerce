@@ -21,7 +21,7 @@ export function useRegister() {
 
     try {
       // Llamamos al servicio con los 3 campos
-      await registerService(data.user, data.email, data.password);
+      await registerService(data.user, data.email, data.password, data.role);
 
       // Si el servicio no lanzó error, fue un éxito
       setToastOpen(true); // Abre el toast

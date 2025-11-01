@@ -3,16 +3,18 @@
  * @param {string} username
  * @param {string} email
  * @param {string} password
+ * @param {string} role  // Añadimos rol
  * @returns {Promise<string>} - El mensaje de éxito del backend.
  * @throws {Error} - Lanza un error con un mensaje amigable.
  */
-export async function registerService(username, email, password) {
+export async function registerService(username, email, password, role) {
 
   // 1. Preparamos el body con las mayúsculas que espera C#
   const requestBody = {
     Username: username,
     Email: email,
     Password: password,
+    Role: role,
   };
 
   try {
@@ -24,24 +26,57 @@ export async function registerService(username, email, password) {
       body: JSON.stringify(requestBody),
     });
 
-    // 2. Manejo de errores (4xx, 5xx)
     if (!response.ok) {
       let errorText = `Error ${response.status}: ${response.statusText}`;
 
       try {
+        // El backend de Identity envía un ARRAY de errores
         const errorData = await response.json();
 
-        // El backend (Identity) devuelve un ARRAY de errores
-        if (Array.isArray(errorData)) {
-          // Tomamos solo la primera descripción de error para mostrar
-          errorText = errorData[0]?.description || 'Error al registrar el usuario.';
-        } else {
-          // Error genérico del middleware
-          errorText = errorData.message || 'Error en la respuesta del servidor.';
+        if (Array.isArray(errorData) && errorData.length > 0) {
+
+          // ▼▼▼ ¡INICIO DE LA MODIFICACIÓN! ▼▼▼
+
+          // 1. Mapeamos y traducimos CADA error
+          const errorMessages = errorData.map(error => {
+            const desc = error.Description; // 'Description' (con D mayúscula)
+
+            // Traducción de errores comunes de Identity
+            if (desc.includes('is already taken')) {
+              return desc.includes('Username')
+                ? 'Ese nombre de usuario ya está en uso.'
+                : 'Ese email ya está en uso.';
+            }
+
+            if (desc.includes('Passwords must be at least')) {
+              return 'La contraseña debe tener al menos 8 caracteres.';
+            }
+
+            if (desc.includes('Passwords must have at least one uppercase')) {
+              return 'La contraseña debe tener al menos una mayúscula.';
+            }
+
+            if (desc.includes('Passwords must have at least one lowercase')) {
+              return 'La contraseña debe tener al menos una minúscula.';
+            }
+
+            if (desc.includes('Passwords must have at least one digit')) {
+              return 'La contraseña debe tener al menos un número.';
+            }
+
+            if (desc.includes('Passwords must have at least one non alphanumeric')) {
+              return 'La contraseña debe tener al menos un carácter especial.';
+            }
+
+            return desc; // Devolver el error original si no lo conocemos
+          });
+
+          // 2. Unimos todos los mensajes de error en un solo string
+          errorText = errorMessages.join(' ');
+
         }
-      // eslint-disable-next-line no-unused-vars
       } catch (e) {
-        // Si response.json() falla
+        console.error('No se pudo parsear la respuesta de error como JSON:', e);
         errorText = `Error ${response.status}: Falla interna del servidor.`;
       }
 

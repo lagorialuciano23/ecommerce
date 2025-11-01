@@ -49,7 +49,9 @@ function Register() {
           md:max-w-sm mx-auto
           shadow-xl border border-white border-opacity-20'
         >
-
+          <h1 className="text-center text-2xl font-semibold text-white mb-0">
+            Registro de Usuario
+          </h1>
           <AuthInput
             label="Usuario"
             id="Username"
@@ -62,24 +64,21 @@ function Register() {
               minLength: { value: 3, message: 'El usuario debe tener al menos 3 caracteres' },
             }}
           />
-
-          <AuthInput
-            label="Email"
-            id="Email"
-            name="email"
-            type="email"
-            register={register}
-            errors={errors}
-            autoComplete="email"
-            validationRules={{
-              required: 'El email es obligatorio',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Formato de email inválido',
-              },
-            }}
-          />
-
+          <div>
+            <label htmlFor="Role" className="block text-white mb-2">Role</label>
+            <select
+              id="Role"
+              className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register('role', { required: 'Debe seleccionar un rol' })}
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="User">Usuario</option>
+              <option value="Admin">Administrador</option>
+            </select>
+            {errors.role && (
+              <p className='text-red-500 pt-2 text-sm'>{errors.role.message}</p>
+            )}
+          </div>
           <AuthInput
             label="Contraseña"
             id="Password"
@@ -92,12 +91,22 @@ function Register() {
               required: 'La contraseña es obligatoria.',
               minLength: {
                 value: 8,
-                message: 'La contraseña debe tener al menos 8 caracteres.',
+                message: 'Mínimo 8 caracteres.',
               },
-              pattern:{
-                // eslint-disable-next-line no-useless-escape
-                value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/,
-                message: 'Debe incluir 1 mayúscula, 1 número y 1 carácter especial.',
+              // 1. Usamos 'validate' para múltiples reglas personalizadas
+              validate: {
+                hasUpper: (value) =>
+                  /(?=.*[A-Z])/.test(value) || 'Debe incluir al menos una mayúscula.',
+
+                hasLower: (value) =>
+                  /(?=.*[a-z])/.test(value) || 'Debe incluir al menos una minúscula.',
+
+                hasDigit: (value) =>
+                  /(?=.*\d)/.test(value) || 'Debe incluir al menos un número.',
+
+                hasSpecialChar: (value) =>
+                  // eslint-disable-next-line no-useless-escape
+                  /(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(value) || 'Debe incluir al menos un carácter especial.',
               },
             }}
           />
