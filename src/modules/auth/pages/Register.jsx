@@ -1,4 +1,3 @@
-// Importamos 'useWatch' para la validación de contraseñas
 import { useForm, useWatch } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import Toast from '../../shared/components/Toast';
@@ -25,7 +24,6 @@ function Register() {
   });
 
   // 2. 'useWatch' observa el valor del campo 'password'
-  //    Esto es necesario para la validación de confirmación
   const passwordValue = useWatch({
     control,
     name: 'password',
@@ -64,8 +62,26 @@ function Register() {
               minLength: { value: 3, message: 'El usuario debe tener al menos 3 caracteres' },
             }}
           />
+
+          <AuthInput
+            label="Email"
+            id="Email"
+            name="email"
+            type="email"
+            register={register}
+            errors={errors}
+            autoComplete="email"
+            validationRules={{
+              required: 'El email es obligatorio',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Formato de email inválido',
+              },
+            }}
+          />
+
           <div>
-            <label htmlFor="Role" className="block text-white mb-2">Role</label>
+            <label htmlFor="Role" className="block text-white mb-2">Rol</label>
             <select
               id="Role"
               className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -93,17 +109,13 @@ function Register() {
                 value: 8,
                 message: 'Mínimo 8 caracteres.',
               },
-              // 1. Usamos 'validate' para múltiples reglas personalizadas
               validate: {
                 hasUpper: (value) =>
                   /(?=.*[A-Z])/.test(value) || 'Debe incluir al menos una mayúscula.',
-
                 hasLower: (value) =>
                   /(?=.*[a-z])/.test(value) || 'Debe incluir al menos una minúscula.',
-
                 hasDigit: (value) =>
                   /(?=.*\d)/.test(value) || 'Debe incluir al menos un número.',
-
                 hasSpecialChar: (value) =>
                   // eslint-disable-next-line no-useless-escape
                   /(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(value) || 'Debe incluir al menos un carácter especial.',
@@ -126,10 +138,12 @@ function Register() {
             }}
           />
 
-          {apiError && (
-            <p className='text-red-400 p-2 bg-red-900 bg-opacity-50 rounded-lg text-center text-sm'>
-              {apiError}
-            </p>
+          {apiError.length > 0 && (
+            <div className='text-red-400 p-2 bg-red-900 bg-opacity-50 rounded-lg text-center text-sm'>
+              {apiError.map((message, index) => (
+                <p key={index}>{message}</p>
+              ))}
+            </div>
           )}
 
           <AuthSubmitButton isLoading={isLoading} isValid={isValid} text="Crear Cuenta" />

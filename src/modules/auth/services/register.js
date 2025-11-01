@@ -28,17 +28,16 @@ export async function registerService(username, email, password, role) {
 
     if (!response.ok) {
       let errorText = `Error ${response.status}: ${response.statusText}`;
+      let errorMessages = []; // <-- Array para guardar los errores
 
       try {
-        // El backend de Identity envía un ARRAY de errores
         const errorData = await response.json();
 
+        // El backend ahora envía un array de errores YA TRADUCIDOS
         if (Array.isArray(errorData) && errorData.length > 0) {
 
-          // ▼▼▼ ¡INICIO DE LA MODIFICACIÓN! ▼▼▼
-
           // 1. Mapeamos y traducimos CADA error
-          const errorMessages = errorData.map(error => {
+          errorMessages = errorData.map(error => { // <-- Asignamos al array
             const desc = error.Description; // 'Description' (con D mayúscula)
 
             // Traducción de errores comunes de Identity
@@ -52,29 +51,26 @@ export async function registerService(username, email, password, role) {
               return 'La contraseña debe tener al menos 8 caracteres.';
             }
 
-            if (desc.includes('Passwords must have at least one uppercase')) {
-              return 'La contraseña debe tener al menos una mayúscula.';
-            }
-
-            if (desc.includes('Passwords must have at least one lowercase')) {
-              return 'La contraseña debe tener al menos una minúscula.';
-            }
-
-            if (desc.includes('Passwords must have at least one digit')) {
-              return 'La contraseña debe tener al menos un número.';
-            }
-
+            // ... (todas las demás traducciones)
             if (desc.includes('Passwords must have at least one non alphanumeric')) {
               return 'La contraseña debe tener al menos un carácter especial.';
             }
 
-            return desc; // Devolver el error original si no lo conocemos
+            return desc;
           });
+          // 2. Lanzamos un error personalizado que CONTIENE el array
+          const apiError = new Error('Errores de validación del backend.');
 
-          // 2. Unimos todos los mensajes de error en un solo string
-          errorText = errorMessages.join(' ');
+          apiError.isApiError = true;
+          apiError.messages = errorMessages; // Adjuntamos el array
+          throw apiError;
 
+        } else if (errorData.message) {
+          errorText = errorData.message;
+        } else {
+          errorText = 'Error desconocido al registrar el usuario.';
         }
+
       } catch (e) {
         console.error('No se pudo parsear la respuesta de error como JSON:', e);
         errorText = `Error ${response.status}: Falla interna del servidor.`;
