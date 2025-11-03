@@ -23,7 +23,8 @@ function ProductsTable({products}) {
                 </div>
 
                  <span className={`
-                 px-3 py-1 rounded-full text-xs font-semibold ml-2
+                 flex items-center
+                 px-2 py-1 rounded-full text-xs font-semibold ml-2
                  ${product.IsActive ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
                  `}>
                   {product.IsActive ? 'Activo' : 'Inactivo'}
