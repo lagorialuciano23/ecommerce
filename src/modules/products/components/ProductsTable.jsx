@@ -1,26 +1,68 @@
 function ProductsTable({products}) {
     return (
-        <div className="container mx-auto p-4 text-white">
-      <h1 className="text-3xl font-bold mb-6">Gestión de Productos</h1>
+    <div className="container mx-auto p-4 text-white">
+      <h1 className="
+                    text-3xl font-bold mb-6 text-center text-gray-800
+                    "
+      >
+        Catalogo de Productos
+      </h1>
 
-      <div className="overflow-x-auto bg-[#1e1e58] rounded-xl shadow-lg">
+      <div className="block lg:hidden space-y-3">
+        {products.map((product) => (
+          <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div key={product.Sku} className="
+            bg-gray-800 p-4 rounded-xl shadow-lg
+            text-white text-md
+            ">
+              <div className="flex justify-between mb-3">
+
+                <div className="flex-1" >
+                  <h3>{product.Sku}</h3>
+                  <p>{product.Name}</p>
+                </div>
+
+                 <span className={`
+                 px-3 py-1 rounded-full text-xs font-semibold ml-2
+                 ${product.IsActive ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
+                 `}>
+                  {product.IsActive ? 'Activo' : 'Inactivo'}
+               </span>
+              </div>
+
+              <div className="flex justify-between text-sm pt-3">
+                <span>Price: ${product.CurrentUnitPrice}</span>
+                <span>Stock: {product.StockQuantity}</span>
+              </div>
+            </div>
+          </div>
+          
+        ))}
+
+      </div>
+
+      <div className="
+      hidden lg:block 
+      overflow-x-auto bg-gray-800 rounded-xl shadow-lg
+      "
+      >
         <table className="min-w-full divide-y divide-gray-700">
-          <thead className="bg-gray-800">
+          <thead className="bg-gray-900 text-white text-md">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                 SKU
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Nombre
+              <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                Name
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Precio
+              <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                Price
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                 Stock
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Estado
+              <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+               Status
               </th>
             </tr>
           </thead>
@@ -39,7 +81,7 @@ function ProductsTable({products}) {
                     {product.Name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {product.CurrentUnitPrice}
+                    ${product.CurrentUnitPrice}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     {product.StockQuantity}
