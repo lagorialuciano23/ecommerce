@@ -1,116 +1,171 @@
 import { useNavigate, NavLink, Outlet } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '../../auth/context/useAuth';
 
 function AdminLayout() {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login', { replace: true });
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
-    <div
-      className="
-grid min-h-screen bg-[#12121e] text-white
-grid-rows-[60px_1fr_50px]
- md:grid-rows-[60px_1fr_50px]
- md:grid-cols-[200px_1fr]
- gap-0
- "
-    >
-      {/* HEADER */}
-      <header
-        className="
- bg-[#263e77] flex items-center justify-between px-4
- md:col-span-2 md:row-start-1 md:col-start-1
- "
+    <div className="min-h-screen bg-gray-50">
+      {/* HEADER - Mobile First */}
+      <header className="
+            bg-white text-black border-b border-gray-200
+            px-4 py-3 
+            flex items-center justify-between sticky 
+            top-0 z-50 shadow-md
+             "
       >
-        <h1 className="text-lg font-semibold">
-                    Bienvenido, {user?.username || 'Usuario'}
+        {/* Hamburger Menu - Solo visible en mobile */}
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden p-2 hover:bg-[#1e3059] rounded-md transition"
+          aria-label="Toggle menu"
+        >
+          {isSidebarOpen ? (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
+
+        <h1 className="
+                    text-base md:text-lg font-semibold
+                    text-gray-800
+                    "
+        >
+            {user?.username || 'User'}
         </h1>
+
         <button
           onClick={handleLogout}
-          className="rounded-md bg-red-500 px-4 py-2 font-medium hover:bg-red-600 transition"
+          className="
+                    text-xs md:text-sm bg-gray-800 text-white
+                    px-3 py-1.5 md:px-4 md:py-2 rounded-md font-medium 
+                    hover:bg-gray-500 transition
+                    "
         >
-                    Cerrar Sesión
+          Salir
         </button>
       </header>
 
-      {/* NAV (Barra Lateral) - CORREGIDO */}
-      <nav
-        className="
- bg-gray-200 text-black p-4
- md:row-start-2 md:col-start-1
- "
-      >
-        <ul className="space-y-2">
-          <li>
-            <NavLink
-              to="/admin" // Esta ruta es absoluta al "index" del admin
-              end // 'end' es para que no se marque activo en /admin/products
-              className={({ isActive }) =>
-                `block px-3 py-2 rounded-md transition-colors ${isActive ? 'bg-gray-400' : 'hover:bg-gray-300'}`
-              }
-            >
-                            Principal
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/admin/products" // Ruta absoluta completa
-              className={({ isActive }) =>
-                `block px-3 py-2 rounded-md transition-colors ${isActive ? 'bg-gray-400' : 'hover:bg-gray-300'}`
-              }
-            >
-                            Productos
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/admin/orders" // Ruta absoluta completa
-              className={({ isActive }) =>
-                `block px-3 py-2 rounded-md transition-colors ${isActive ? 'bg-gray-400' : 'hover:bg-gray-300'}`
-              }
-            >
-                            Órdenes
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/admin/users" // Ruta absoluta completa
-              className={({ isActive }) =>
-                `block px-3 py-2 rounded-md transition-colors ${isActive ? 'bg-gray-400' : 'hover:bg-gray-300'}`
-              }
-            >
-                            Usuarios
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
+      <div className="flex">
+        {/* SIDEBAR - Mobile First con overlay */}
+        <>
+          {/* Overlay oscuro para mobile */}
+          {isSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+              onClick={closeSidebar}
+            />
+          )}
 
-      {/* MAIN (Contenido Principal) - CORREGIDO */}
-      <main
-        className="
- p-6
- md:row-start-2 md:col-start-2
- overflow-y-auto {/* Le añadí overflow por si el contenido es largo */}
- "
-      >
-        {/* ¡YA NO ESTÁN LAS CARDS! Solo el Outlet */}
-        <Outlet />
-      </main>
+          {/* Sidebar */}
+          <nav
+            className={`
+              fixed top-[53px] left-0 h-[calc(100vh-53px)] w-64 
+              bg-white shadow-lg z-40 
+              transform transition-transform duration-300 ease-in-out
+              ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+              md:translate-x-0 md:static md:h-[calc(100vh-53px)] md:w-56
+            `}
+          >
+            <div className="p-4">
+              <h2 className="text-gray-600 text-xs font-semibold uppercase mb-3 px-3">
+                Menu
+              </h2>
+              <ul className="space-y-1">
+                <li>
+                  <NavLink
+                    to="/admin"
+                    end
+                    onClick={closeSidebar}
+                    className={({ isActive }) =>
+                      `block px-4 py-2.5 rounded-lg transition-colors text-sm ${
+                        isActive
+                          ? 'bg-purple-100 text-purple-700 font-medium'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`
+                    }
+                  >
+                    Home
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/admin/products"
+                    onClick={closeSidebar}
+                    className={({ isActive }) =>
+                      `block px-4 py-2.5 rounded-lg transition-colors text-sm ${
+                        isActive
+                          ? 'bg-purple-100 text-purple-700 font-medium'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`
+                    }
+                  >
+                    Products
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/admin/orders"
+                    onClick={closeSidebar}
+                    className={({ isActive }) =>
+                      `block px-4 py-2.5 rounded-lg transition-colors text-sm ${
+                        isActive
+                          ? 'bg-purple-100 text-purple-700 font-medium'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`
+                    }
+                  >
+                    Orders
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/admin/users"
+                    onClick={closeSidebar}
+                    className={({ isActive }) =>
+                      `block px-4 py-2.5 rounded-lg transition-colors text-sm ${
+                        isActive
+                          ? 'bg-purple-100 text-purple-700 font-medium'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`
+                    }
+                  >
+                    Users
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </>
 
-      {/* FOOTER */}
-      <footer
-        className="
- bg-[#263e77] flex items-center justify-center text-sm
- md:col-span-2 md:row-start-3 md:col-start-1
- "
-      >
-                Mi footer
-      </footer>
+        {/* MAIN CONTENT - Mobile First */}
+        <main className="flex-1 min-h-[calc(100vh-53px)] overflow-y-auto">
+          <div className="p-4 md:p-6 lg:p-8">
+            <Outlet />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
