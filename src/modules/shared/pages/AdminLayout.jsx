@@ -33,7 +33,7 @@ function AdminLayout() {
         {/* Hamburger Menu - Solo visible en mobile */}
         <button
           onClick={toggleSidebar}
-          className="md:hidden p-2 hover:bg-[#1e3059] rounded-md transition"
+          className="md:hidden p-2 hover:bg-gray-700 text-white rounded-md transition"
           aria-label="Toggle menu"
         >
           {isSidebarOpen ? (
