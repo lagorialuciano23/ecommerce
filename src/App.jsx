@@ -1,12 +1,12 @@
 import Login from './modules/auth/pages/Login';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProductsPage from './modules/products/pages/ProductsPage.jsx';
-import Dashboard from './modules/shared/pages/AdminLayout.jsx'; // Tu "esqueleto"
 import NotFoundPage from './modules/shared/pages/NotFoundPage.jsx';
 import { ProtectedRoute } from './modules/auth/helpers/ProtectedRoute.jsx';
 import DashboardHome from './modules/shared/pages/DashboardHome.jsx';
 import AdminLayout from './modules/shared/pages/AdminLayout.jsx';
 import Register from './modules/auth/pages/Register';
+import OrdersPage from './modules/orders/pages/OrdersPage.jsx';
 
 function App() {
   return (
@@ -37,12 +37,8 @@ function App() {
         {/* 'path' se añade a la ruta padre (URL: /admin/products) */}
         <Route path="products" element={<ProductsPage />} />
 
-        {/* (Aquí puedes agregar "orders", "users", etc.) */}
-        {/* <Route path="orders" element={<OrdersPage />} /> */}
+        <Route path="orders" element={<OrdersPage />} />
       </Route>
-
-      {/* BORRAMOS las rutas antiguas de /dashboard y /products */}
-
     </Routes>
   );
 }
