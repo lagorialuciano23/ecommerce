@@ -7,6 +7,7 @@ import { ProtectedRoute } from './modules/auth/helpers/ProtectedRoute.jsx';
 import DashboardHome from './modules/shared/pages/DashboardHome.jsx';
 import AdminLayout from './modules/shared/pages/AdminLayout.jsx';
 import Register from './modules/auth/pages/Register';
+import CreateProductsPage from './modules/products/pages/CreateProductsPage.jsx';
 
 function App() {
   return (
@@ -36,13 +37,10 @@ function App() {
 
         {/* 'path' se añade a la ruta padre (URL: /admin/products) */}
         <Route path="products" element={<ProductsPage />} />
-
+        <Route path="products/create" element={<CreateProductsPage />} />
         {/* (Aquí puedes agregar "orders", "users", etc.) */}
         {/* <Route path="orders" element={<OrdersPage />} /> */}
       </Route>
-
-      {/* BORRAMOS las rutas antiguas de /dashboard y /products */}
-
     </Routes>
   );
 }
