@@ -7,6 +7,8 @@ import DashboardHome from './modules/shared/pages/DashboardHome.jsx';
 import AdminLayout from './modules/shared/pages/AdminLayout.jsx';
 import Register from './modules/auth/pages/Register';
 import OrdersPage from './modules/orders/pages/OrdersPage.jsx';
+import CartPage from './modules/cart/pages/CartPage.jsx';
+import ProductCreatePage from './modules/products/pages/ProductCreatePage.jsx';
 
 function App() {
   return (
@@ -16,27 +18,20 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Register />} />
       <Route path="*" element={<NotFoundPage />} />
+      <Route path="/cart" element={<CartPage />} />
 
-      {/* --- RUTAS PROTEGIDAS (ANIDADAS) --- */}
-
-      {/* 1. RUTA PADRE / LAYOUT */}
-      {/* Esta es la ruta que coincide con tus links: /admin */}
+      {/* --- RUTAS PROTEGIDAS (ADMIN) --- */}
       <Route
         path="/admin"
         element={
           <ProtectedRoute>
-            <AdminLayout /> {/* Tu "Esqueleto" con el <Outlet /> */}
+            <AdminLayout />
           </ProtectedRoute>
         }
       >
-        {/* 2. RUTAS HIJAS (las que van en el <Outlet />) */}
-
-        {/* 'index' se muestra en la URL exacta del padre (/admin) */}
         <Route index element={<DashboardHome />} />
-
-        {/* 'path' se añade a la ruta padre (URL: /admin/products) */}
         <Route path="products" element={<ProductsPage />} />
-
+        <Route path="products/create" element={<ProductCreatePage />} />
         <Route path="orders" element={<OrdersPage />} />
       </Route>
     </Routes>

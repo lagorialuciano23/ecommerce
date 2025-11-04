@@ -1,4 +1,16 @@
-import { api } from "../../shared/services/api";
+import { api } from '../../shared/services/api';
+
+// Mapea los nombres del formulario (camelCase) a los nombres del DTO (PascalCase)
+const mapProductToRequest = (product) => {
+  return {
+    Sku: product.sku,
+    InternalCode: product.internalCode,
+    Name: product.name,
+    Description: product.description,
+    CurrentUnitPrice: parseFloat(product.currentUnitPrice), // Asegurarnos que sea un número
+    StockQuantity: parseInt(product.stockQuantity, 10), // Asegurarnos que sea un entero
+  };
+};
 
 /**
  * Servicio para gestionar operaciones relacionadas con productos.
