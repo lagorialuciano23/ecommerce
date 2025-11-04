@@ -26,7 +26,11 @@ export default function OrdersPage() {
       try {
         // Llamamos al servicio con la paginación
         // (Añadiremos filterStatus y searchTerm cuando el backend los soporte)
-        const response = await ordersService.getAll(currentPage);
+        const response = await ordersService.getAll(
+          currentPage,
+          8, // PageSize (puedes ajustarlo)
+          filterStatus,
+          searchTerm);
 
         setOrders(response);
       } catch (err) {
@@ -40,23 +44,21 @@ export default function OrdersPage() {
     fetchOrders();
     // Re-ejecutar este efecto si la página actual cambia
     // (Añadiremos filterStatus y searchTerm cuando el backend los soporte)
-  }, [currentPage]);
+  }, [currentPage, filterStatus, searchTerm]);
 
   // --- Manejadores de eventos (aún no funcionales) ---
   const handleSearch = (e) => {
     e.preventDefault();
-    // Lógica de búsqueda (requiere backend)
-    console.log('Buscar:', searchTerm);
-    // Reiniciar a página 1
-    // setCurrentPage(1);
+    // Al buscar, siempre volvemos a la página 1
+    setCurrentPage(1);
+    // El useEffect se encargará de re-llamar a la API
   };
 
   const handleStatusChange = (e) => {
     setFilterStatus(e.target.value);
-    // Lógica de filtro (requiere backend)
-    console.log('Filtrar por:', e.target.value);
-    // Reiniciar a página 1
-    // setCurrentPage(1);
+    // Al cambiar el filtro, siempre volvemos a la página 1
+    setCurrentPage(1);
+    // El useEffect se encargará de re-llamar a la API
   };
 
   // --- Manejadores de Paginación ---
@@ -158,7 +160,6 @@ export default function OrdersPage() {
             </select>
           </div>
         </div>
-        <p className="text-xs text-gray-400 mt-2">* La búsqueda y el filtro por estado aún no están implementados en el backend.</p>
       </div>
 
       {/* --- Contenido (Lista o Errores) --- */}
