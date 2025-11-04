@@ -46,7 +46,8 @@ function AdminLayout() {
         </button>
 
         <h1 className="text-base md:text-lg font-semibold text-gray-800">
-          {user?.username || 'User'}
+          Iniciado sesión como{' '}
+          {user && user.Username ? user.Username : 'User'}
         </h1>
 
         <button
