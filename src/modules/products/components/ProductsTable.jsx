@@ -25,7 +25,7 @@ function ProductsTable({ products }) {
       <div className="block lg:hidden space-y-3">
         {products.map((product) => (
           // 3. LA KEY AHORA ESTÁ EN EL DIV EXTERNO Y USA 'Id'
-          <div key={product.Id} className="bg-gray-800 p-4 rounded-xl shadow-lg">
+          <div key={product.id} className="bg-gray-800 p-4 rounded-xl shadow-lg">
             <div className="
               bg-gray-800 p-4 rounded-xl shadow-lg
               text-white text-md
@@ -34,8 +34,8 @@ function ProductsTable({ products }) {
 
                 {/* 4. PROPIEDADES EN PascalCase */}
                 <div className="flex-1" >
-                  <h3>{product.Sku}</h3>
-                  <p>{product.Name}</p>
+                  <h3>{product.sku}</h3>
+                  <p>{product.name}</p>
                 </div>
 
                 <span className={`
@@ -49,8 +49,8 @@ function ProductsTable({ products }) {
 
               <div className="flex justify-between text-sm pt-3">
                 {/* 5. AÑADIDO .toFixed(2) CON PROTECCIÓN */}
-                <span>Price: ${(product.CurrentUnitPrice || 0).toFixed(2)}</span>
-                <span>Stock: {product.StockQuantity}</span>
+                <span>Price: ${(product.currentUnitPrice || 0).toFixed(2)}</span>
+                <span>Stock: {product.stockQuantity}</span>
               </div>
             </div>
           </div>
@@ -69,16 +69,16 @@ function ProductsTable({ products }) {
                 SKU
               </th>
               <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
-                Name
+                Nombre
               </th>
               <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
-                Price
+                Precio
               </th>
               <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                 Stock
               </th>
               <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
-                Status
+                Estado
               </th>
             </tr>
           </thead>
