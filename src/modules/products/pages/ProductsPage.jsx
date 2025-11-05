@@ -13,12 +13,10 @@ export default function ProductsPage() {
       try {
         setIsLoading(true);
         setError(null);
-        
-        // 4. Usamos nuestro servicio 'api' (que ya incluye el token)
         const response = await productsService.getAll();
 
-        // Guardamos la respuesta
         setProducts(response);
+
       } catch (err) {
         setError(err.message);
         console.error('Error al cargar productos:', err);

@@ -22,7 +22,19 @@ export const productsService = {
    * GET /api/products
    * @returns {Promise<Array>} Lista de productos
    */
-  getAll: () => api.get('/api/products'),
+  getAll: (pageNumber = 1, pageSize = 8, search = '') =>{
+    const params = new URLSearchParams();
+
+    params.append('pageNumber', pageNumber);
+    params.append('pageSize', pageSize);
+
+    // Nota: Tu API de C# (ProductController) no tiene parámetro 'search' aún.
+    // if (search) {
+    //   params.append('search', search);
+    // }
+
+    return api.get(`/api/products?${params.toString()}`);
+  },
 
   /**
    * Obtiene un producto por su ID.
