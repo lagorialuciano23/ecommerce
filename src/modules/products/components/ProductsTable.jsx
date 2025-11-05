@@ -49,7 +49,7 @@ function ProductsTable({ products }) {
 
               <div className="flex justify-between text-sm pt-3">
                 {/* 5. AÑADIDO .toFixed(2) CON PROTECCIÓN */}
-                <span>Price: ${(product.currentUnitPrice || 0).toFixed(2)}</span>
+                <span>Precio: ${(product.currentUnitPrice || 0).toFixed(2)}</span>
                 <span>Stock: {product.stockQuantity}</span>
               </div>
             </div>
@@ -87,19 +87,19 @@ function ProductsTable({ products }) {
               products.map((product) => (
 
                 // (La key aquí ya estaba bien)
-                <tr key={product.Id} className="hover:bg-gray-700 transition-colors">
+                <tr key={product.id} className="hover:bg-gray-700 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-200">
-                    {product.Sku}
+                    {product.sku}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {product.Name}
+                    {product.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     {/* 5. AÑADIDO .toFixed(2) CON PROTECCIÓN */}
-                    ${(product.CurrentUnitPrice || 0).toFixed(2)}
+                    ${(product.currentUnitPrice || 0).toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {product.StockQuantity}
+                    {product.stockQuantity}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {product.IsActive ? (
