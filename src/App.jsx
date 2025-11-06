@@ -11,6 +11,7 @@ import CartPage from './modules/cart/pages/CartPage.jsx';
 import ProductCreatePage from './modules/products/pages/ProductCreatePage.jsx';
 import PublicLayout from './modules/shared/pages/PublicLayout.jsx';
 import CustomerProductsPage from './modules/products/pages/CustomersProductsPage.jsx';
+import CreateProductsPage from './modules/products/pages/CreateProductsPage.jsx';
 
 function App() {
   return (
@@ -35,11 +36,11 @@ function App() {
       >
         <Route index element={<DashboardHome />} />
         <Route path="products" element={<ProductsPage />} />
-        <Route path="products/create" element={<ProductCreatePage />} />
-        <Route path="orders" element={<OrdersPage />} />
+
+        <Route path="products/create" element={<CreateProductsPage />} />
+        {/* (Aquí puedes agregar "orders", "users", etc.) */}
+        {/* <Route path="orders" element={<OrdersPage />} /> */}
       </Route>
-      {/* --- RUTA 404 --- */}
-      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

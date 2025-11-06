@@ -2,59 +2,41 @@ import { Link } from 'react-router-dom';
 
 function ProductsTable({ products }) {
   return (
-    <div className="container mx-auto p-4 text-white">
-
-      {/* 2. Añadimos el botón "Crear Producto" que definimos antes */}
-      <div className="flex justify-between items-center mb-6">
-        <h1
-          className="
-            text-3xl font-bold text-gray-800
-          "
-        >
-          Catalogo de Productos
-        </h1>
-        <Link
-          to="/admin/products/create"
-          className="rounded-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 transition"
-        >
-          + Crear Producto
-        </Link>
-      </div>
-
-      {/* --- VISTA MÓVIL CORREGIDA --- */}
-      <div className="block lg:hidden space-y-3">
-        {products.map((product) => (
-          // 3. LA KEY AHORA ESTÁ EN EL DIV EXTERNO Y USA 'Id'
-          <div key={product.id} className="bg-gray-800 p-4 rounded-xl shadow-lg">
-            <div className="
-              bg-gray-800 p-4 rounded-xl shadow-lg
-              text-white text-md
-            ">
-              <div className="flex justify-between mb-3">
-
-                {/* 4. PROPIEDADES EN PascalCase */}
-                <div className="flex-1" >
-                  <h3>{product.sku}</h3>
-                  <p>{product.name}</p>
+    <div className="container mx-auto p-4">
+      <div className="space-y-3">
+        {products && products.length > 0 ? (
+          products.map((product) => (
+            <div
+              key={product.Sku}
+              className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h3 className="text-gray-900 font-semibold text-base mb-1">
+                    {product.Sku} - {product.Name}
+                  </h3>
+                  <p className="text-gray-500 text-sm flex items-center gap-2">
+                    <span>{product.StockQuantity} Stock</span>
+                    <span>•</span>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${product.IsActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      {product.IsActive ? 'Activo' : 'Inactivo'}
+                    </span>
+                  </p>
                 </div>
 
-                <span className={`
-                  flex items-center
-                  px-2 py-1 rounded-full text-xs font-semibold ml-2
-                  ${product.IsActive ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
-                `}>
-                  {product.IsActive ? 'Activo' : 'Inactivo'}
-                </span>
-              </div>
-
-              <div className="flex justify-between text-sm pt-3">
-                {/* 5. AÑADIDO .toFixed(2) CON PROTECCIÓN */}
-                <span>Precio: ${(product.currentUnitPrice || 0).toFixed(2)}</span>
-                <span>Stock: {product.stockQuantity}</span>
+                <button className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors ml-4">
+                  Ver
+                </button>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-base">
+              No se encontraron productos asociados.
+            </p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* --- VISTA ESCRITORIO CORREGIDA --- */}

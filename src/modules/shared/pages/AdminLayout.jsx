@@ -46,7 +46,8 @@ function AdminLayout() {
         </button>
 
         <h1 className="text-base md:text-lg font-semibold text-gray-800">
-          {user?.username || 'User'}
+          Iniciado sesión como{' '}
+          {user && user.Username ? user.Username : 'User'}
         </h1>
 
         <button
@@ -153,7 +154,6 @@ function AdminLayout() {
           </nav>
         </>
 
-        {/* MAIN CONTENT - Mobile First */}
         <main className="flex-1 min-h-[calc(100vh-53px)] overflow-y-auto">
           <div className="p-4 md:p-6 lg:p-8">
             <Outlet />
