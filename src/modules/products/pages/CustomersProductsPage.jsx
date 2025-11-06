@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { productsService } from '../services/productsService';
 import ProductCard from '../components/ProductCard';
 
@@ -11,9 +12,18 @@ export default function CustomerProductsPage() {
   // Estados para los filtros y paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  // (La API de C# aún no devuelve el total de páginas,
-  //  así que asumimos que 'siguiente' está habilitado si recibimos 8 productos)
+
+  const [searchParams] = useSearchParams(); //Hook para leer la URL
+
   const [canGoNext, setCanGoNext] = useState(true);
+
+  //NUEVO EFECTO: Sincroniza la URL con el estado local
+  // Este efecto se ejecuta CADA VEZ que la URL (searchParams) cambia.
+  useEffect(() => {
+    const querySearch = searchParams.get('search') || '';
+
+    setSearchTerm(querySearch);
+  }, [searchParams]);
 
   // Efecto para cargar los productos
   useEffect(() => {
@@ -27,9 +37,10 @@ export default function CustomerProductsPage() {
           searchTerm,
         );
 
-        setProducts(response);
-        // Si la API devuelve menos de 8 productos, ya no hay página siguiente
-        setCanGoNext(response.length === 8);
+        // Ajustamos cómo guardamos los datos
+        setProducts(response.items); // <-- response.items en lugar de response
+        // Ajustamos la lógica del botón "Siguiente"
+        setCanGoNext(response.currentPage < response.totalPages);
       } catch (err) {
         setError(err.message);
         console.error('Error al cargar productos:', err);
@@ -83,10 +94,16 @@ export default function CustomerProductsPage() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-white">Card Grid</h1>
-
-      {/* --- Contenido (Grilla o Errores) --- */}
-      {renderContent()}
+      {/* Si el término de búsqueda existe, mostramos un título
+        (Esto es opcional, pero mejora la experiencia)
+      */}
+      {searchTerm ? (
+        <h1 className="text-3xl font-bold mb-6 text-white">
+          Resultados para: "{searchTerm}"
+        </h1>
+      ) : (
+        <h1 className="text-3xl font-bold mb-6 text-white">Catálogo</h1>
+      )}
 
       {/* --- Paginación --- */}
       <div className="flex justify-between items-center mt-8">

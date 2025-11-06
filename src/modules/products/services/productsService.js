@@ -28,10 +28,9 @@ export const productsService = {
     params.append('pageNumber', pageNumber);
     params.append('pageSize', pageSize);
 
-    // Nota: Tu API de C# (ProductController) no tiene parámetro 'search' aún.
-    // if (search) {
-    //   params.append('search', search);
-    // }
+    if (search) {
+      params.append('search', search);
+    }
 
     return api.get(`/api/products?${params.toString()}`);
   },

@@ -1,5 +1,6 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useCart } from '../../cart/context/useCart';
+import { useState } from 'react';
 
 // Ícono simple de Carrito
 function CartIcon() {
@@ -35,6 +36,15 @@ function CartIcon() {
 
 // Layout principal
 export default function PublicLayout() {
+  //Estado local para controlar el input de búsqueda
+  const [localSearch, setLocalSearch] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    navigate(`/?search=${localSearch}`);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">
       {/* Header */}
@@ -45,16 +55,17 @@ export default function PublicLayout() {
             MiTienda
           </Link>
 
-          {/* Buscador (aún no funcional) */}
-          <div className="relative w-full max-w-xs">
+          {/* Buscador */}
+          <form onSubmit={handleSearch} className="relative w-full max-w-xs">
             <input
               type="search"
               placeholder="Search"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
               className="w-full p-2 rounded-lg bg-gray-700 text-white border-none
               focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {/* Ícono de Lupa (opcional) */}
-          </div>
+          </form>
 
           {/* Ícono de Carrito */}
           <CartIcon />
