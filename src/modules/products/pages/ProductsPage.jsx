@@ -72,7 +72,7 @@ export default function ProductsPage() {
           bg-green-500 hover:bg-green-200 text-green-900 
           py-2 px-4 rounded"
           >
-          Add Product
+          Add Product+
           </button>
         </Link>
     </div>
