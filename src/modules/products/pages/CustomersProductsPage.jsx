@@ -38,9 +38,9 @@ export default function CustomerProductsPage() {
         );
 
         // Ajustamos cómo guardamos los datos
-        setProducts(response.items); // <-- response.items en lugar de response
+        setProducts(response.Items); // <-- response.Items en lugar de response
         // Ajustamos la lógica del botón "Siguiente"
-        setCanGoNext(response.currentPage < response.totalPages);
+        setCanGoNext(response.CurrentPage < response.TotalPages);
       } catch (err) {
         setError(err.message);
         console.error('Error al cargar productos:', err);
@@ -85,8 +85,7 @@ export default function CustomerProductsPage() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map((product) => (
-          // Usamos camelCase para el 'id'
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.Id} product={product} />
         ))}
       </div>
     );
@@ -104,6 +103,10 @@ export default function CustomerProductsPage() {
       ) : (
         <h1 className="text-3xl font-bold mb-6 text-white">Catálogo</h1>
       )}
+
+      <div className="mb-8">
+        {renderContent()}
+      </div>
 
       {/* --- Paginación --- */}
       <div className="flex justify-between items-center mt-8">

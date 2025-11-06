@@ -41,15 +41,15 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Nombre y Precio (usando camelCase) */}
-      <h3 className="text-lg font-semibold">{product.name}</h3>
+      <h3 className="text-lg font-semibold">{product.Name}</h3>
       <p className="text-2xl font-bold text-green-400">
-        ${(product.currentUnitPrice || 0).toFixed(2)}
+        ${(product.CurrentUnitPrice || 0).toFixed(2)}
       </p>
       <p className="text-sm text-gray-400 mb-2">
-        SKU: {product.sku}
+        SKU: {product.Sku}
       </p>
       <p className="text-sm text-gray-400 mb-4">
-        Stock: {product.stockQuantity}
+        Stock: {product.StockQuantity}
       </p>
 
       {/* Controles de Cantidad */}
