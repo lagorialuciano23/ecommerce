@@ -8,20 +8,10 @@ function CartIcon() {
 
   return (
     <Link to="/cart" className="relative p-2 text-white">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="w-7 h-7"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.121.001.24.015.356.042a4.858 4.858 0 014.145 4.724l-.86.513M3.375 4.5l.383 1.437m0 0L7.5 14.25M3.758 5.937l5.69 4.026a.75.75 0 01.27.527l-.637 7.158a.75.75 0 01-.676.688l-6.162.94a.75.75 0 01-.818-.675l-.637-7.158a.75.75 0 01.27-.527L3.758 5.937z"
-        />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+        <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
       </svg>
+
       {cartCount > 0 && (
         <span
           className="absolute top-0 right-0 flex h-5 w-5 items-center
