@@ -28,16 +28,28 @@ export default function ProductCard({ product }) {
 
   return (
     <div className="bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col text-white border border-gray-700">
-      {/* Imagen (placeholder) */}
-      <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4">
-        <svg
-          className="w-12 h-12 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M4 7.61c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61V7.61zM16 12.61c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61V8.83c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78zM7 16.61c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61v-3.78c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78zM17 20.39c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61v-3.78c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78z" />
-        </svg>
+      {/* URL de imagen */}
+      <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4 overflow-hidden">
+        {product.ImageUrl ? (
+          // Si hay URL, mostramos la imagen
+          <img
+            src={product.ImageUrl}
+            alt={product.Name}
+            className="w-full h-full object-cover"
+            // Opcional: manejar errores de imagen
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        ) : (
+          // Si NO hay URL, mostramos el ícono placeholder
+          <svg
+            className="w-12 h-12 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M4 7.61c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61V7.61zM16 12.61c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61V8.83c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78zM7 16.61c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61v-3.78c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78zM17 20.39c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61v-3.78c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78z" />
+          </svg>
+        )}
       </div>
 
       {/* Nombre y Precio (usando camelCase) */}

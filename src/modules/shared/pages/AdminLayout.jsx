@@ -24,8 +24,8 @@ function AdminLayout() {
     <div className="min-h-screen bg-gray-50">
       {/* HEADER - Mobile First */}
       <header className="
-        bg-white border-b border-gray-200 px-4 py-3 
-        flex items-center justify-between 
+        bg-white border-b border-gray-200 px-4 py-3
+        flex items-center justify-between
         sticky top-0 z-50 shadow-md
       ">
         {/* Hamburger Menu - Solo visible en mobile */}
@@ -54,7 +54,7 @@ function AdminLayout() {
           onClick={handleLogout}
           className="
             text-xs md:text-sm bg-gray-800 text-white
-            px-3 py-1.5 md:px-4 md:py-2 rounded-md font-medium 
+            px-3 py-1.5 md:px-4 md:py-2 rounded-md font-medium
             hover:bg-gray-700 transition
           "
         >
@@ -164,7 +164,7 @@ function AdminLayout() {
           bg-gray-800 text-white p-4 text-center
           ">
             footer content
-        </footer>
+      </footer>
     </div>
   );
 }

@@ -1,8 +1,7 @@
-
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { productsService } from '../services/productsService';
-import FormInput from "./FormInput";
+import FormInput from './FormInput';
 
 function ProductsForm({ onSuccess }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -12,20 +11,22 @@ function ProductsForm({ onSuccess }) {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     setSubmitError(null);
-    
+
     try {
-      // onvertir los tipos de datos apropiadamente
+      // convertir los tipos de datos apropiadamente
       const productData = {
         sku: data.sku || null,
         internalCode: data.internalCode || null,
         name: data.name || null,
         description: data.description || null,
         currentUnitPrice: parseFloat(data.currentUnitPrice),
-        stockQuantity: parseInt(data.stockQuantity, 10)
+        stockQuantity: parseInt(data.stockQuantity, 10),
+        imageUrl: data.imageUrl || null,
       };
-      
+
       await productsService.create(productData);
       reset(); // uso para limpiar el form
+
       if (onSuccess) onSuccess();
     } catch (error) {
       setSubmitError(error.message || 'Error al crear el producto');
@@ -43,6 +44,19 @@ function ProductsForm({ onSuccess }) {
         error={errors.sku}
         validation={{ required: 'El SKU es requerido' }}
         inputProps={{ placeholder: 'SKU-...' }}
+      />
+
+      <FormInput
+        id="imageUrl"
+        label="URL de la Imagen (opcional)"
+        register={register}
+        error={errors.imageUrl}
+        validation={{ pattern: {
+          value: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i,
+          message: 'Por favor, ingresa una URL válida',
+        },
+        }}
+        inputProps={{ placeholder: 'https://ejemplo.com/imagen.png' }}
       />
 
       <FormInput
@@ -75,11 +89,11 @@ function ProductsForm({ onSuccess }) {
         type="number"
         register={register}
         error={errors.currentUnitPrice}
-        validation={{ 
+        validation={{
           required: 'El precio es requerido',
-          min: { value: 0, message: 'El precio debe ser mayor o igual a 0' }
+          min: { value: 0, message: 'El precio debe ser mayor o igual a 0' },
         }}
-        inputProps={{ step: "0.01", placeholder: "0.00" }}
+        inputProps={{ step: '0.01', placeholder: '0.00' }}
       />
 
       <FormInput
@@ -88,11 +102,11 @@ function ProductsForm({ onSuccess }) {
         type="number"
         register={register}
         error={errors.stockQuantity}
-        validation={{ 
+        validation={{
           required: 'La cantidad en stock es requerida',
-          min: { value: 0, message: 'El stock no puede ser negativo' }
+          min: { value: 0, message: 'El stock no puede ser negativo' },
         }}
-        inputProps={{ step: "1" }}
+        inputProps={{ step: '1' }}
       />
 
       {submitError && (

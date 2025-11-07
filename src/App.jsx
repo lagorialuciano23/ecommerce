@@ -41,6 +41,7 @@ function App() {
         {/* (Aquí puedes agregar "orders", "users", etc.) */}
         {/* <Route path="orders" element={<OrdersPage />} /> */}
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

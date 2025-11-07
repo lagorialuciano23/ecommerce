@@ -3,30 +3,36 @@ import { Link } from 'react-router-dom';
 function ProductsTable({ products }) {
   return (
     <div className="container mx-auto p-4">
-      <div className="space-y-3">
+      {/* --- VISTA MOVIL --- */}
+      <div className="space-y-3 lg:hidden">
         {products && products.length > 0 ? (
           products.map((product) => (
             <div
-              key={product.Sku}
-              className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow"
+              key={product.Id}
+              className='bg-white p-4 rounded-lg shadow border border-gray-200 hover: shadow-md transition-shadow'
             >
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-gray-900 font-semibold text-base mb-1">
-                    {product.Sku} - {product.Name}
-                  </h3>
-                  <p className="text-gray-500 text-sm flex items-center gap-2">
-                    <span>{product.StockQuantity} Stock</span>
-                    <span>•</span>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${product.IsActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                      {product.IsActive ? 'Activo' : 'Inactivo'}
-                    </span>
-                  </p>
-                </div>
+              <div
+                key={product.Sku}
+                className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="text-gray-900 font-semibold text-base mb-1">
+                      {product.Sku} - {product.Name}
+                    </h3>
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      <span>{product.StockQuantity} Stock</span>
+                      <span>•</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${product.IsActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {product.IsActive ? 'Activo' : 'Inactivo'}
+                      </span>
+                    </p>
+                  </div>
 
-                <button className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors ml-4">
+                  <button className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors ml-4">
                   Ver
-                </button>
+                  </button>
+                </div>
               </div>
             </div>
           ))
@@ -39,7 +45,7 @@ function ProductsTable({ products }) {
         )}
       </div>
 
-      {/* --- VISTA ESCRITORIO CORREGIDA --- */}
+      {/* --- VISTA ESCRITORIO --- */}
       <div className="
         hidden lg:block
         overflow-x-auto bg-gray-800 rounded-xl shadow-lg
@@ -67,21 +73,19 @@ function ProductsTable({ products }) {
           <tbody className="divide-y divide-gray-700">
             {products.length > 0 ? (
               products.map((product) => (
-
-                // (La key aquí ya estaba bien)
-                <tr key={product.id} className="hover:bg-gray-700 transition-colors">
+                <tr key={product.Id} className="hover:bg-gray-700 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-200">
-                    {product.sku}
+                    {product.Sku}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {product.name}
+                    {product.Name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     {/* 5. AÑADIDO .toFixed(2) CON PROTECCIÓN */}
-                    ${(product.currentUnitPrice || 0).toFixed(2)}
+                    ${(product.CurrentUnitPrice || 0).toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {product.stockQuantity}
+                    {product.StockQuantity}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {product.IsActive ? (

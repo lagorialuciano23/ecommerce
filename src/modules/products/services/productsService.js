@@ -9,6 +9,7 @@ const mapProductToRequest = (product) => {
     Description: product.description,
     CurrentUnitPrice: parseFloat(product.currentUnitPrice), // Asegurarnos que sea un número
     StockQuantity: parseInt(product.stockQuantity, 10), // Asegurarnos que sea un entero
+    ImageUrl: product.imageUrl || null,
   };
 };
 
@@ -49,7 +50,11 @@ export const productsService = {
    * @param {object} product - Datos del producto a crear
    * @returns {Promise<object>} Producto creado
    */
-  create: (product) => api.post('/api/products', product),
+  create: (product) => {
+    const productData = mapProductToRequest(product);
+
+    return api.post('/api/products', productData);
+  },
 
   /**
    * Actualiza un producto existente completamente.
@@ -58,7 +63,11 @@ export const productsService = {
    * @param {object} product - Datos actualizados del producto
    * @returns {Promise<object>} Producto actualizado
    */
-  update: (id, product) => api.put(`/api/products/${id}`, product),
+  update: (id, product) => {
+    const productData = mapProductToRequest(product);
+
+    return api.put(`/api/products/${id}`, productData);
+  },
 
   /**
    * Actualiza parcialmente un producto.
