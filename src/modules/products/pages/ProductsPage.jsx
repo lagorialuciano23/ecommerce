@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { productsService } from '../services/productsService.js';
 import { Link } from 'react-router-dom';
-import ProductsTable from '../components/ProductsTable.jsx';
 import SearchInput from '../components/SearchInput.jsx';
+import AdminProductCard from '../components/AdminProductCard.jsx';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -92,21 +92,33 @@ export default function ProductsPage() {
       {/* Usar setSearchTerm (el useEffect se encargará del resto) */}
       <SearchInput  value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
       {/* Pasamos 'products' (ya filtrados por backend) */}
-      <ProductsTable products={products} />
+      {products.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <AdminProductCard key={product.Id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-white rounded-lg shadow">
+          <p className="text-gray-500 text-base">
+            No se encontraron productos.
+          </p>
+        </div>
+      )}
       {/* --- Paginación --- */}
       <div className="flex justify-between items-center mt-8">
         <button
           onClick={goToPrevPage}
           disabled={currentPage === 1}
-          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
+          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
         >
           &larr; Anterior
         </button>
-        <span className="text-white">Página {currentPage}</span>
+        <span className="text-gray-700">Página {currentPage}</span>
         <button
           onClick={goToNextPage}
-          disabled={!canGoNext} // Deshabilitado si no hay más páginas
-          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
+          disabled={!canGoNext}
+          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
         >
           Siguiente &rarr;
         </button>
