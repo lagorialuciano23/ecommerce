@@ -31,6 +31,14 @@ export const ordersService = {
   },
 
   /**
+   * Obtiene una orden por su ID.
+   * GET /api/orders/{id}
+   */
+  getById: (id) => {
+    return api.get(`/api/orders/${id}`);
+  },
+
+  /**
    * Actualiza el estado de una orden (Admin).
    * PATCH /api/orders/{id}/status
    */

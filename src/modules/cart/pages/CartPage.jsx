@@ -161,6 +161,7 @@ export default function CartPage() {
                   register={register}
                   errors={errors}
                   validationRules={{ required: 'La dirección de envío es obligatoria' }}
+                  labelClassName="text-gray-800" // Pasamos el color oscuro
                 />
 
                 <AuthInput
@@ -170,6 +171,7 @@ export default function CartPage() {
                   register={register}
                   errors={errors}
                   validationRules={{ required: 'La dirección de facturación es obligatoria' }}
+                  labelClassName="text-gray-800" // Pasamos el color oscuro
                 />
 
                 <div>
