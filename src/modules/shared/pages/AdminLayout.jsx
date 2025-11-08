@@ -134,21 +134,6 @@ function AdminLayout() {
                     Orders
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink
-                    to="/admin/users"
-                    onClick={closeSidebar}
-                    className={({ isActive }) =>
-                      `block px-4 py-2.5 rounded-lg transition-colors text-sm ${
-                        isActive
-                          ? 'bg-purple-100 text-purple-700 font-medium'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`
-                    }
-                  >
-                    Users
-                  </NavLink>
-                </li>
               </ul>
             </div>
           </nav>

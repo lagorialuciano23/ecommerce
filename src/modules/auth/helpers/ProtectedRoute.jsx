@@ -1,17 +1,20 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 
-//Componente que envuelve una ruta y redirige al usuario si no esta autenticado
 export const ProtectedRoute = ({ children, redirectPath = '/login' }) => {
-//Obtenemos el estado de autenticacion
-  const { isLoggedIn } = useAuth();
+  // 1. Obtenemos el estado de autenticación y el usuario
+  const { isLoggedIn, user } = useAuth();
 
-  //Si no está logueado, redirigimos a la ruta de login.
-  if (!isLoggedIn) {
-    //'replace' asegura que la página actual no se guarde en el historial
-    return <Navigate to = {redirectPath} replace/>;
+  // 2. Verificamos si el usuario es Admin
+  // (Usamos 'Roles' con mayúscula, como lo envía C#)
+  const isAdmin = user?.Roles?.includes('Admin');
+
+  // 3. Si no está logueado O NO es Admin, redirigimos
+  if (!isLoggedIn || !isAdmin) {
+    // 'replace' asegura que la página actual no se guarde en el historial
+    return <Navigate to={redirectPath} replace />;
   }
 
-  // Si está logueado, renderizamos el componente hijo (la ruta solicitada)
+  // 4. Si está logueado Y ES Admin, renderizamos la ruta
   return children;
 };

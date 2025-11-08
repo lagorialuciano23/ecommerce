@@ -20,9 +20,12 @@ function App() {
       <Route path="/" element={<PublicLayout />}>
         {/* La ruta raíz ahora es la tienda de clientes */}
         <Route index element={<CustomerProductsPage />} />
-
         <Route path="cart" element={<CartPage />} />
       </Route>
+
+      {/* --- RUTAS DE AUTENTICACIÓN (Públicas, sin layout) --- */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Register />} />
 
       {/* --- RUTAS PROTEGIDAS (con Layout de Admin) --- */}
       <Route
@@ -35,12 +38,10 @@ function App() {
       >
         <Route index element={<DashboardHome />} />
         <Route path="products" element={<ProductsPage />} />
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<Register />} />P
         <Route path="products/create" element={<CreateProductsPage />} />
-        {/* (Aquí puedes agregar "orders", "users", etc.) */}
-        {/* <Route path="orders" element={<OrdersPage />} /> */}
+        <Route path="orders" element={<OrdersPage />} />
       </Route>
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
