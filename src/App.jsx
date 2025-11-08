@@ -8,11 +8,11 @@ import AdminLayout from './modules/shared/pages/AdminLayout.jsx';
 import Register from './modules/auth/pages/Register';
 import OrdersPage from './modules/orders/pages/OrdersPage.jsx';
 import CartPage from './modules/cart/pages/CartPage.jsx';
-import ProductCreatePage from './modules/products/pages/ProductCreatePage.jsx';
 import PublicLayout from './modules/shared/pages/PublicLayout.jsx';
 import CustomerProductsPage from './modules/products/pages/CustomersProductsPage.jsx';
 import CreateProductsPage from './modules/products/pages/CreateProductsPage.jsx';
 import EditProductPage from './modules/products/pages/EditProductPage.jsx';
+import OrdersDetailPage from './modules/orders/pages/OrdersDetailPage.jsx';
 
 function App() {
   return (
@@ -42,6 +42,7 @@ function App() {
         <Route path="products/create" element={<CreateProductsPage />} />
         <Route path="products/edit/:id" element={<EditProductPage />} />
         <Route path="orders" element={<OrdersPage />} />
+        <Route path="orders/:id" element={<OrdersDetailPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

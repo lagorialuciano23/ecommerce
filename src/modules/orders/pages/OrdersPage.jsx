@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ordersService } from '../services/orderServices';
+import { Link } from 'react-router-dom';
 
 // Definimos los estados de orden basados en tu backend
 const orderStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
@@ -109,9 +110,12 @@ export default function OrdersPage() {
                 {order.Status}
               </span>
             </div>
-            <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors">
+            <Link
+              to={`/admin/orders/${order.Id}`}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors"
+            >
               Ver
-            </button>
+            </Link>
           </div>
         ))}
       </div>
