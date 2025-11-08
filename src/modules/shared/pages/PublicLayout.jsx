@@ -41,7 +41,7 @@ export default function PublicLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-200 text-gray-800" >
       {/* Header */}
       <header className="sticky top-0 z-50 bg-gray-800 shadow-md">
         <nav className="container mx-auto px-4 py-3 flex justify-between items-center">

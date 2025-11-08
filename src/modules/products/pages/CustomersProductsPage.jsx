@@ -92,16 +92,16 @@ export default function CustomerProductsPage() {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="text-gray-800 container mx-auto">
       {/* Si el término de búsqueda existe, mostramos un título
         (Esto es opcional, pero mejora la experiencia)
       */}
       {searchTerm ? (
-        <h1 className="text-3xl font-bold mb-6 text-white">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">
           Resultados para: "{searchTerm}"
         </h1>
       ) : (
-        <h1 className="text-3xl font-bold mb-6 text-white">Catálogo</h1>
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">Catálogo</h1>
       )}
 
       <div className="mb-8">

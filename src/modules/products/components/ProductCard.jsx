@@ -27,7 +27,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col text-white border border-gray-700">
+    <div className="bg-white text-gray-800 rounded-xl shadow-lg p-4 flex flex-col text-white border">
       {/* URL de imagen */}
       <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4 overflow-hidden">
         {product.ImageUrl ? (
@@ -53,31 +53,25 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Nombre y Precio (usando camelCase) */}
-      <h3 className="text-lg font-semibold">{product.Name}</h3>
+      <h3 className=" text-gray-800 text-lg font-semibold">{product.Name}</h3>
       <p className="text-2xl font-bold text-green-400">
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
-      </p>
-      <p className="text-sm text-gray-400 mb-2">
-        SKU: {product.Sku}
-      </p>
-      <p className="text-sm text-gray-400 mb-4">
-        Stock: {product.StockQuantity}
       </p>
 
       {/* Controles de Cantidad */}
       <div className="flex items-center justify-center gap-2 mb-4">
         <button
           onClick={handleDecrease}
-          className="px-3 py-1 bg-gray-700 rounded-md hover:bg-gray-600"
+          className="px-3 py-1 bg-gray-800 rounded-md hover:bg-gray-600"
         >
           -
         </button>
-        <span className="text-lg font-bold w-12 text-center">
+        <span className="border border-gray-800 border-2 text-lg text-gray-800 font-bold w-12 text-center">
           {quantity}
         </span>
         <button
           onClick={handleIncrease}
-          className="px-3 py-1 bg-gray-700 rounded-md hover:bg-gray-600"
+          className="px-3 py-1 bg-gray-800 rounded-md hover:bg-gray-600"
         >
           +
         </button>
@@ -87,8 +81,8 @@ export default function ProductCard({ product }) {
       <button
         onClick={handleAddToCart}
         disabled={quantity < 1} // Se deshabilita si la cantidad es 0 (aunque la UI ya no lo permite)
-        className="w-full cursor-pointer bg-blue-600 text-white rounded-lg p-2
-         transition-colors duration-200 hover:bg-blue-700
+        className="w-full cursor-pointer bg-gray-800 text-white rounded-lg p-2
+         transition-colors duration-200 hover:bg-gray-700
          disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed"
       >
         Agregar
