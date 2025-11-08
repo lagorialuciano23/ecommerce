@@ -12,6 +12,7 @@ import ProductCreatePage from './modules/products/pages/ProductCreatePage.jsx';
 import PublicLayout from './modules/shared/pages/PublicLayout.jsx';
 import CustomerProductsPage from './modules/products/pages/CustomersProductsPage.jsx';
 import CreateProductsPage from './modules/products/pages/CreateProductsPage.jsx';
+import EditProductPage from './modules/products/pages/EditProductPage.jsx';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route index element={<DashboardHome />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="products/create" element={<CreateProductsPage />} />
+        <Route path="products/edit/:id" element={<EditProductPage />} />
         <Route path="orders" element={<OrdersPage />} />
       </Route>
 

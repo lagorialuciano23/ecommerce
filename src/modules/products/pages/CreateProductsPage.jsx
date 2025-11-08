@@ -1,12 +1,18 @@
 import ProductsForm from '../components/ProductsForm';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateProductsPage() {
   const [showSuccess, setShowSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleSuccess = () => {
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    // Redirigir al listado después de 2 seg
+    setTimeout(() => {
+      setShowSuccess(false);
+      navigate('/admin/products');
+    }, 2000);
   };
 
   return (

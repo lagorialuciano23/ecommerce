@@ -29,9 +29,12 @@ function ProductsTable({ products }) {
                     </p>
                   </div>
 
-                  <button className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors ml-4">
-                  Ver
-                  </button>
+                  <Link
+                    to={`/admin/products/edit/${product.Id}`}
+                    className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors ml-4"
+                  >
+                    Editar
+                  </Link>
                 </div>
               </div>
             </div>
@@ -68,6 +71,9 @@ function ProductsTable({ products }) {
               <th scope="col" className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                 Estado
               </th>
+              <th scope="col" className="px-6 py-3 text-right text-sm font-medium text-white uppercase tracking-wider">
+                Acciones
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
@@ -97,6 +103,14 @@ function ProductsTable({ products }) {
                         Inactivo
                       </span>
                     )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <Link
+                      to={`/admin/products/edit/${product.Id}`}
+                      className="text-purple-400 hover:text-purple-300"
+                    >
+                      Editar
+                    </Link>
                   </td>
                 </tr>
               ))

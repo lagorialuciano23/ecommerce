@@ -1,12 +1,27 @@
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { productsService } from '../services/productsService';
 import FormInput from './FormInput';
 
-function ProductsForm({ onSuccess }) {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+function ProductsForm({ onSuccess, productToEdit }) {
+  //Determinar si estamos en modo "edición"
+  const isEditMode = !!productToEdit;
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    //Usamos 'defaultValues' para poblar el formulario si estamos editando
+    defaultValues: productToEdit,
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+
+  // Usamos useEffect para poblar el formulario cuando los datos lleguen
+  // Esto es clave si 'productToEdit' se carga de forma asíncrona
+  useEffect(() => {
+    if (isEditMode) {
+      // 'reset' actualiza los valores del formulario
+      reset(productToEdit);
+    }
+  }, [productToEdit, isEditMode, reset]);
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
@@ -24,10 +39,17 @@ function ProductsForm({ onSuccess }) {
         imageUrl: data.imageUrl || null,
       };
 
-      await productsService.create(productData);
-      reset(); // uso para limpiar el form
+      if (isEditMode) {
+        // --- MODO EDICIÓN ---
+        // Usamos el ID del producto original y el servicio de 'update'
+        await productsService.update(productToEdit.id, productData);
+      } else {
+        // --- MODO CREACIÓN ---
+        await productsService.create(productData);
+        reset(); // Limpiar el form solo al crear
+      }
 
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess(); // Llamar al callback de éxito
     } catch (error) {
       setSubmitError(error.message || 'Error al crear el producto');
     } finally {
@@ -114,13 +136,16 @@ function ProductsForm({ onSuccess }) {
           {submitError}
         </div>
       )}
-
+      {/* Cambiamos el texto del botón según el modo */}
       <button
         type="submit"
         disabled={isSubmitting}
         className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
       >
-        {isSubmitting ? 'Creando...' : 'Crear Producto'}
+        {isSubmitting
+          ? (isEditMode ? 'Actualizando...' : 'Creando...')
+          : (isEditMode ? 'Actualizar Producto' : 'Crear Producto')
+        }
       </button>
     </form>
   );
