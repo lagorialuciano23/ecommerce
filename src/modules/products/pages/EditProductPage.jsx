@@ -14,6 +14,7 @@ const mapApiToForm = (product) => {
     currentUnitPrice: product.CurrentUnitPrice,
     stockQuantity: product.StockQuantity,
     imageUrl: product.ImageUrl,
+    isActive: product.IsActive,
   };
 };
 

@@ -10,6 +10,7 @@ const mapProductToRequest = (product) => {
     CurrentUnitPrice: parseFloat(product.currentUnitPrice), // Asegurarnos que sea un número
     StockQuantity: parseInt(product.stockQuantity, 10), // Asegurarnos que sea un entero
     ImageUrl: product.imageUrl || null,
+    IsActive: product.isActive,
   };
 };
 

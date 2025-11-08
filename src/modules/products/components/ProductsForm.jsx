@@ -9,7 +9,8 @@ function ProductsForm({ onSuccess, productToEdit }) {
   const isEditMode = !!productToEdit;
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     //Usamos 'defaultValues' para poblar el formulario si estamos editando
-    defaultValues: productToEdit,
+    //Añadimos 'isActive: true' como default para el modo CREAR
+    defaultValues: productToEdit || { isActive: true },
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
@@ -37,6 +38,7 @@ function ProductsForm({ onSuccess, productToEdit }) {
         currentUnitPrice: parseFloat(data.currentUnitPrice),
         stockQuantity: parseInt(data.stockQuantity, 10),
         imageUrl: data.imageUrl || null,
+        isActive: data.isActive,
       };
 
       if (isEditMode) {
@@ -130,7 +132,20 @@ function ProductsForm({ onSuccess, productToEdit }) {
         }}
         inputProps={{ step: '1' }}
       />
-
+      <div className="mb-4">
+        <label htmlFor="isActive" className="flex items-center gap-2 text-sm font-medium text-gray-700">
+          <input
+            id="isActive"
+            type="checkbox"
+            {...register('isActive')} // Registramos el checkbox
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          ¿Producto Activo?
+        </label>
+        <p className="text-xs text-gray-500 mt-1">
+          Si no está activo, no aparecerá en el catálogo público.
+        </p>
+      </div>
       {submitError && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           {submitError}
