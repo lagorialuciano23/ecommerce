@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ordersService } from '../services/orderServices';
+import Toast from '../../shared/components/Toast';
+import ConfirmModal from '../../shared/components/ConfirmModal';
 
 // Componente helper para mostrar un ítem
 function OrderItem({ item }) {
@@ -23,6 +25,12 @@ export default function OrderDetailPage() {
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  // Nuevos estados para los botones
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteToast, setShowDeleteToast] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -41,6 +49,62 @@ export default function OrderDetailPage() {
 
     fetchOrder();
   }, [id]); // Se ejecuta cada vez que el ID de la URL cambia
+
+  // --- 4. NUEVOS HANDLERS ---
+
+  /**
+   * Manejador para cambiar el estado de la orden (Modificar)
+   */
+  const handleStatusChange = async (newStatus) => {
+    setIsUpdating(true);
+    setError(null);
+    try {
+      // El servicio 'updateStatus' ya existe
+      await ordersService.updateStatus(order.Id, newStatus);
+      // Actualizamos el estado local para ver el cambio instantáneamente
+      setOrder(prevOrder => ({ ...prevOrder, Status: newStatus }));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  /**
+   * Manejador para INICIAR el borrado (abre la modal)
+   */
+  const handleDelete = () => {
+    // 3. Ya no usamos window.confirm, solo abrimos la modal
+    setIsConfirmModalOpen(true);
+  };
+
+  /**
+   * Manejador para CONFIRMAR el borrado (se llama desde la modal)
+   */
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    setError(null);
+    setIsConfirmModalOpen(false); // Cerramos la modal
+
+    try {
+      await ordersService.delete(order.Id);
+      // Mostramos el toast de éxito
+      setShowDeleteToast(true);
+    } catch (err) {
+      setError(err.message);
+      setIsDeleting(false); // Si hay error, reactivamos los botones
+    }
+  };
+
+  // --- 4. AÑADIR HANDLER PARA CERRAR EL TOAST ---
+  /**
+   * Se llama cuando el toast se cierra.
+   * Cierra el toast y navega a la lista de órdenes.
+   */
+  const handleDeleteToastClose = () => {
+    setShowDeleteToast(false);
+    navigate('/admin/orders'); // <-- Navegamos DESPUÉS de cerrar el toast
+  };
 
   if (isLoading) {
     return <p className="text-center text-white">Cargando detalles de la orden...</p>;
@@ -75,14 +139,23 @@ export default function OrderDetailPage() {
         </div>
         <div className="text-right">
           {/* Status (Corregido - ahora espera "PENDING") */}
-          <span className={`text-lg font-medium px-3 py-1 rounded-full ${
-            order.Status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-              order.Status === 'DELIVERED' ? 'bg-green-100 text-green-800' :
-                order.Status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
-                  'bg-blue-100 text-blue-800'
-          }`}>
-            {order.Status}
-          </span>
+          <select
+            value={order.Status}
+            onChange={(e) => handleStatusChange(e.target.value)}
+            disabled={isUpdating || isDeleting}
+            className={`text-lg font-medium px-3 py-1 rounded-full border ${
+              order.Status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+                order.Status === 'DELIVERED' ? 'bg-green-100 text-green-800 border-green-200' :
+                  order.Status === 'CANCELLED' ? 'bg-red-100 text-red-800 border-red-200' :
+                    'bg-blue-100 text-blue-800 border-blue-200'
+            } focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50`}
+          >
+            <option value="PENDING">PENDING</option>
+            <option value="PROCESSING">PROCESSING</option>
+            <option value="SHIPPED">SHIPPED</option>
+            <option value="DELIVERED">DELIVERED</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </select>
           <p className="text-gray-500 mt-2">
             {new Date(order.Date).toLocaleDateString()}
           </p>
@@ -129,8 +202,38 @@ export default function OrderDetailPage() {
             <h3 className="font-semibold text-gray-700">Facturación:</h3>
             <p className="text-gray-600">{order.BillingAddress}</p>
           </div>
+
+          <div className="bg-white p-6 rounded-lg shadow border border-gray-200">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">Acciones de Admin</h2>
+            <button
+              onClick={handleDelete} // Este botón ahora solo abre la modal
+              disabled={isDeleting || isUpdating}
+              className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {isDeleting ? 'Eliminando...' : 'Eliminar Orden'}
+            </button>
+            {error && (
+              <p className="text-center text-red-600 mt-4">{error}</p>
+            )}
+          </div>
         </div>
       </div>
+      <Toast
+        open={showDeleteToast}
+        title="¡Orden Eliminada!"
+        message="La orden ha sido eliminada y el stock repuesto."
+        onClose={handleDeleteToastClose}
+        duration={2000} // Duración corta, ya que redirigimos
+      />
+      <ConfirmModal
+        open={isConfirmModalOpen}
+        title="Confirmar Eliminación"
+        message="¿Estás seguro de que deseas eliminar esta orden? Esta acción no se puede deshacer y repondrá el stock de los productos."
+        confirmText="Eliminar"
+        isConfirming={isDeleting}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

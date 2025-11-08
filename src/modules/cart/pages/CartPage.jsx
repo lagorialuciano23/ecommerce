@@ -35,7 +35,7 @@ function CartItem({ item, removeFromCart }) {
 export default function CartPage() {
   // --- 1. HOOKS ---
   const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
-  const { isLoggedIn, user } = useAuth(); // Hook de autenticación
+  const { isLoggedIn } = useAuth(); // Hook de autenticación
   const navigate = useNavigate();
 
   // Estados de UI
@@ -52,7 +52,7 @@ export default function CartPage() {
   } = useForm({ mode: 'onChange' });
 
   // 2. Definimos costos (pueden venir del backend más adelante)
-  const shippingCost = 8.00;
+  const shippingCost = 8000.00;
   const finalTotal = cartTotal + shippingCost;
 
   // --- 2. LÓGICA DE ENVÍO DE ORDEN ---
@@ -121,7 +121,7 @@ export default function CartPage() {
   };
   const handleToastClose = () => {
     setShowSuccessToast(false);
-    navigate('/admin/orders'); // Redirige a la lista de órdenes
+    navigate('/'); // Redirige a la pagina principal
   };
 
   return (
@@ -132,7 +132,7 @@ export default function CartPage() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Tu Carrito de Compras</h1>
             <Link
-              to="/admin/products" // O a la tienda principal
+              to="/" //a la tienda principal
               className="text-blue-600 hover:text-blue-800"
             >
               &larr; Seguir comprando
@@ -188,7 +188,20 @@ export default function CartPage() {
               {/* --- Resumen y Total --- */}
               <div className="bg-white p-6 rounded-lg shadow-sm">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">Sumario de Orden</h2>
-                {/* ... (Subtotal, Envío, Total - igual que antes) ... */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between text-gray-600">
+                    <span>Subtotal:</span>
+                    <span>${cartTotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-600">
+                    <span>Envío:</span>
+                    <span>${shippingCost.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-900 font-bold text-lg mt-2 pt-2 border-t border-gray-200">
+                    <span>Total:</span>
+                    <span>${finalTotal.toFixed(2)}</span> {/* <-- Aquí usamos finalTotal */}
+                  </div>
+                </div>
 
                 {apiError && (
                   <p className='text-red-600 p-2 bg-red-100 rounded-lg text-center text-sm mb-4'>

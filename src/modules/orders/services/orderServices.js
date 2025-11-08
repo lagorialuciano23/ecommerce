@@ -59,4 +59,11 @@ export const ordersService = {
     // api.post ya incluye el token de autorización
     return api.post('/api/orders', orderPayload);
   },
+  /**
+   * Elimina una orden por su ID.
+   * DELETE /api/orders/{id}
+   */
+  delete: (id) => {
+    return api.delete(`/api/orders/${id}`);
+  },
 };
