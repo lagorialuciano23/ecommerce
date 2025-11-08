@@ -31,7 +31,7 @@ export default function CustomerProductsPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await productsService.getAll(
+        const response = await productsService.getActiveProducts(
           currentPage,
           8, // PageSize
           searchTerm,

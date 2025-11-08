@@ -36,6 +36,19 @@ export const productsService = {
     return api.get(`/api/products?${params.toString()}`);
   },
 
+  getActiveProducts: (pageNumber = 1, pageSize = 8, search = '') => {
+    const params = new URLSearchParams();
+
+    params.append('pageNumber', pageNumber);
+    params.append('pageSize', pageSize);
+
+    if (search) {
+      params.append('search', search);
+    }
+
+    return api.get(`/api/products/active?${params.toString()}`);
+  },
+
   /**
    * Obtiene un producto por su ID.
    * GET /api/products/{id}
