@@ -95,18 +95,18 @@ export default function OrdersPage() {
     return (
       <div className="space-y-4">
         {orders.map((order) => (
-          <div key={order.id} className="bg-[#1e1e58] p-4 rounded-lg shadow flex justify-between items-center">
+          <div key={order.Id} className="bg-[#1e1e58] p-4 rounded-lg shadow flex justify-between items-center">
             <div>
-              <p className="text-lg font-semibold text-white">Orden #{order.id.substring(0, 8)}...</p>
-              <p className="text-sm text-gray-400">Cliente ID: {order.customerId.substring(0, 8)}...</p>
-              <p className="text-sm text-gray-300">Total: ${order.totalAmount.toFixed(2)}</p>
+              <p className="text-lg font-semibold text-white">Orden #{order.Id.substring(0, 8)}...</p>
+              <p className="text-sm text-gray-400">Cliente ID: {order.CustomerId.substring(0, 8)}...</p>
+              <p className="text-sm text-gray-300">Total: ${order.TotalAmount.toFixed(2)}</p>
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                order.status === 'PENDING' ? 'bg-yellow-800 text-yellow-100' :
-                  order.status === 'DELIVERED' ? 'bg-green-800 text-green-100' :
-                    order.status === 'CANCELLED' ? 'bg-red-800 text-red-100' :
+                order.Status === 'PENDING' ? 'bg-yellow-800 text-yellow-100' :
+                  order.Status === 'DELIVERED' ? 'bg-green-800 text-green-100' :
+                    order.Status === 'CANCELLED' ? 'bg-red-800 text-red-100' :
                       'bg-blue-800 text-blue-100'
               }`}>
-                {order.status}
+                {order.Status}
               </span>
             </div>
             <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors">

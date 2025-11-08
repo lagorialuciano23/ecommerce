@@ -10,10 +10,11 @@ export default function Input({
   validationRules,
   errors,
   autoComplete,
+  labelClassName = 'text-white',
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-white mb-2">{label}</label>
+      <label htmlFor={id} className={labelClassName}>{label}</label>
       <input
         id={id}
         type={type}
