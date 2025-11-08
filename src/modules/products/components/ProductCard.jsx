@@ -27,9 +27,10 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="bg-white text-gray-800 rounded-xl shadow-lg p-4 flex flex-col text-white border">
+    <div className="bg-white text-gray-800 rounded-xl shadow-lg p-4 flex flex-col text-white border-rounded border-gray-500">
       {/* URL de imagen */}
-      <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4 overflow-hidden">
+      <div className="w-full h-48 bg-gray-700 rounded-md 
+      flex items-center justify-center mb-4 overflow-hidden">
         {product.ImageUrl ? (
           // Si hay URL, mostramos la imagen
           <img
@@ -66,7 +67,7 @@ export default function ProductCard({ product }) {
         >
           -
         </button>
-        <span className="border border-gray-800 border-2 text-lg text-gray-800 font-bold w-12 text-center">
+        <span className="border rounded-lg border-gray-300 text-lg text-gray-800 font-bold w-12 text-center">
           {quantity}
         </span>
         <button

@@ -7,7 +7,7 @@ function CartIcon() {
   const { cartCount } = useCart(); // Hook para obtener la cantidad
 
   return (
-    <Link to="/cart" className="relative p-2 text-white">
+    <Link to="/cart" className="relative p-2 text-gray-800">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -20,7 +20,7 @@ function CartIcon() {
       {cartCount > 0 && (
         <span
           className="absolute top-0 right-0 flex h-5 w-5 items-center
-          justify-center rounded-full bg-red-600 text-xs font-bold text-white"
+          justify-center rounded-full bg-red-600 text-xs font-bold text-gray-800"
         >
           {cartCount}
         </span>
@@ -41,12 +41,12 @@ export default function PublicLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-200 text-gray-800" >
+    <div className="min-h-screen flex flex-col bg-gray-200 text-gray-800">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-gray-800 shadow-md">
+      <header className="sticky top-0 z-50 bg-white shadow-md">
         <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
           {/* Título o Logo */}
-          <Link to="/" className="text-xl font-bold text-white">
+          <Link to="/" className="text-xl font-bold text-gray-800">
             MiTienda
           </Link>
 
@@ -57,8 +57,7 @@ export default function PublicLayout() {
               placeholder="Search"
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="w-full p-2 rounded-lg bg-gray-700 text-white border-none
-              focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded-lg border-gray-200 bg-gray-200 text-gray-800 border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </form>
 

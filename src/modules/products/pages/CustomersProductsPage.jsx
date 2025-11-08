@@ -65,7 +65,7 @@ export default function CustomerProductsPage() {
 
   const renderContent = () => {
     if (isLoading) {
-      return <p className="text-center text-white">Cargando productos...</p>;
+      return <p className="text-center text-gray-800">Cargando productos...</p>;
     }
 
     if (error) {
@@ -78,7 +78,7 @@ export default function CustomerProductsPage() {
     }
 
     if (products.length === 0) {
-      return <p className="text-center text-white">No se encontraron productos.</p>;
+      return <p className="text-center text-gray-800">No se encontraron productos.</p>;
     }
 
     // Grilla de Productos
@@ -113,15 +113,15 @@ export default function CustomerProductsPage() {
         <button
           onClick={goToPrevPage}
           disabled={currentPage === 1}
-          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
+          className="bg-gray-600 hover:bg-gray-700 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
         >
           &larr; Anterior
         </button>
-        <span className="text-white">Página {currentPage}</span>
+        <span className="text-gray-800 text-xl">Página {currentPage}</span>
         <button
           onClick={goToNextPage}
           disabled={!canGoNext} // Deshabilitado si no hay más páginas
-          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
+          className="bg-gray-900 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
         >
           Siguiente &rarr;
         </button>
