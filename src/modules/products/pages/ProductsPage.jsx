@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { productsService } from '../services/productsService.js';
 import { Link } from 'react-router-dom';
-import SearchInput from '../components/SearchInput.jsx';
 import AdminProductCard from '../components/AdminProductCard.jsx';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  // 'searchTerm' se usará para la API (en el useEffect)
   const [searchTerm, setSearchTerm] = useState('');
+  // 'localSearch' (NUEVO) se usará para el input
+  const [localSearch, setLocalSearch] = useState('');
   //PAGINACION
   const [currentPage, setCurrentPage] = useState(1);
   const [canGoNext, setCanGoNext] = useState(false);
@@ -44,6 +46,13 @@ export default function ProductsPage() {
     setCurrentPage((prev) => Math.max(1, prev - 1)); // No ir por debajo de 1
   };
 
+  // NUEVO HANDLER para el form de búsqueda
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setCurrentPage(1); // Reiniciamos a la página 1
+    setSearchTerm(localSearch); // Actualizamos el término de búsqueda, lo que dispara el useEffect
+  };
+
   // Ya no filtramos en el frontend, el backend lo hace
   // const filteredProducts = products.filter((product) => {
   //   return product.Name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -77,21 +86,39 @@ export default function ProductsPage() {
       justify-between lg:items-center
       gap-4
       ">
-        <h1 className="text-2xl font-bold mb-4 py-2 px-4 mb-4 lg:mb-0">
-          Admin Products
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          Administrar Productos
         </h1>
-        <Link to="/admin/products/create">
-          <button className="
-          bg-green-500 hover:bg-green-200 text-green-900
-          py-2 px-4 rounded"
-          >
-          Add Product+
-          </button>
-        </Link>
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2">
+            <input
+              type="text"
+              placeholder="Buscar por nombre, SKU..."
+              className="flex-1 w-full p-2 border border-gray-300 rounded-lg"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow font-medium hover:bg-blue-700 transition"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+            Buscar
+            </button>
+          </form>
+          <Link to="/admin/products/create">
+            <button className="
+            w-full md:w-auto h-full  /* Ajusta el tamaño */
+            bg-green-500 hover:bg-green-600 text-white
+            py-2 px-4 rounded-lg shadow font-medium transition"
+            >
+            Agregar Producto +
+            </button>
+          </Link>
+        </div>
       </div>
-      {/* Usar setSearchTerm (el useEffect se encargará del resto) */}
-      <SearchInput  value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-      {/* Pasamos 'products' (ya filtrados por backend) */}
       {products.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
