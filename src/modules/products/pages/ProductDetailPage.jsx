@@ -36,36 +36,36 @@ export default function ProductDetailPage() {
 
   const renderContent = () => {
     if (isLoading) {
-      return <p className="text-center text-white">Cargando producto...</p>;
+      return <p className="text-center text-gray-500">Cargando producto...</p>;
     }
 
     if (error) {
       return (
         <div className="text-center p-8 bg-red-900 bg-opacity-50 rounded-lg max-w-md mx-auto">
           <p className="text-lg text-red-300">Error:</p>
-          <p className="text-white">{error}</p>
+          <p className="text-gray-800">{error}</p>
         </div>
       );
     }
 
     if (!product) {
-      return <p className="text-center text-white">Producto no encontrado.</p>;
+      return <p className="text-center text-gray-500">Producto no encontrado.</p>;
     }
 
     // Renderizamos la card pública, pero más grande
     return (
-      <div className="max-w-md mx-auto">
+      <div className="container mx-auto text-gray-800">
         <ProductCard product={product} />
       </div>
     );
   };
 
   return (
-    <div className="container mx-auto text-white">
+    <div className="container mx-auto text-gray-800">
       <div className="mb-6">
         <Link
           to="/"
-          className="text-blue-400 hover:text-blue-300"
+          className="text-purple-600 hover:text-purple-800"
         >
           &larr; Volver al Catálogo
         </Link>

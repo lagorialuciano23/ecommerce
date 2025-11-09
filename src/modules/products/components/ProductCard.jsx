@@ -29,7 +29,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col text-white border border-gray-700">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col text-gray-900">
 
       {/* 1. Imagen Clickeable */}
       <Link to={`/products/${product.Id}`}>
@@ -62,23 +62,25 @@ export default function ProductCard({ product }) {
         <h3 className="text-lg font-semibold hover:text-blue-400 transition-colors">{product.Name}</h3>
       </Link>
 
-      {/* --- INICIO DE LA CORRECCIÓN --- */}
-      {/* 3. Descripción (con PascalCase) */}
+      {/* 3. Descripción */}
       <p className="text-sm text-gray-400 mt-1 mb-2 line-clamp-2" title={product.Description}>
         {product.Description}
       </p>
-      {/* --- FIN DE LA CORRECCIÓN --- */}
 
-      {/* 4. Info (con PascalCase) */}
+      {/* 4. Precio */}
       <p className="text-2xl font-bold text-green-400 mt-2">
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
       </p>
+      {/* Stock  */}
+      <p className="text-sm text-gray-500 mb-4">Stock: {product.StockQuantity}</p>
+
+      {/* SKU */}
       <p className="text-sm text-gray-400 mb-2">
         SKU: {product.Sku}
       </p>
+      {/* Stock */}
       <p className="text-sm text-gray-400 mb-4">
         Stock: {product.StockQuantity}
-
       </p>
 
       {/* Controles de Cantidad */}

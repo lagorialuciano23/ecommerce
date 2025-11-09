@@ -1,54 +1,46 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { useCart } from '../../cart/context/useCart';
+// import { useCart } from '../../cart/context/useCart'; // <-- 1. Quitamos esto
+import { useAuth } from '../../auth/context/useAuth';
 import { useState } from 'react';
-
-// Ícono simple de Carrito
-function CartIcon() {
-  const { cartCount } = useCart(); // Hook para obtener la cantidad
-
-  return (
-    <Link to="/cart" className="relative p-2 text-gray-800">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="size-6"
-      >
-        <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
-      </svg>
-
-      {cartCount > 0 && (
-        <span
-          className="absolute top-0 right-0 flex h-5 w-5 items-center
-          justify-center rounded-full bg-red-600 text-xs font-bold text-gray-800"
-        >
-          {cartCount}
-        </span>
-      )}
-    </Link>
-  );
-}
 
 // Layout principal
 export default function PublicLayout() {
   //Estado local para controlar el input de búsqueda
   const [localSearch, setLocalSearch] = useState('');
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth(); // Obtenemos el estado de login
 
   const handleSearch = (event) => {
     event.preventDefault();
     navigate(`/?search=${localSearch}`);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Refresca la página al inicio
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-200 text-gray-800">
+    <div className="min-h-screen flex flex-col bg-white text-gray-800">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white shadow-md">
         <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
           {/* Título o Logo */}
-          <Link to="/" className="text-xl font-bold text-gray-800">
-            MiTienda
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="text-xl font-bold text-gray-900">
+              {/* Icono de Logo (de la imagen) */}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+              </svg>
+
+            </Link>
+            <Link to="/" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              Productos
+            </Link>
+            <Link to="/cart" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              Carrito de compras
+            </Link>
+          </div>
 
           {/* Buscador */}
           <form onSubmit={handleSearch} className="relative w-full max-w-xs">
@@ -61,8 +53,34 @@ export default function PublicLayout() {
             />
           </form>
 
-          {/* Ícono de Carrito */}
-          <CartIcon />
+          {/* --- INICIO DE LA CORRECCIÓN --- */}
+          {/* Botones de Autenticación */}
+          <div className="flex items-center gap-2">
+            {isLoggedIn ? (
+              // Si está logueado, muestra botón de Salir
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition"
+              >
+                Salir
+              </button>
+            ) : (
+              // Si no, muestra Login y Registro
+              <>
+                <Link to="/login">
+                  <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition">
+                    Iniciar Sesión
+                  </button>
+                </Link>
+                <Link to="/signup">
+                  <button className="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition">
+                    Registrarse
+                  </button>
+                </Link>
+              </>
+            )}
+          </div>
+          {/* --- FIN DE LA CORRECCIÓN --- */}
         </nav>
       </header>
 

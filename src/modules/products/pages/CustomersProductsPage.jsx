@@ -113,7 +113,7 @@ export default function CustomerProductsPage() {
         <button
           onClick={goToPrevPage}
           disabled={currentPage === 1}
-          className="bg-gray-900 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
+          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
         >
           &larr; Anterior
         </button>
@@ -121,7 +121,7 @@ export default function CustomerProductsPage() {
         <button
           onClick={goToNextPage}
           disabled={!canGoNext} // Deshabilitado si no hay más páginas
-          className="bg-gray-900 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors disabled:bg-gray-800 disabled:text-gray-500"
+          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
         >
           Siguiente &rarr;
         </button>
