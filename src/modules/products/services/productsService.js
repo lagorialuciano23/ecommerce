@@ -24,6 +24,7 @@ export const productsService = {
    * GET /api/products
    * @returns {Promise<Array>} Lista de productos
    */
+
   getAll: (pageNumber = 1, pageSize = 8, search = '') =>{
     const params = new URLSearchParams();
 
@@ -36,6 +37,8 @@ export const productsService = {
 
     return api.get(`/api/products?${params.toString()}`);
   },
+
+  getProducts: () => api.get('/api/products/total'),
 
   getActiveProducts: (pageNumber = 1, pageSize = 8, search = '') => {
     const params = new URLSearchParams();
