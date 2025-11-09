@@ -52,7 +52,10 @@ export default function PublicLayout() {
           {/* Título o Logo */}
           <div className="flex items-center gap-6">
             <Link to="/" onClick={handleLinkClick} className="text-xl font-bold text-gray-900">
-              <svg className="w-8 h-8" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M48.24 73.088h31.52L64 96.736 48.24 73.088zM64 31.264l15.76 23.648H48.24L64 31.264zM39.664 64c0 13.44 10.896 24.336 24.336 24.336S88.336 77.44 88.336 64 77.44 39.664 64 39.664 39.664 50.56 39.664 64zM0 64C0 28.672 28.672 0 64 0s64 28.672 64 64-28.672 64-64 64S0 99.328 0 64z" fill="#111" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+              </svg>
             </Link>
             {/* Links de Desktop (ocultos en móvil) */}
             <div className="hidden md:flex items-center gap-6">

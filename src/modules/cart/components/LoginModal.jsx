@@ -5,8 +5,8 @@ import { loginService } from '../../auth/services/login';
 import AuthInput from '../../auth/components/Input';
 import AuthSubmitButton from '../../auth/components/Button';
 
-// Acepta 'footer' como prop
-export default function LoginModal({ onClose, onLoginSuccess, footer }) {
+// 1. AÑADIMOS 'open' a las props
+export default function LoginModal({ open, onClose, onLoginSuccess, footer }) {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const { login: saveAuth } = useAuth();
@@ -40,6 +40,10 @@ export default function LoginModal({ onClose, onLoginSuccess, footer }) {
       setIsLoading(false);
     }
   };
+
+  // 2. AÑADIMOS ESTA LÍNEA
+  // Si la prop 'open' es false, no renderizamos nada
+  if (!open) return null;
 
   return (
     // Fondo oscuro (overlay)
