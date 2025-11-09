@@ -87,7 +87,7 @@ export default function ProductCard({ product }) {
       <div className="flex items-center justify-center gap-2 mb-4">
         <button
           onClick={handleDecrease}
-          className="px-3 py-1 bg-gray-700 rounded-md hover:bg-gray-600"
+          className="px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-300"
         >
           -
         </button>
@@ -96,7 +96,7 @@ export default function ProductCard({ product }) {
         </span>
         <button
           onClick={handleIncrease}
-          className="px-3 py-1 bg-gray-700 rounded-md hover:bg-gray-600"
+          className="px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-300"
         >
           +
         </button>

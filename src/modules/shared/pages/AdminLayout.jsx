@@ -21,7 +21,7 @@ function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+   <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-white text-gray-800">
       {/* HEADER - Mobile First */}
       <header className="
         bg-white border-b border-gray-200 px-4 py-3
@@ -74,13 +74,13 @@ function AdminLayout() {
           )}
 
           {/* Sidebar */}
-          <nav
+           <nav
             className={`
               fixed top-[53px] left-0 h-[calc(100vh-53px)] w-64 
               bg-white shadow-lg z-40 
               transform transition-transform duration-300 ease-in-out
               ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-              lg:translate-x-0 lg:static lg:h-[calc(100vh-53px)] lg:w-56
+              lg:translate-x-0 lg:static lg:h-full lg:w-56
             `}
           >
             <div className="p-4">

@@ -44,7 +44,7 @@ export default function PublicLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-gray-800">
+    <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-white text-gray-800 overflow-hidden">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
         <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -169,10 +169,15 @@ export default function PublicLayout() {
       </header>
 
       {/* Contenido de la página */}
-      <main className="flex-1 container mx-auto p-4 md:p-8">
+      <main className="flex-1 container mx-auto p-4 md:p-8 overflow-y-auto">
         <Outlet />
       </main>
 
+      <footer className="
+          bg-gray-800 text-white p-4 text-center
+          ">
+            footer content
+      </footer>
       {/* Renderizar las Modales (ocultas por defecto) */}
       <LoginModal
         open={modalView === 'login'}
