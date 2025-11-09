@@ -156,8 +156,8 @@ export default function OrderDetailPage() {
             <option value="DELIVERED">DELIVERED</option>
             <option value="CANCELLED">CANCELLED</option>
           </select>
-          <p className="text-gray-500 mt-2">
-            {new Date(order.Date).toLocaleDateString()}
+          <p className="text-gray-600 mt-2">
+           Fecha de la orden:  {new Date(order.Date).toLocaleDateString()}
           </p>
         </div>
       </div>
