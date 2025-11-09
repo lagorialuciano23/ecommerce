@@ -5,15 +5,11 @@ import { loginService } from '../../auth/services/login';
 import AuthInput from '../../auth/components/Input';
 import AuthSubmitButton from '../../auth/components/Button';
 
-/**
- * Componente Modal para login.
- * Recibe 'onClose' para cerrar la modal y 'onLoginSuccess'
- * para ejecutar una acción después de un login exitoso.
- */
-export default function LoginModal({ onClose, onLoginSuccess }) {
+// Acepta 'footer' como prop
+export default function LoginModal({ onClose, onLoginSuccess, footer }) {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
-  const { login: saveAuth } = useAuth(); // Función del AuthContext
+  const { login: saveAuth } = useAuth();
 
   const {
     register,
@@ -25,23 +21,21 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
     setIsLoading(true);
     setApiError(null);
     try {
+      // Usamos el servicio de login
       const responseData = await loginService(data.user, data.password);
 
+      // La lógica de tu hook 'useLogin'
       const tokenString = responseData.token.Result || responseData.token;
       const userObject = responseData.user || { username: data.user };
 
-      // 1. Guardar la sesión en el AuthContext
       saveAuth(userObject, tokenString);
 
-      // 2. Ejecutar la acción de éxito (ej. enviar el formulario de la orden)
-      onLoginSuccess();
+      if (onLoginSuccess) onLoginSuccess();
 
-      // 3. Cerrar la modal
       onClose();
 
     } catch (error) {
       setApiError(error.message);
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -51,56 +45,77 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
     // Fondo oscuro (overlay)
     <div
       className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"
-      onClick={onClose} // Cierra la modal si se hace clic fuera
+      onClick={onClose}
     >
+      {/* Contenido de la Modal (Fondo Blanco) */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        // Detiene la propagación del clic para no cerrar la modal al hacer clic en el formulario
         onClick={(e) => e.stopPropagation()}
-        className='bg-gray-800 bg-opacity-10 backdrop-blur-md p-8 rounded-xl
-          flex flex-col
-          p-6 md:p-8
-          gap-4 md:gap-8
-          w-full
-          md:max-w-sm mx-auto
-          shadow-xl border border-white border-opacity-20'
+        className='bg-white p-6 rounded-lg shadow-xl w-full max-w-sm relative'
       >
-        <h2 className="text-center text-2xl font-semibold text-white mb-0">
-          Inicia Sesión para Continuar
+        {/* Botón de Cerrar (X) */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-700"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <h2 className="text-center text-2xl font-semibold text-gray-900 mb-6">
+          Iniciar Sesión
         </h2>
 
-        <AuthInput
-          label="Usuario"
-          id="modal-user"
-          name="user"
-          register={register}
-          errors={errors}
-          autoComplete="username"
-          validationRules={{
-            required: 'El usuario es obligatorio',
-          }}
-        />
+        <div className="space-y-4">
+          <AuthInput
+            label="Usuario"
+            id="modal-user"
+            name="user"
+            register={register}
+            errors={errors}
+            autoComplete="username"
+            validationRules={{
+              required: 'El usuario es obligatorio',
+            }}
+            labelClassName="text-gray-700" // Color de label oscuro
+          />
 
-        <AuthInput
-          label="Contraseña"
-          id="modal-password"
-          name="password"
-          type="password"
-          register={register}
-          errors={errors}
-          autoComplete="current-password"
-          validationRules={{
-            required: 'La contraseña es obligatoria.',
-          }}
-        />
+          <AuthInput
+            label="Password" // "Password" como en la imagen
+            id="modal-password"
+            name="password"
+            type="password"
+            register={register}
+            errors={errors}
+            autoComplete="current-password"
+            validationRules={{
+              required: 'La contraseña es obligatoria.',
+            }}
+            labelClassName="text-gray-700" // Color de label oscuro
+          />
+        </div>
 
         {apiError && (
-          <p className='text-red-400 p-2 bg-red-900 bg-opacity-50 rounded-lg text-center text-sm'>
+          <p className='text-red-600 p-2 bg-red-100 rounded-lg text-center text-sm mt-4'>
             {apiError}
           </p>
         )}
 
-        <AuthSubmitButton isLoading={isLoading} isValid={isValid} text="Iniciar Sesión" />
+        <div className="mt-6">
+          <AuthSubmitButton
+            isLoading={isLoading}
+            isValid={isValid}
+            text="Iniciar Sesión"
+            // Botón con estilo morado
+            className="w-full cursor-pointer bg-purple-600 text-white rounded-lg p-2.5 transition-colors duration-200 hover:bg-purple-700 disabled:bg-gray-300"
+          />
+        </div>
+
+        {/* Renderiza el footer (ej. "¿No tenés cuenta? Registrate") */}
+        {footer}
+
       </form>
     </div>
   );

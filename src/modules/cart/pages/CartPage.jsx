@@ -8,12 +8,13 @@ import { ordersService } from '../../orders/services/orderServices';
 import AuthInput from '../../auth/components/Input';
 import AuthSubmitButton from '../../auth/components/Button';
 import LoginModal from '../components/LoginModal';
+import RegisterModal from '../components/RegisterModal'; // Importamos la modal de registro
 import Toast from '../../shared/components/Toast';
 
 // Componente simple para el item del carrito
 function CartItem({ item, removeFromCart }) {
   return (
-    <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm">
+    <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
       <div>
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
         <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
@@ -35,11 +36,12 @@ function CartItem({ item, removeFromCart }) {
 export default function CartPage() {
   // --- 1. HOOKS ---
   const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
-  const { isLoggedIn } = useAuth(); // Hook de autenticación
+  const { isLoggedIn } = useAuth(); // Corregido: 'user' no se usaba
   const navigate = useNavigate();
 
   // Estados de UI
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Estado para la modal de registro
   const [apiError, setApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
@@ -51,35 +53,23 @@ export default function CartPage() {
     formState: { errors, isValid },
   } = useForm({ mode: 'onChange' });
 
-  // 2. Definimos costos (pueden venir del backend más adelante)
-  const shippingCost = 8000.00;
-  const finalTotal = cartTotal + shippingCost;
+  // 2. Definimos costos
+  const shippingCost = 0.00; // Lo ponemos en 0 por ahora
+  const finalTotal = cartTotal + shippingCost; // Corregido: esta variable ahora se usa
 
   // --- 2. LÓGICA DE ENVÍO DE ORDEN ---
-
-  /**
-   * Esta es la función final que se llama cuando el usuario
-   * está (o acaba de) loguearse.
-   */
   const submitOrder = async (formData) => {
     setIsLoading(true);
     setApiError(null);
 
-    // --- A. Preparar el Payload para el Backend ---
+    // (NOTA: Asunto pendiente - El backend necesita un CustomerId de tu 'customers.json')
+    const customerId = 'a1111111-aaaa-1111-aaaa-111111111111';
 
-    // (NOTA: El backend necesita un CustomerId.
-    // Como tu login de Auth no devuelve un CustomerId,
-    // usaremos uno harcodeado de tu 'customers.json'
-    // ¡Esto debe ser corregido en el backend a futuro!)
-    const customerId = 'a1111111-aaaa-1111-aaaa-111111111111'; // ID de Francisco Vicente
-
-    // Mapeamos los items del carrito al formato del DTO del backend
     const orderItemsPayload = cartItems.map(item => ({
       ProductId: item.id,
       Quantity: item.quantity,
     }));
 
-    // Creamos el payload final de la orden
     const orderPayload = {
       CustomerId: customerId,
       ShippingAddress: formData.shippingAddress,
@@ -88,15 +78,10 @@ export default function CartPage() {
       Notes: formData.notes || '',
     };
 
-    // --- B. Llamar a la API ---
     try {
       await ordersService.create(orderPayload);
-
-      // ¡Éxito!
       clearCart();
       setShowSuccessToast(true);
-      // (La redirección ocurrirá cuando se cierre el toast)
-
     } catch (error) {
       console.error('Error al crear la orden:', error);
       setApiError(error.message);
@@ -105,34 +90,40 @@ export default function CartPage() {
     }
   };
 
-  /**
-   * Esta función se llama al presionar "Finalizar Compra".
-   * Decide si abre la modal o envía la orden.
-   */
   const handleFinalizePurchase = (formData) => {
-    // formData solo tiene { shippingAddress, billingAddress, notes }
     if (!isLoggedIn) {
-      // Si no está logueado, abre la modal
       setIsModalOpen(true);
     } else {
-      // Si está logueado, envía la orden
       submitOrder(formData);
     }
   };
+
   const handleToastClose = () => {
     setShowSuccessToast(false);
     navigate('/'); // Redirige a la pagina principal
   };
 
+  // --- Handlers para las Modales ---
+  const handleLoginSuccess = () => {
+    setIsModalOpen(false);
+    handleSubmit(submitOrder)(); // Llama a submitOrder con los datos del form
+  };
+
+  const handleRegisterSuccess = () => {
+    setIsRegisterModalOpen(false);
+    setIsModalOpen(true); // Abre el login después de registrarse
+  };
+
   return (
     <>
+      {/* Corregido: Quitamos 'bg-gray-100' para tener fondo blanco uniforme */}
       <div className="min-h-screen p-4 md:p-8">
         <div className="max-w-2xl mx-auto">
 
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Tu Carrito de Compras</h1>
             <Link
-              to="/" //a la tienda principal
+              to="/"
               className="text-blue-600 hover:text-blue-800"
             >
               &larr; Seguir comprando
@@ -149,11 +140,9 @@ export default function CartPage() {
                 ))}
               </div>
 
-              {/* --- Formulario de Direcciones (Requerido por Backend) --- */}
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-6 space-y-4">
+              {/* --- Formulario de Direcciones --- */}
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6 space-y-4">
                 <h2 className="text-xl font-semibold text-gray-800">Datos de Envío</h2>
-
-                {/* Reutilizamos AuthInput pero con fondo blanco */}
                 <AuthInput
                   label="Dirección de Envío"
                   id="shippingAddress"
@@ -161,9 +150,8 @@ export default function CartPage() {
                   register={register}
                   errors={errors}
                   validationRules={{ required: 'La dirección de envío es obligatoria' }}
-                  labelClassName="text-gray-800" // Pasamos el color oscuro
+                  labelClassName="text-gray-800"
                 />
-
                 <AuthInput
                   label="Dirección de Facturación"
                   id="billingAddress"
@@ -171,9 +159,8 @@ export default function CartPage() {
                   register={register}
                   errors={errors}
                   validationRules={{ required: 'La dirección de facturación es obligatoria' }}
-                  labelClassName="text-gray-800" // Pasamos el color oscuro
+                  labelClassName="text-gray-800"
                 />
-
                 <div>
                   <label htmlFor="notes" className="block text-gray-800 mb-2">Notas (Opcional)</label>
                   <textarea
@@ -185,8 +172,8 @@ export default function CartPage() {
                 </div>
               </div>
 
-              {/* --- Resumen y Total --- */}
-              <div className="bg-white p-6 rounded-lg shadow-sm">
+              {/* --- Resumen y Total (Corregido: Mostrando el total) --- */}
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">Sumario de Orden</h2>
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-gray-600">
@@ -199,7 +186,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-gray-900 font-bold text-lg mt-2 pt-2 border-t border-gray-200">
                     <span>Total:</span>
-                    <span>${finalTotal.toFixed(2)}</span> {/* <-- Aquí usamos finalTotal */}
+                    <span>${finalTotal.toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -211,7 +198,7 @@ export default function CartPage() {
 
                 <div className="flex justify-between items-center">
                   <button
-                    type="button" // Evita que envíe el formulario
+                    type="button"
                     onClick={clearCart}
                     className="text-sm text-red-600 hover:text-red-800"
                   >
@@ -221,6 +208,8 @@ export default function CartPage() {
                     isLoading={isLoading}
                     isValid={isValid && cartItems.length > 0}
                     text="Finalizar Compra"
+                    // Estilo morado para el botón principal
+                    className="cursor-pointer bg-purple-600 text-white rounded-lg p-2.5 transition-colors duration-200 hover:bg-purple-700 disabled:bg-gray-300"
                   />
                 </div>
               </div>
@@ -232,15 +221,42 @@ export default function CartPage() {
         </div>
       </div>
 
-      {/* --- 4. MODAL Y TOASTS --- */}
+      {/* --- MODALES --- */}
+      <LoginModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+        footer={
+          <div className="text-center text-sm text-gray-600 mt-4">
+            ¿No tenés cuenta?{' '}
+            <button
+              type="button"
+              onClick={() => { setIsModalOpen(false); setIsRegisterModalOpen(true); }}
+              className="font-medium text-purple-600 hover:text-purple-500"
+            >
+              Registrate
+            </button>
+          </div>
+        }
+      />
 
-      {isModalOpen && (
-        <LoginModal
-          onClose={() => setIsModalOpen(false)}
-          // Al loguearse con éxito, se ejecuta el submit con los datos del form
-          onLoginSuccess={handleSubmit(submitOrder)}
-        />
-      )}
+      <RegisterModal
+        open={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        onRegisterSuccess={handleRegisterSuccess}
+        footer={
+          <div className="text-center text-sm text-gray-600 mt-4">
+            ¿Ya tenés cuenta?{' '}
+            <button
+              type="button"
+              onClick={() => { setIsRegisterModalOpen(false); setIsModalOpen(true); }}
+              className="font-medium text-purple-600 hover:text-purple-500"
+            >
+              Inicia Sesión
+            </button>
+          </div>
+        }
+      />
 
       <Toast
         open={showSuccessToast}

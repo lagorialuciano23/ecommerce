@@ -1,7 +1,9 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-// import { useCart } from '../../cart/context/useCart'; // No lo usamos
 import { useAuth } from '../../auth/context/useAuth';
 import { useState } from 'react';
+// 1. Importar las modales
+import LoginModal from '../../cart/components/LoginModal';
+import RegisterModal from '../../cart/components/RegisterModal';
 
 // Layout principal
 export default function PublicLayout() {
@@ -9,41 +11,48 @@ export default function PublicLayout() {
   const navigate = useNavigate();
   const { isLoggedIn, logout } = useAuth();
 
-  // 1. Estado para el menú móvil
+  // 2. Estado para el menú móvil
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // 3. Estado para controlar qué modal se ve
+  const [modalView, setModalView] = useState(null); // 'login', 'register', o null
 
   const handleSearch = (event) => {
     event.preventDefault();
     navigate(`/?search=${localSearch}`);
-    setIsMobileMenuOpen(false); // Cierra el menú al buscar
+    setIsMobileMenuOpen(false);
   };
 
   const handleLogout = () => {
     logout();
     navigate('/');
-    setIsMobileMenuOpen(false); // Cierra el menú
+    setIsMobileMenuOpen(false);
   };
 
-  // Cierra el menú al hacer clic en cualquier link
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  // Callback cuando el login de la modal es exitoso
+  const handleLoginSuccess = () => {
+    setModalView(null);
+  };
+
+  // Callback cuando el registro de la modal es exitoso
+  const handleRegisterSuccess = () => {
+    // Cerramos 'register' y abrimos 'login'
+    setModalView('login');
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-800">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
-        {/* --- Barra superior (Desktop y Mobile) --- */}
         <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
 
           {/* Título o Logo */}
           <div className="flex items-center gap-6">
             <Link to="/" onClick={handleLinkClick} className="text-xl font-bold text-gray-900">
-              {/* Icono de Logo (de la imagen) */}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
-                <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
-              </svg>
+              <svg className="w-8 h-8" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M48.24 73.088h31.52L64 96.736 48.24 73.088zM64 31.264l15.76 23.648H48.24L64 31.264zM39.664 64c0 13.44 10.896 24.336 24.336 24.336S88.336 77.44 88.336 64 77.44 39.664 64 39.664 39.664 50.56 39.664 64zM0 64C0 28.672 28.672 0 64 0s64 28.672 64 64-28.672 64-64 64S0 99.328 0 64z" fill="#111" /></svg>
             </Link>
             {/* Links de Desktop (ocultos en móvil) */}
             <div className="hidden md:flex items-center gap-6">
@@ -70,7 +79,7 @@ export default function PublicLayout() {
             </span>
           </form>
 
-          {/* Auth (Desktop) */}
+          {/* Auth (Desktop) - CORREGIDO PARA USAR MODALES */}
           <div className="hidden md:flex items-center gap-2">
             {isLoggedIn ? (
               <button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition">
@@ -78,21 +87,23 @@ export default function PublicLayout() {
               </button>
             ) : (
               <>
-                <Link to="/login" onClick={handleLinkClick}>
-                  <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition">
-                    Iniciar Sesión
-                  </button>
-                </Link>
-                <Link to="/signup" onClick={handleLinkClick}>
-                  <button className="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition">
-                    Registrarse
-                  </button>
-                </Link>
+                <button
+                  onClick={() => setModalView('login')}
+                  className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
+                >
+                  Iniciar Sesión
+                </button>
+                <button
+                  onClick={() => setModalView('register')}
+                  className="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition"
+                >
+                  Registrarse
+                </button>
               </>
             )}
           </div>
 
-          {/* --- 2. Botón de Hamburguesa (Móvil) --- */}
+          {/* Botón de Hamburguesa (Móvil) */}
           <div className="md:hidden flex items-center">
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-700 hover:bg-gray-100 rounded-md">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -102,7 +113,7 @@ export default function PublicLayout() {
           </div>
         </nav>
 
-        {/* --- 3. Panel Desplegable (Móvil) --- */}
+        {/* Panel Desplegable (Móvil) - CORREGIDO PARA USAR MODALES */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white shadow-lg p-4 space-y-4 border-t border-gray-200">
             {/* Buscador Móvil */}
@@ -135,16 +146,18 @@ export default function PublicLayout() {
                 </button>
               ) : (
                 <>
-                  <Link to="/login" onClick={handleLinkClick} className="block">
-                    <button className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition">
-                      Iniciar Sesión
-                    </button>
-                  </Link>
-                  <Link to="/signup" onClick={handleLinkClick} className="block">
-                    <button className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition">
-                      Registrarse
-                    </button>
-                  </Link>
+                  <button
+                    onClick={() => { setModalView('login'); setIsMobileMenuOpen(false); }}
+                    className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
+                  >
+                    Iniciar Sesión
+                  </button>
+                  <button
+                    onClick={() => { setModalView('register'); setIsMobileMenuOpen(false); }}
+                    className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition"
+                  >
+                    Registrarse
+                  </button>
                 </>
               )}
             </div>
@@ -156,6 +169,43 @@ export default function PublicLayout() {
       <main className="flex-1 container mx-auto p-4 md:p-8">
         <Outlet />
       </main>
+
+      {/* Renderizar las Modales (ocultas por defecto) */}
+      <LoginModal
+        open={modalView === 'login'}
+        onClose={() => setModalView(null)}
+        onLoginSuccess={handleLoginSuccess}
+        footer={
+          <div className="text-center text-sm text-gray-600 mt-4">
+            ¿No tenés cuenta?{' '}
+            <button
+              type="button"
+              onClick={() => setModalView('register')}
+              className="font-medium text-purple-600 hover:text-purple-500"
+            >
+              Registrate
+            </button>
+          </div>
+        }
+      />
+
+      <RegisterModal
+        open={modalView === 'register'}
+        onClose={() => setModalView(null)}
+        onRegisterSuccess={handleRegisterSuccess}
+        footer={
+          <div className="text-center text-sm text-gray-600 mt-4">
+            ¿Ya tenés cuenta?{' '}
+            <button
+              type="button"
+              onClick={() => setModalView('login')}
+              className="font-medium text-purple-600 hover:text-purple-500"
+            >
+              Inicia Sesión
+            </button>
+          </div>
+        }
+      />
     </div>
   );
 }
