@@ -1,88 +1,112 @@
 import { useState } from 'react';
 import { useCart } from '../../cart/context/useCart';
+import { Link } from 'react-router-dom';
 
 export default function ProductCard({ product }) {
-  const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1); // Inicia en 1 por defecto
+  const { addToCart } = useCart(); // Hook del carrito
 
   const handleDecrease = () => {
+    // No permite bajar de 1
     setQuantity((prev) => Math.max(1, prev - 1));
   };
 
   const handleIncrease = () => {
+    // (Opcional: puedes limitar por product.StockQuantity)
     setQuantity((prev) => prev + 1);
   };
 
   const handleAddToCart = () => {
+    // Verifica que la cantidad sea 1 o más
     if (quantity < 1) return;
+
+    // Llama a la función del context
+    //
     addToCart(product, quantity);
+
+    // Resetea la cantidad a 1 después de agregar
     setQuantity(1);
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 flex flex-col border border-gray-200">
-      {/* Imagen del producto - Más pequeña */}
-      <div className="w-full aspect-square bg-gray-100 rounded-md flex items-center justify-center mb-3 overflow-hidden">
-        {product.ImageUrl ? (
-          <img
-            src={product.ImageUrl}
-            alt={product.Name}
-            className="w-full h-full object-cover"
-            onError={(e) => { e.target.style.display = 'none'; }}
-          />
-        ) : (
-          <svg
-            className="w-10 h-10 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" 
+    <div className="bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col text-white border border-gray-700">
+
+      {/* 1. Imagen Clickeable */}
+      <Link to={`/products/${product.Id}`}>
+        <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4 overflow-hidden group">
+          {product.ImageUrl ? (
+            // Si hay URL, mostramos la imagen
+            <img
+              src={product.ImageUrl}
+              alt={product.Name}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              // Opcional: manejar errores de imagen
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
-          </svg>
-        )}
-      </div>
+          ) : (
+            // Si NO hay URL, mostramos el ícono placeholder
+            <svg
+              className="w-12 h-12 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 7.61c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61V7.61zM16 12.61c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61V8.83c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78zM7 16.61c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61v-3.78c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78zM17 20.39c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61v-3.78c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78z" />
+            </svg>
+          )}
+        </div>
+      </Link>
 
-      {/* Nombre del producto - Más pequeño */}
-      <h3 className="text-gray-900 text-sm font-semibold mb-1 line-clamp-2 min-h-[2.5rem]">
-        {product.Name}
-      </h3>
+      {/* 2. Título Clickeable */}
+      <Link to={`/products/${product.Id}`}>
+        <h3 className="text-lg font-semibold hover:text-blue-400 transition-colors">{product.Name}</h3>
+      </Link>
 
-      {/* Precio - Más compacto */}
-      <p className="text-lg font-bold text-green-600 mb-3">
+      {/* --- INICIO DE LA CORRECCIÓN --- */}
+      {/* 3. Descripción (con PascalCase) */}
+      <p className="text-sm text-gray-400 mt-1 mb-2 line-clamp-2" title={product.Description}>
+        {product.Description}
+      </p>
+      {/* --- FIN DE LA CORRECCIÓN --- */}
+
+      {/* 4. Info (con PascalCase) */}
+      <p className="text-2xl font-bold text-green-400 mt-2">
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
       </p>
+      <p className="text-sm text-gray-400 mb-2">
+        SKU: {product.Sku}
+      </p>
+      <p className="text-sm text-gray-400 mb-4">
+        Stock: {product.StockQuantity}
 
-      {/* Controles de Cantidad - Más pequeños */}
-      <div className="flex items-center justify-center gap-2 mb-2">
+      </p>
+
+      {/* Controles de Cantidad */}
+      <div className="flex items-center justify-center gap-2 mb-4">
         <button
           onClick={handleDecrease}
-          className="w-7 h-7 flex items-center justify-center bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+          className="px-3 py-1 bg-gray-700 rounded-md hover:bg-gray-600"
         >
           -
         </button>
-        <span className="text-gray-900 text-sm font-semibold w-8 text-center">
+        <span className="text-lg font-bold w-12 text-center">
           {quantity}
         </span>
         <button
           onClick={handleIncrease}
-          className="w-7 h-7 flex items-center justify-center bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+          className="px-3 py-1 bg-gray-700 rounded-md hover:bg-gray-600"
         >
           +
         </button>
       </div>
 
-      {/* Botón Agregar - Más pequeño */}
+      {/* Botón Agregar */}
       <button
         onClick={handleAddToCart}
         disabled={quantity < 1}
-        className="w-full bg-gray-900 text-white rounded-md py-2 text-sm font-medium
-         transition-colors duration-200 hover:bg-gray-800
-         disabled:bg-gray-400 disabled:cursor-not-allowed"
+        className="w-full cursor-pointer bg-blue-600 text-white rounded-lg p-2
+         transition-colors duration-200 hover:bg-blue-700
+         disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed"
       >
         Agregar
       </button>

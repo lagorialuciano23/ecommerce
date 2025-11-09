@@ -13,7 +13,7 @@ import CustomerProductsPage from './modules/products/pages/CustomersProductsPage
 import CreateProductsPage from './modules/products/pages/CreateProductsPage.jsx';
 import EditProductPage from './modules/products/pages/EditProductPage.jsx';
 import OrdersDetailPage from './modules/orders/pages/OrdersDetailPage.jsx';
-
+import ProductDetailPage from './modules/products/pages/ProductDetailPage.jsx';
 function App() {
   return (
     <Routes>
@@ -22,6 +22,7 @@ function App() {
         {/* La ruta raíz ahora es la tienda de clientes */}
         <Route index element={<CustomerProductsPage />} />
         <Route path="cart" element={<CartPage />} />
+        <Route path="products/:id" element={<ProductDetailPage />} />
       </Route>
 
       {/* --- RUTAS DE AUTENTICACIÓN (Públicas, sin layout) --- */}

@@ -6,7 +6,7 @@ export default function AdminProductCard({ product }) {
     <div className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow flex flex-col justify-between">
       {/* Contenido principal */}
       <div>
-        {/* Imagen (usamos la misma lógica de ProductCard.jsx) */}
+        {/* Imagen */}
         <div className="w-full h-40 bg-gray-200 rounded-md flex items-center justify-center mb-4 overflow-hidden">
           {product.ImageUrl ? (
             <img
@@ -24,10 +24,16 @@ export default function AdminProductCard({ product }) {
 
         {/* SKU */}
         <p className="text-xs text-gray-500">{product.Sku}</p>
+
         {/* Nombre */}
         <h3 className="text-gray-900 font-semibold text-base mb-1 truncate" title={product.Name}>
           {product.Name}
         </h3>
+
+        {/* --- DESCRIPCIÓN AÑADIDA --- */}
+        <p className="text-sm text-gray-600 mb-2 line-clamp-2" title={product.Description}>
+          {product.Description}
+        </p>
 
         {/* Precio y Stock */}
         <div className="flex justify-between items-center text-sm mb-3">
@@ -38,7 +44,7 @@ export default function AdminProductCard({ product }) {
         </div>
       </div>
 
-      {/* Contenido inferior (Estado y Botón) */}
+      {/* Contenido inferior (Estado y Botones) */}
       <div className="flex justify-between items-center mt-2">
         {/* Estado */}
         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -49,13 +55,26 @@ export default function AdminProductCard({ product }) {
           {product.IsActive ? 'Activo' : 'Inactivo'}
         </span>
 
-        {/* Botón Editar */}
-        <Link
-          to={`/admin/products/edit/${product.Id}`}
-          className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors"
-        >
-          Editar
-        </Link>
+        {/* Botones */}
+        <div className="flex gap-2">
+          {/* Botón "Ver" (público) */}
+          <Link
+            to={`/products/${product.Id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-100 text-blue-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors"
+          >
+            Ver
+          </Link>
+
+          {/* Botón "Editar" (admin) */}
+          <Link
+            to={`/admin/products/edit/${product.Id}`}
+            className="bg-purple-100 text-purple-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors"
+          >
+            Editar
+          </Link>
+        </div>
       </div>
     </div>
   );
