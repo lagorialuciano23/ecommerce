@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ordersService } from '../../orders/services/orderServices';
 import { productsService } from '../../products/services/productsService';
+import StatCard from '../../shared/components/StatCard';
 
 export default function DashboardHome() {
 
@@ -42,22 +43,12 @@ export default function DashboardHome() {
   if (error) return <p>Error al cargar el dashboard.</p>;
 
   return (
-    <div className="grid md:grid-cols-4 gap-6">
-      <div className="bg-blue-200 p-6 text-blue-900 rounded-xl shadow">
-        Productos totales: {summary.Total}
-      </div>
-      <div className="bg-green-200 p-6 text-green-900 rounded-xl shadow">
-        Productos activos: {summary.Activos}
-      </div>
-      <div className="bg-red-200 p-6 text-red-900 rounded-xl shadow">
-        Inactivos: {summary.Inactivos}
-      </div>
-      <div className="bg-yellow-200 p-6 text-yellow-900 rounded-xl shadow">
-        Bajo stock: {summary.BajoStock}
-      </div>  
-      <div className="bg-orange-200 p-6 text-orange-900 rounded-xl shadow md:col-span-4">
-        Órdenes actuales: {orders.length}
-      </div>
+   <div className="grid md:grid-cols-4 gap-6">
+      <StatCard title="Productos totales" value={summary.Total} bgColor="bg-blue-200" textColor="text-blue-900" />
+      <StatCard title="Productos activos" value={summary.Activos} bgColor="bg-green-200" textColor="text-green-900" />
+      <StatCard title="Inactivos" value={summary.Inactivos} bgColor="bg-red-200" textColor="text-red-900" />
+      <StatCard title="Bajo stock" value={summary.BajoStock} bgColor="bg-yellow-200" textColor="text-yellow-900" />
+      <StatCard title="Órdenes actuales" value={orders.length} bgColor="bg-orange-200" textColor="text-orange-900" />
     </div>
   );
 }
