@@ -176,9 +176,9 @@ export default function PublicLayout() {
       </main>
 
       <footer className="
-          bg-gray-800 text-white p-4 text-center
+          bg-purple-100 text-purple-800 p-4 text-center border-t border-purple-200
           ">
-            footer content
+        © 2025 MiTienda. Todos los derechos reservados.
       </footer>
       {/* Renderizar las Modales (ocultas por defecto) */}
       <LoginModal
