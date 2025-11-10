@@ -32,6 +32,24 @@ export function CartProvider({ children }) {
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.Id); // Usamos Id (mayúscula)
+      const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
+      const stockLimit = product.StockQuantity;
+
+      if (currentQuantityInCart >= stockLimit) {
+        alert('Ya tenés todo el stock disponible de este producto en tu carrito.');
+
+        return prevItems; // No hacemos nada
+      }
+
+      let newTotalQuantity = currentQuantityInCart + quantity;
+
+      if (newTotalQuantity > stockLimit) {
+        // Si nos pasamos, ajustamos la cantidad al límite
+        const quantityLeft = stockLimit - currentQuantityInCart;
+
+        alert(`Stock máximo alcanzado. Solo se ${quantityLeft > 1 ? 'agregaron' : 'agregó'} ${quantityLeft} ${quantityLeft > 1 ? 'items' : 'item'} más.`);
+        newTotalQuantity = stockLimit;
+      }
 
       if (existingItem) {
         // Si existe, actualiza la cantidad
