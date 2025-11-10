@@ -12,8 +12,11 @@ export default function ProductCard({ product }) {
   };
 
   const handleIncrease = () => {
-    // (Opcional: puedes limitar por product.StockQuantity)
-    setQuantity((prev) => prev + 1);
+    // Usamos el StockQuantity (con PascalCase) como límite
+    const stockLimit = product.StockQuantity;
+
+    // Solo aumentamos si la cantidad actual es MENOR al stock
+    setQuantity((prev) => Math.min(stockLimit, prev + 1));
   };
 
   const handleAddToCart = () => {
@@ -82,7 +85,7 @@ export default function ProductCard({ product }) {
       </p>
 
       {/* Controles de Cantidad - mt-auto los empuja al final */}
-      <div className="flex items-center justify-center gap-2 mb-4 mt-auto">
+      <div className="flex items-center justify-center gap-2 mb-4 mt-auto pt-4">
         <button
           onClick={handleDecrease}
           className="px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-300"
@@ -103,12 +106,12 @@ export default function ProductCard({ product }) {
       {/* Botón Agregar */}
       <button
         onClick={handleAddToCart}
-        disabled={quantity < 1}
-        className="w-full cursor-pointer bg-blue-600 text-white rounded-lg p-2
-         transition-colors duration-200 hover:bg-blue-700
-         disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed"
+        disabled={quantity < 1 || product.StockQuantity === 0} // Deshabilitado si no hay stock
+        className="cursor-pointer bg-purple-600 text-white rounded-lg px-4 py-2 text-sm font-medium
+           transition-colors duration-200 hover:bg-purple-700
+           disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
       >
-        Agregar
+        {product.StockQuantity === 0 ? 'Sin Stock' : 'Agregar'}
       </button>
     </div>
   );

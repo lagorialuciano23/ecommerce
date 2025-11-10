@@ -35,9 +35,9 @@ export function CartProvider({ children }) {
    */
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
+      const stockLimit = product.StockQuantity;
       const existingItem = prevItems.find(item => item.id === product.Id); // Usamos Id (mayúscula)
       const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
-      const stockLimit = product.StockQuantity;
 
       if (currentQuantityInCart >= stockLimit) {
         setToastMessage({
@@ -45,7 +45,7 @@ export function CartProvider({ children }) {
           message: 'Ya tenés todo el stock disponible de este producto en tu carrito.',
         });
 
-        return prevItems; // No hacemos nada
+        return prevItems;
       }
 
       let newTotalQuantity = currentQuantityInCart + quantity;
