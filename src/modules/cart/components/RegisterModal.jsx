@@ -23,12 +23,15 @@ export default function RegisterModal({ open, onClose, onRegisterSuccess, footer
   const passwordValue = useWatch({ control, name: 'password' });
 
   const onSubmit = async (data) => {
-    await handleRegisterSubmit(data);
+    // 1. Esperamos y guardamos el resultado (true/false)
+    const success = await handleRegisterSubmit(data);
 
-    // Solo llamamos al éxito si no hubo error
-    if (!apiError) {
-      if (onRegisterSuccess) onRegisterSuccess();
+    // 2. Solo llamamos a onRegisterSuccess (que abre el Login) SI el registro fue exitoso
+    if (success && onRegisterSuccess) {
+      onRegisterSuccess();
     }
+    // Si 'success' es false, no hacemos nada, y la modal
+    // mostrará el 'apiError' que seteó el hook.
   };
 
   if (!open) return null;

@@ -6,7 +6,7 @@ import { registerCustomerService } from '../services/registerCustomer.js';
  */
 export function useCustomerRegister() {
   const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState();
+  const [apiError, setApiError] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
 
   const handleRegisterSubmit = async (data) => {
@@ -18,9 +18,12 @@ export function useCustomerRegister() {
       await registerCustomerService(data.user, data.email, data.password);
       setToastOpen(true);
 
+      return true;
     } catch (error) {
       console.error(error);
       setApiError(error.message);
+
+      return false;
     } finally {
       setIsLoading(false);
     }
