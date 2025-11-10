@@ -4,7 +4,6 @@ import AuthInput from '../../auth/components/Input';
 import AuthSubmitButton from '../../auth/components/Button';
 import Toast from '../../shared/components/Toast';
 
-// 1. AÑADIMOS 'open' a las props
 export default function RegisterModal({ open, onClose, onRegisterSuccess, footer }) {
   const {
     isLoading,
@@ -26,16 +25,12 @@ export default function RegisterModal({ open, onClose, onRegisterSuccess, footer
   const onSubmit = async (data) => {
     await handleRegisterSubmit(data);
 
-    // Si no hay error, llamamos al callback (que abrirá el login)
-    // (Necesitamos una forma de saber si hubo error, el hook no lo expone)
-    // Asumimos que si hay error, 'handleRegisterSubmit' lo setea en 'apiError'
-    // Esta parte es un poco frágil, ¡revisemos 'useCustomerRegister' luego!
-    // Por ahora, asumimos que onRegisterSuccess se llama siempre.
-    if (onRegisterSuccess) onRegisterSuccess();
+    // Solo llamamos al éxito si no hubo error
+    if (!apiError) {
+      if (onRegisterSuccess) onRegisterSuccess();
+    }
   };
 
-  // 2. AÑADIMOS ESTA LÍNEA
-  // Si la prop 'open' es false, no renderizamos nada
   if (!open) return null;
 
   return (
@@ -49,7 +44,6 @@ export default function RegisterModal({ open, onClose, onRegisterSuccess, footer
           onClick={(e) => e.stopPropagation()}
           className='bg-white p-6 rounded-lg shadow-xl w-full max-w-sm relative'
         >
-          {/* ... (Botón de Cerrar (X) y Título "Crear Cuenta") ... */}
           <button type="button" onClick={onClose} className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -58,7 +52,6 @@ export default function RegisterModal({ open, onClose, onRegisterSuccess, footer
           <h2 className="text-center text-2xl font-semibold text-gray-900 mb-6">Crear Cuenta</h2>
 
           <div className="space-y-4">
-            {/* ... (Inputs de Usuario, Email, Password, Confirmar Password) ... */}
             <AuthInput
               label="Usuario"
               id="modal-reg-user"
@@ -81,6 +74,7 @@ export default function RegisterModal({ open, onClose, onRegisterSuccess, footer
               }}
               labelClassName="text-gray-700"
             />
+
             <AuthInput
               label="Contraseña"
               id="modal-reg-password"
@@ -89,8 +83,22 @@ export default function RegisterModal({ open, onClose, onRegisterSuccess, footer
               register={register}
               errors={errors}
               validationRules={{
-                required: 'La contraseña es obligatoria',
-                minLength: { value: 8, message: 'Mínimo 8 caracteres' },
+                required: 'La contraseña es obligatoria.',
+                minLength: {
+                  value: 8,
+                  message: 'Mínimo 8 caracteres.',
+                },
+                validate: {
+                  hasUpper: (value) =>
+                    /(?=.*[A-Z])/.test(value) || 'Debe incluir al menos una mayúscula.',
+                  hasLower: (value) =>
+                    /(?=.*[a-z])/.test(value) || 'Debe incluir al menos una minúscula.',
+                  hasDigit: (value) =>
+                    /(?=.*\d)/.test(value) || 'Debe incluir al menos un número.',
+                  hasSpecialChar: (value) =>
+                    // eslint-disable-next-line no-useless-escape
+                    /(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(value) || 'Debe incluir al menos un carácter especial.',
+                },
               }}
               labelClassName="text-gray-700"
             />
