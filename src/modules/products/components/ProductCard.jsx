@@ -21,7 +21,6 @@ export default function ProductCard({ product }) {
     if (quantity < 1) return;
 
     // Llama a la función del context
-    //
     addToCart(product, quantity);
 
     // Resetea la cantidad a 1 después de agregar
@@ -29,7 +28,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col text-gray-900">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col text-gray-900 h-full">
 
       {/* 1. Imagen Clickeable */}
       <Link to={`/products/${product.Id}`}>
@@ -71,20 +70,19 @@ export default function ProductCard({ product }) {
       <p className="text-2xl font-bold text-green-400 mt-2">
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
       </p>
-      {/* Stock  */}
-      <p className="text-sm text-gray-500 mb-4">Stock: {product.StockQuantity}</p>
+
+      {/* Stock */}
+      <p className="text-sm text-gray-500 mb-4">
+        Stock: {product.StockQuantity}
+      </p>
 
       {/* SKU */}
       <p className="text-sm text-gray-400 mb-2">
         SKU: {product.Sku}
       </p>
-      {/* Stock */}
-      <p className="text-sm text-gray-400 mb-4">
-        Stock: {product.StockQuantity}
-      </p>
 
-      {/* Controles de Cantidad */}
-      <div className="flex items-center justify-center gap-2 mb-4">
+      {/* Controles de Cantidad - mt-auto los empuja al final */}
+      <div className="flex items-center justify-center gap-2 mb-4 mt-auto">
         <button
           onClick={handleDecrease}
           className="px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-300"

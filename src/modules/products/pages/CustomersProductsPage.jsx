@@ -83,7 +83,7 @@ export default function CustomerProductsPage() {
 
     // Grilla de Productos
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
         {products.map((product) => (
           <ProductCard key={product.Id} product={product} />
         ))}
