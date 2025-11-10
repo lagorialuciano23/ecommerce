@@ -1,4 +1,3 @@
-// src/components/Toast.jsx
 import { useEffect } from 'react';
 
 export default function Toast({ open, title = 'Listo', message, onClose, duration = 2500 }) {
@@ -13,22 +12,20 @@ export default function Toast({ open, title = 'Listo', message, onClose, duratio
   if (!open) return null;
 
   return (
-    // Contenedor fijo en la parte superior (top-0) y centrada.
     <div className="fixed inset-x-0 top-0 z-50 pointer-events-none">
-      {/* Contenedor centrador que limita el ancho del toast */}
       <div className="pointer-events-auto flex justify-center w-full max-w-full px-4 pt-4">
         <div
           role="status"
-          // Clases para el estilo Top Accent Border
-          className="rounded-b-lg rounded-t-sm shadow-xl bg-neutral-900/95 text-neutral-100
-                     border-t-4 border-[#263e77] p-5 w-full max-w-sm"
+          className="rounded-lg shadow-xl bg-white text-gray-900
+                     border-t-4 border-purple-600 p-4 w-full max-w-sm
+                     animate-slide-down"
         >
-          <div className="text-sm font-semibold">{title}</div>
-          {message && <div className="text-sm/6 opacity-90">{message}</div>}
+          <div className="text-sm font-semibold text-gray-900">{title}</div>
+          {message && <div className="text-sm text-gray-600">{message}</div>}
           <button
             onClick={onClose}
-            className="mt-3 inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-medium
-                       border border-neutral-700 hover:bg-neutral-800 transition"
+            className="mt-3 inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium
+                       bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
           >
             Aceptar
           </button>

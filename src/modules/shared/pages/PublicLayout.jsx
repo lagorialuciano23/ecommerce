@@ -1,9 +1,10 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/useAuth';
 import { useState } from 'react';
-// 1. Importar las modales
 import LoginModal from '../../cart/components/LoginModal';
 import RegisterModal from '../../cart/components/RegisterModal';
+import Toast from '../../shared/components/Toast';
+import { useCart } from '../../cart/context/useCart';
 
 // Layout principal
 export default function PublicLayout() {
@@ -15,6 +16,7 @@ export default function PublicLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // 3. Estado para controlar qué modal se ve
   const [modalView, setModalView] = useState(null); // 'login', 'register', o null
+  const { toastMessage, clearToast } = useCart();
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -213,6 +215,13 @@ export default function PublicLayout() {
             </button>
           </div>
         }
+      />
+      <Toast
+        open={!!toastMessage}
+        title={toastMessage?.title || 'Aviso'}
+        message={toastMessage?.message}
+        onClose={clearToast}
+        duration={3000} // Le damos 3 segundos
       />
     </div>
   );

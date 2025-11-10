@@ -17,6 +17,7 @@ function getInitialCart() {
 export function CartProvider({ children }) {
   // 1. Estado que se inicializa con localStorage
   const [cartItems, setCartItems] = useState(getInitialCart);
+  const [toastMessage, setToastMessage] = useState(null);
 
   // 2. Efecto que GUARDA en localStorage CADA VEZ que cartItems cambia
   useEffect(() => {
@@ -25,6 +26,9 @@ export function CartProvider({ children }) {
 
   // --- Funciones para modificar el carrito ---
 
+  const clearToast = () => {
+    setToastMessage(null);
+  };
   /**
    * Añade un producto al carrito.
    * Si ya existe, incrementa la cantidad.
@@ -36,7 +40,10 @@ export function CartProvider({ children }) {
       const stockLimit = product.StockQuantity;
 
       if (currentQuantityInCart >= stockLimit) {
-        alert('Ya tenés todo el stock disponible de este producto en tu carrito.');
+        setToastMessage({
+          title: 'Stock Límite',
+          message: 'Ya tenés todo el stock disponible de este producto en tu carrito.',
+        });
 
         return prevItems; // No hacemos nada
       }
@@ -47,7 +54,10 @@ export function CartProvider({ children }) {
         // Si nos pasamos, ajustamos la cantidad al límite
         const quantityLeft = stockLimit - currentQuantityInCart;
 
-        alert(`Stock máximo alcanzado. Solo se ${quantityLeft > 1 ? 'agregaron' : 'agregó'} ${quantityLeft} ${quantityLeft > 1 ? 'items' : 'item'} más.`);
+        setToastMessage({
+          title: 'Stock máximo alcanzado',
+          message: `Solo se ${quantityLeft > 1 ? 'agregaron' : 'agregó'} ${quantityLeft} ${quantityLeft > 1 ? 'items' : 'item'} más.`,
+        });
         newTotalQuantity = stockLimit;
       }
 
@@ -104,7 +114,9 @@ export function CartProvider({ children }) {
     clearCart,
     cartTotal,
     cartCount,
-  }), [cartItems, cartTotal, cartCount]);
+    toastMessage,
+    clearToast,
+  }), [cartItems, cartTotal, cartCount, toastMessage]);
 
   return (
     <CartContext.Provider value={cartValue}>
