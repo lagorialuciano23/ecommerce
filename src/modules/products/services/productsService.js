@@ -40,6 +40,8 @@ export const productsService = {
 
   getProducts: () => api.get('/api/products/total'),
 
+  getProductSummary: () => api.get('/api/products/summary'),
+
   getActiveProducts: (pageNumber = 1, pageSize = 8, search = '') => {
     const params = new URLSearchParams();
 
