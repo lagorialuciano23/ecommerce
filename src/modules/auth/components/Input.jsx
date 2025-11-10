@@ -10,7 +10,7 @@ export default function Input({
   validationRules,
   errors,
   autoComplete,
-  labelClassName = 'text-white',
+  labelClassName = 'text-black text-lg',
 }) {
   return (
     <div>
@@ -19,7 +19,9 @@ export default function Input({
         id={id}
         type={type}
         autoComplete={autoComplete}
-        className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="
+        w-full p-2 rounded-lg bg-gray-300 text-black border-none
+        focus:outline-none focus:ring-2 focus:ring-blue-500"
         // 1. Registra el input con react-hook-form
         {...register(name, validationRules)}
       />
