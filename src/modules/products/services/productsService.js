@@ -35,12 +35,12 @@ export const productsService = {
       params.append('search', search);
     }
 
-    return api.get(`/api/products?${params.toString()}`);
+    return api.get(`/products?${params.toString()}`);
   },
 
-  getProducts: () => api.get('/api/products/total'),
+  getProducts: () => api.get('/products/total'),
 
-  getProductSummary: () => api.get('/api/products/summary'),
+  getProductSummary: () => api.get('/products/summary'),
 
   getActiveProducts: (pageNumber = 1, pageSize = 8, search = '') => {
     const params = new URLSearchParams();
@@ -52,16 +52,16 @@ export const productsService = {
       params.append('search', search);
     }
 
-    return api.get(`/api/products/active?${params.toString()}`);
+    return api.get(`/products/active?${params.toString()}`);
   },
 
   /**
    * Obtiene un producto por su ID.
-   * GET /api/products/{id}
+   * GET /products/{id}
    * @param {number|string} id - ID del producto
    * @returns {Promise<object>} Producto encontrado
    */
-  getById: (id) => api.get(`/api/products/${id}`),
+  getById: (id) => api.get(`/products/${id}`),
 
   /**
    * Crea un nuevo producto.
@@ -72,12 +72,12 @@ export const productsService = {
   create: (product) => {
     const productData = mapProductToRequest(product);
 
-    return api.post('/api/products', productData);
+    return api.post('/products', productData);
   },
 
   /**
    * Actualiza un producto existente completamente.
-   * PUT /api/products/{id}
+   * PUT /products/{id}
    * @param {number|string} id - ID del producto
    * @param {object} product - Datos actualizados del producto
    * @returns {Promise<object>} Producto actualizado
@@ -85,23 +85,23 @@ export const productsService = {
   update: (id, product) => {
     const productData = mapProductToRequest(product);
 
-    return api.put(`/api/products/${id}`, productData);
+    return api.put(`/products/${id}`, productData);
   },
 
   /**
    * Actualiza parcialmente un producto.
-   * PATCH /api/products/{id}
+   * PATCH /products/{id}
    * @param {number|string} id - ID del producto
    * @param {object} updates - Campos a actualizar
    * @returns {Promise<object>} Producto actualizado
    */
-  partialUpdate: (id, updates) => api.patch(`/api/products/${id}`, updates),
+  partialUpdate: (id, updates) => api.patch(`/products/${id}`, updates),
 
   /**
    * Elimina un producto.
-   * DELETE /api/products/{id}
+   * DELETE /products/{id}
    * @param {number|string} id - ID del producto
    * @returns {Promise<void>}
    */
-  delete: (id) => api.delete(`/api/products/${id}`),
+  delete: (id) => api.delete(`/products/${id}`),
 };

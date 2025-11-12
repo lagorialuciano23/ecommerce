@@ -27,43 +27,43 @@ export const ordersService = {
       params.append('search', search);
     }
 
-    return api.get(`/api/orders?${params.toString()}`);
+    return api.get(`/orders?${params.toString()}`);
   },
 
   /**
    * Obtiene una orden por su ID.
-   * GET /api/orders/{id}
+   * GET /orders/{id}
    */
   getById: (id) => {
-    return api.get(`/api/orders/${id}`);
+    return api.get(`/orders/${id}`);
   },
 
   /**
    * Actualiza el estado de una orden (Admin).
-   * PATCH /api/orders/{id}/status
+   * PATCH /orders/{id}/status
    */
   updateStatus: (id, newStatus) => {
     // El backend espera un string simple, no un JSON
     // Por eso, ajustamos apiFetch para enviar texto plano
-    return api.patch(`/api/orders/${id}/status`, newStatus, {
+    return api.patch(`/orders/${id}/status`, newStatus, {
       'Content-Type': 'application/json', // El backend espera un string JSON
     });
   },
   /**
    * Crea una nueva orden.
-   * POST /api/orders
+   * POST /orders
    * @param {object} orderPayload - El DTO que espera el backend
    * @returns {Promise<object>} La orden creada
    */
   create: (orderPayload) => {
     // api.post ya incluye el token de autorización
-    return api.post('/api/orders', orderPayload);
+    return api.post('/orders', orderPayload);
   },
   /**
    * Elimina una orden por su ID.
-   * DELETE /api/orders/{id}
+   * DELETE /orders/{id}
    */
   delete: (id) => {
-    return api.delete(`/api/orders/${id}`);
+    return api.delete(`/orders/${id}`);
   },
 };
