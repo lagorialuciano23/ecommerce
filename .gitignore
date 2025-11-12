@@ -25,3 +25,7 @@ dist-ssr
 
 password.md
 
+# Variables de entorno locales , realmente deberian estar comentadas
+#.env.development
+#.env.local
+#.env
