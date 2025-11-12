@@ -14,6 +14,8 @@ export default function ProductsPage() {
   //Añadimos el estado para el filtro
   const [filterStatus, setFilterStatus] = useState(''); // '' significa "Todos"
   //PAGINACION
+  // --- AÑADIR ESTADO PARA pageSize ---
+  const [pageSize, setPageSize] = useState(10); // Default 10
   const [currentPage, setCurrentPage] = useState(1);
   const [canGoNext, setCanGoNext] = useState(false);
 
@@ -23,7 +25,7 @@ export default function ProductsPage() {
         setIsLoading(true);
         setError(null);
         //Pasamos el filtro al servicio
-        const response = await productsService.getAll(currentPage, 8, searchTerm, filterStatus);
+        const response = await productsService.getAll(currentPage, pageSize, searchTerm, filterStatus);
 
         // Guardamos la respuesta
         setProducts(response.Items);
@@ -37,7 +39,7 @@ export default function ProductsPage() {
     };
 
     fetchProducts();
-  }, [currentPage, searchTerm, filterStatus]);
+  }, [currentPage, searchTerm, filterStatus, pageSize]);
 
   const goToNextPage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -60,10 +62,11 @@ export default function ProductsPage() {
     setFilterStatus(e.target.value);
   };
 
-  // Ya no filtramos en el frontend, el backend lo hace
-  // const filteredProducts = products.filter((product) => {
-  //   return product.Name.toLowerCase().includes(searchTerm.toLowerCase());
-  // });
+  // --- AÑADIR HANDLER PARA EL CAMBIO DE TAMAÑO ---
+  const handlePageSizeChange = (e) => {
+    setCurrentPage(1); // Reiniciar a página 1
+    setPageSize(Number(e.target.value));
+  };
 
   // Caso 1: Cargando
   if (isLoading) {
@@ -149,23 +152,53 @@ export default function ProductsPage() {
           </p>
         </div>
       )}
-      {/* --- Paginación --- */}
-      <div className="flex justify-between items-center mt-8">
-        <button
-          onClick={goToPrevPage}
-          disabled={currentPage === 1}
-          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
-        >
-          &larr; Anterior
-        </button>
-        <span className="text-gray-700">Página {currentPage}</span>
-        <button
-          onClick={goToNextPage}
-          disabled={!canGoNext}
-          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
-        >
-          Siguiente &rarr;
-        </button>
+      {/* --- INICIO DE LA CORRECCIÓN DE PAGINACIÓN --- */}
+      {/* Usamos 'grid' y 'grid-cols-3' para centrar la paginación.
+        Col 1: Dropdown (alineado a la izquierda)
+        Col 2: Controles (centrados)
+        Col 3: Vacía (para balancear)
+      */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 items-center mt-8 gap-4">
+
+        {/* Dropdown de PageSize (Columna 1) */}
+        <div className="flex items-center gap-2 justify-start">
+          <label htmlFor="pageSize" className="text-sm text-gray-700">Mostrar:</label>
+          <select
+            id="pageSize"
+            value={pageSize}
+            onChange={handlePageSizeChange}
+            className="p-2 border border-gray-300 rounded-lg text-sm h-full"
+          >
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+
+        {/* Controles de Paginación (Columna 2) */}
+        {/* Quitamos 'mt-8' que estaba mal copiado.
+          'justify-center' centra los botones.
+        */}
+        <div className="flex justify-center items-center gap-4">
+          <button
+            onClick={goToPrevPage}
+            disabled={currentPage === 1}
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+          >
+            &larr; Anterior
+          </button>
+          <span className="text-gray-700">Página {currentPage}</span>
+          <button
+            onClick={goToNextPage}
+            disabled={!canGoNext}
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+          >
+            Siguiente &rarr;
+          </button>
+        </div>
+
+        {/* Columna 3 (vacía para centrar la Col 2) */}
+        <div></div>
       </div>
     </div>
   );
