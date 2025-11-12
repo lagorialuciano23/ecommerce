@@ -11,6 +11,8 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   // 'localSearch' (NUEVO) se usará para el input
   const [localSearch, setLocalSearch] = useState('');
+  //Añadimos el estado para el filtro
+  const [filterStatus, setFilterStatus] = useState(''); // '' significa "Todos"
   //PAGINACION
   const [currentPage, setCurrentPage] = useState(1);
   const [canGoNext, setCanGoNext] = useState(false);
@@ -20,9 +22,8 @@ export default function ProductsPage() {
       try {
         setIsLoading(true);
         setError(null);
-
-        // 4. Usamos nuestro servicio 'api' (que ya incluye el token)
-        const response = await productsService.getAll(currentPage, 8, searchTerm);
+        //Pasamos el filtro al servicio
+        const response = await productsService.getAll(currentPage, 8, searchTerm, filterStatus);
 
         // Guardamos la respuesta
         setProducts(response.Items);
@@ -36,7 +37,7 @@ export default function ProductsPage() {
     };
 
     fetchProducts();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, filterStatus]);
 
   const goToNextPage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -51,6 +52,12 @@ export default function ProductsPage() {
     e.preventDefault();
     setCurrentPage(1); // Reiniciamos a la página 1
     setSearchTerm(localSearch); // Actualizamos el término de búsqueda, lo que dispara el useEffect
+  };
+
+  //HANDLER para el <select>
+  const handleStatusChange = (e) => {
+    setCurrentPage(1);
+    setFilterStatus(e.target.value);
   };
 
   // Ya no filtramos en el frontend, el backend lo hace
@@ -108,6 +115,16 @@ export default function ProductsPage() {
             Buscar
             </button>
           </form>
+          {/* Filtro de Estado */}
+          <select
+            value={filterStatus}
+            onChange={handleStatusChange}
+            className="p-2 border border-gray-300 rounded-lg h-full"
+          >
+            <option value="">Todos los estados</option>
+            <option value="active">Activos</option>
+            <option value="inactive">Inactivos</option>
+          </select>
           <Link to="/admin/products/create">
             <button className="
             w-full md:w-auto h-full  /* Ajusta el tamaño */

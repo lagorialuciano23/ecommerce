@@ -25,7 +25,7 @@ export const productsService = {
    * @returns {Promise<Array>} Lista de productos
    */
 
-  getAll: (pageNumber = 1, pageSize = 8, search = '') =>{
+  getAll: (pageNumber = 1, pageSize = 8, search = '', status = '') =>{
     const params = new URLSearchParams();
 
     params.append('pageNumber', pageNumber);
@@ -33,6 +33,10 @@ export const productsService = {
 
     if (search) {
       params.append('search', search);
+    }
+
+    if (status) {
+      params.append('status', status);
     }
 
     return api.get(`/products?${params.toString()}`);
