@@ -70,7 +70,7 @@ export default function ProductCard({ product }) {
       </p>
 
       {/* 4. Precio */}
-      <p className="text-2xl font-bold text-green-400 mt-2">
+      <p className="text-2xl font-bold text-gray-900 mt-2">
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
       </p>
 

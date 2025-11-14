@@ -12,6 +12,7 @@ export default function CustomerProductsPage() {
   // Estados para los filtros y paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [pageSize, setPageSize] = useState(10); // Default 10
 
   const [searchParams] = useSearchParams(); //Hook para leer la URL
 
@@ -33,7 +34,7 @@ export default function CustomerProductsPage() {
       try {
         const response = await productsService.getActiveProducts(
           currentPage,
-          8, // PageSize
+          pageSize, // PageSize
           searchTerm,
         );
 
@@ -50,7 +51,7 @@ export default function CustomerProductsPage() {
     };
 
     fetchProducts();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, pageSize]);
 
   // --- Manejadores de Paginación ---
   const goToNextPage = () => {
@@ -59,6 +60,11 @@ export default function CustomerProductsPage() {
 
   const goToPrevPage = () => {
     setCurrentPage((prev) => Math.max(1, prev - 1)); // No ir por debajo de 1
+  };
+
+  const handlePageSizeChange = (e) => {
+    setCurrentPage(1); // Reiniciar a página 1
+    setPageSize(Number(e.target.value));
   };
 
   // --- Renderizado ---
@@ -109,22 +115,47 @@ export default function CustomerProductsPage() {
       </div>
 
       {/* --- Paginación --- */}
-      <div className="flex justify-between items-center mt-8">
-        <button
-          onClick={goToPrevPage}
-          disabled={currentPage === 1}
-          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
-        >
-          &larr; Anterior
-        </button>
-        <span className="text-gray-800 text-xl">Página {currentPage}</span>
-        <button
-          onClick={goToNextPage}
-          disabled={!canGoNext} // Deshabilitado si no hay más páginas
-          className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
-        >
-          Siguiente &rarr;
-        </button>
+       <div className="grid grid-cols-1 sm:grid-cols-3 items-center mt-8 gap-4">
+
+        {/* Dropdown de PageSize (Columna 1) */}
+        <div className="flex items-center gap-2 justify-start">
+          <label htmlFor="pageSize" className="text-sm text-gray-700">Mostrar:</label>
+          <select
+            id="pageSize"
+            value={pageSize}
+            onChange={handlePageSizeChange}
+            className="p-2 border border-gray-300 rounded-lg text-sm h-full"
+          >
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+
+        {/* Controles de Paginación (Columna 2) */}
+        {/* Quitamos 'mt-8' que estaba mal copiado.
+          'justify-center' centra los botones.
+        */}
+        <div className="flex justify-center items-center gap-4">
+          <button
+            onClick={goToPrevPage}
+            disabled={currentPage === 1}
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+          >
+            &larr; Anterior
+          </button>
+          <span className="text-gray-700">Página {currentPage}</span>
+          <button
+            onClick={goToNextPage}
+            disabled={!canGoNext}
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+          >
+            Siguiente &rarr;
+          </button>
+        </div>
+
+        {/* Columna 3 (vacía para centrar la Col 2) */}
+        <div></div>
       </div>
     </div>
   );
