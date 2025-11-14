@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { productsService } from '../services/productsService';
+import { productErrorMap } from '../helpers/productErrorMap';
 import FormInput from './FormInput';
 
 function ProductsForm({ onSuccess, productToEdit }) {
@@ -41,6 +42,9 @@ function ProductsForm({ onSuccess, productToEdit }) {
         isActive: data.isActive,
       };
 
+      //DEBUGGER
+      console.log('Objeto enviado al backend:', productData);
+
       if (isEditMode) {
         // --- MODO EDICIÓN ---
         // Usamos el ID del producto original y el servicio de 'update'
@@ -53,7 +57,10 @@ function ProductsForm({ onSuccess, productToEdit }) {
 
       if (onSuccess) onSuccess(); // Llamar al callback de éxito
     } catch (error) {
-      setSubmitError(error.message || 'Error al crear el producto');
+      // 'error' ahora es el objeto { code, message } de Axios
+      const friendlyMessage = productErrorMap[error.code] || error.message || 'Error al guardar el producto';
+
+      setSubmitError(friendlyMessage);
     } finally {
       setIsSubmitting(false);
     }

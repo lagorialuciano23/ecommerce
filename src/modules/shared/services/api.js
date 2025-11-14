@@ -37,24 +37,28 @@ api.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    // --- Manejo de Errores Centralizado ---
-    let errorMessage = 'Ocurrió un error desconocido';
+    // Creamos un objeto de error por defecto
+    let errorResponse = {
+      message: 'Ocurrió un error desconocido',
+      code: 'UNKNOWN',
+    };
 
     if (error.response) {
-      // El backend respondió con un error (4xx, 5xx)
-      // Usamos el 'message' que envia el Middleware de C#
-      errorMessage = error.response.data?.message || error.response.data || error.message;
-
-      if (error.response.status === 401) {
-        // Si el token es inválido, podríamos desloguear al usuario
-        console.error('Error 401: No autorizado. Redirigiendo al login...');
+      // El backend respondió. 'error.response.data' es { message, code }
+      if (typeof error.response.data === 'object' && error.response.data !== null) {
+        errorResponse.message = error.response.data.message || error.message;
+        errorResponse.code = error.response.data.code || 'BACKEND_ERROR';
+      } else {
+        // Si el backend mandó solo texto (ej. un 500 HTML)
+        errorResponse.message = error.response.data || error.message;
       }
     } else if (error.request) {
       // La petición se hizo pero no hubo respuesta (API caída)
-      errorMessage = 'No se pudo conectar con el servidor. Revisa que la API esté funcionando.';
+      errorResponse.message = 'No se pudo conectar con el servidor. Revisa que la API esté funcionando.';
+      errorResponse.code = 'CONNECTION_ERROR';
     }
 
-    // Rechazamos la promesa con el mensaje de error limpio
-    return Promise.reject(new Error(errorMessage));
+    // Rechazamos la promesa con el OBJETO de error
+    return Promise.reject(errorResponse);
   },
 );
