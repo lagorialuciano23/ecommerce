@@ -36,7 +36,7 @@ function CartItem({ item, removeFromCart }) {
 export default function CartPage() {
   // --- 1. HOOKS ---
   const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
-  const { isLoggedIn } = useAuth(); // Corregido: 'user' no se usaba
+  const { isLoggedIn, user } = useAuth(); // Corregido: 'user' no se usaba
   const navigate = useNavigate();
 
   // Estados de UI
@@ -62,8 +62,7 @@ export default function CartPage() {
     setIsLoading(true);
     setApiError(null);
 
-    // (NOTA: Asunto pendiente - El backend necesita un CustomerId de tu 'customers.json')
-    const customerId = 'a1111111-aaaa-1111-aaaa-111111111111';
+    const customerId = user.Id;
 
     const orderItemsPayload = cartItems.map(item => ({
       ProductId: item.id,
