@@ -25,32 +25,37 @@ export default function OrdersPage() {
 
   // Estados para los filtros y paginación
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10); // Default 10
   const [filterStatus, setFilterStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [canGoNext, setCanGoNext] = useState(true);
 
   // Efecto para cargar las órdenes
   useEffect(() => {
-    const fetchOrders = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await ordersService.getAll(
-          currentPage,
-          8,
-          filterStatus,
-          searchTerm
-        );
-        setOrders(response);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error al cargar órdenes:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchOrders = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await ordersService.getAll(
+        currentPage,
+        pageSize,
+        filterStatus,
+        searchTerm
+      );
+      setOrders(response);
+      
+      // Actualizar canGoNext según la respuesta
+      setCanGoNext(response === pageSize);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error al cargar órdenes:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchOrders();
-  }, [currentPage, filterStatus, searchTerm]);
+  fetchOrders();
+}, [currentPage, filterStatus, searchTerm, pageSize]);
 
   // --- Manejadores de eventos ---
   const handleSearch = (e) => {
@@ -63,6 +68,10 @@ export default function OrdersPage() {
     setCurrentPage(1);
   };
 
+  const handlePageSizeChange = (e) => {
+    setCurrentPage(1); // Reiniciar a página 1
+    setPageSize(Number(e.target.value));
+  };
   // --- Manejadores de Paginación ---
   const goToNextPage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -215,35 +224,48 @@ export default function OrdersPage() {
       {renderContent()}
 
       {/* --- Paginación --- */}
-      {!isLoading && !error && orders.length > 0 && (
-        <div className="flex justify-between items-center mt-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 items-center mt-8 gap-4">
+
+        {/* Dropdown de PageSize (Columna 1) */}
+        <div className="flex items-center gap-2 justify-start">
+          <label htmlFor="pageSize" className="text-sm text-gray-700">Mostrar:</label>
+          <select
+            id="pageSize"
+            value={pageSize}
+            onChange={handlePageSizeChange}
+            className="p-2 border border-gray-300 rounded-lg text-sm h-full"
+          >
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+
+        {/* Controles de Paginación (Columna 2) */}
+        {/* Quitamos 'mt-8' que estaba mal copiado.
+          'justify-center' centra los botones.
+        */}
+        <div className="flex justify-center items-center gap-4">
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className="flex items-center gap-1 px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            <span className="hidden sm:inline">Anterior</span>
+            &larr; Anterior
           </button>
-          
-          <span className="text-sm text-gray-700 font-medium">
-            Pág. {currentPage}
-          </span>
-          
+          <span className="text-gray-700">Página {currentPage}</span>
           <button
             onClick={goToNextPage}
-            disabled={orders.length < 8}
-            className="flex items-center gap-1 px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+            disabled={!canGoNext}
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            <span className="hidden sm:inline">Siguiente</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            Siguiente &rarr;
           </button>
         </div>
-      )}
+
+        {/* Columna 3 (vacía para centrar la Col 2) */}
+        <div></div>
+      </div>
     </div>
   );
 }
