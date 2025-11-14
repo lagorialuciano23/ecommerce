@@ -30,6 +30,10 @@ export const ordersService = {
     return api.get(`/orders?${params.toString()}`);
   },
 
+  getOrdersSummary: () => {
+    return api.get('/orders/summary');
+  },
+
   /**
    * Obtiene una orden por su ID.
    * GET /orders/{id}
