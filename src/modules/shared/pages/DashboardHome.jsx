@@ -9,7 +9,7 @@ export default function DashboardHome() {
     total: 0,
     activos: 0,
     inactivos: 0,
-    bajoStock: 0
+    bajoStock: 0,
   });
 
   const [ordersSummary, setOrdersSummary] = useState({
@@ -18,7 +18,7 @@ export default function DashboardHome() {
     totalProcessing: 0,
     totalShipped: 0,
     totalDelivered: 0,
-    totalCancelled: 0
+    totalCancelled: 0,
   });
 
   const [orders, setOrders] = useState([]);
@@ -30,29 +30,31 @@ export default function DashboardHome() {
       try {
         const [responseOrders, responseProducts] = await Promise.all([
           ordersService.getOrdersSummary(),
-          productsService.getProductSummary()
+          productsService.getProductSummary(),
         ]);
 
         setOrdersSummary(responseOrders || { total: 0, totalPending: 0, totalProcessing: 0, totalShipped: 0, totalDelivered: 0, totalCancelled: 0 }); // depende de cómo lo devuelva tu servicio
         setSummary(responseProducts || { total: 0, activos: 0, inactivos: 0, bajoStock: 0 });
 
-        console.log("Ordenes:", responseOrders);
-        console.log("Resumen de productos:", responseProducts);
+        console.log('Ordenes:', responseOrders);
+        console.log('Resumen de productos:', responseProducts);
       } catch (error) {
-        console.error("Error al obtener datos:", error);
+        console.error('Error al obtener datos:', error);
         setError(error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
   if (loading) return <p>Cargando...</p>;
+
   if (error) return <p>Error al cargar el dashboard.</p>;
 
   return (
-   <div className="grid md:grid-cols-4 gap-6">
+    <div className="grid md:grid-cols-4 gap-6">
       <StatCard title="Productos totales" value={summary.Total} bgColor="bg-blue-200" textColor="text-blue-900" />
       <StatCard title="Productos activos" value={summary.Activos} bgColor="bg-green-200" textColor="text-green-900" />
       <StatCard title="Inactivos" value={summary.Inactivos} bgColor="bg-red-200" textColor="text-red-900" />

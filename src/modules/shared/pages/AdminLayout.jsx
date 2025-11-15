@@ -101,7 +101,7 @@ function AdminLayout() {
                       }`
                     }
                   >
-                    Home
+                    Inicio
                   </NavLink>
                 </li>
                 <li>
@@ -116,7 +116,7 @@ function AdminLayout() {
                       }`
                     }
                   >
-                    Products
+                    Productos
                   </NavLink>
                 </li>
                 <li>
@@ -131,7 +131,7 @@ function AdminLayout() {
                       }`
                     }
                   >
-                    Orders
+                    Ordenes
                   </NavLink>
                 </li>
               </ul>
