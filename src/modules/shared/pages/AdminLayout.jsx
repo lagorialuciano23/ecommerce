@@ -139,7 +139,7 @@ function AdminLayout() {
           </nav>
         </>
 
-        <main className="flex-1 min-h-[calc(100vh-53px)] overflow-y-auto">
+        <main className="flex-1 bg-gray-100 min-h-[calc(100vh-53px)] overflow-y-auto">
           <div className="p-4 md:p-6 lg:p-8">
             <Outlet />
           </div>
