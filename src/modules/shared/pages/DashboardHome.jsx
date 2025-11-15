@@ -1,4 +1,17 @@
 import { useState, useEffect } from 'react';
+import { 
+  Package, 
+  CheckCircle, 
+  XCircle, 
+  AlertTriangle,
+  ClipboardList,
+  Clock,
+  RefreshCw,
+  Send,
+  PackageCheck,
+  Ban
+} from 'lucide-react'
+
 import { ordersService } from '../../orders/services/orderServices';
 import { productsService } from '../../products/services/productsService';
 import StatCard from '../../shared/components/StatCard';
@@ -96,25 +109,29 @@ export default function DashboardHome() {
             title="Productos totales" 
             value={summary.Total} 
             bgColor="bg-blue-200" 
-            textColor="text-blue-900" 
+            textColor="text-blue-900"
+            icon={Package}
           />
           <StatCard 
             title="Productos activos" 
             value={summary.Activos} 
             bgColor="bg-green-200" 
-            textColor="text-green-900" 
+            textColor="text-green-900"
+            icon={CheckCircle}
           />
           <StatCard 
             title="Inactivos" 
             value={summary.Inactivos} 
             bgColor="bg-red-200" 
-            textColor="text-red-900" 
+            textColor="text-red-900"
+            icon={XCircle}
           />
           <StatCard 
             title="Bajo stock" 
             value={summary.BajoStock} 
             bgColor="bg-yellow-200" 
-            textColor="text-yellow-900" 
+            textColor="text-yellow-900"
+            icon={AlertTriangle}
           />
         </div>
       </div>
@@ -127,37 +144,43 @@ export default function DashboardHome() {
             title="Órdenes totales" 
             value={ordersSummary.TotalOrders} 
             bgColor="bg-purple-200" 
-            textColor="text-purple-900" 
+            textColor="text-purple-900"
+            icon={ClipboardList}
           />
           <StatCard 
             title="Pendientes" 
             value={ordersSummary.PendingOrders} 
             bgColor="bg-yellow-200" 
-            textColor="text-yellow-900" 
+            textColor="text-yellow-900"
+            icon={Clock}
           />
           <StatCard 
             title="En proceso" 
             value={ordersSummary.ProcessingOrders} 
             bgColor="bg-blue-200" 
-            textColor="text-blue-900" 
+            textColor="text-blue-900"
+            icon={RefreshCw}
           />
           <StatCard 
             title="Enviadas" 
             value={ordersSummary.ShippedOrders} 
             bgColor="bg-indigo-200" 
-            textColor="text-indigo-900" 
+            textColor="text-indigo-900"
+            icon={Send}
           />
           <StatCard 
             title="Entregadas" 
             value={ordersSummary.DeliveredOrders} 
             bgColor="bg-green-200" 
-            textColor="text-green-900" 
+            textColor="text-green-900"
+            icon={PackageCheck}
           />
           <StatCard 
             title="Canceladas" 
             value={ordersSummary.CancelledOrders} 
             bgColor="bg-red-200" 
-            textColor="text-red-900" 
+            textColor="text-red-900"
+            icon={Ban}
           />
         </div>
       </div>
