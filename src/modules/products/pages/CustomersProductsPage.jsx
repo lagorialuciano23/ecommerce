@@ -99,15 +99,30 @@ export default function CustomerProductsPage() {
 
   return (
     <div className="text-gray-800 container mx-auto">
-      {/* Si el término de búsqueda existe, mostramos un título
-        (Esto es opcional, pero mejora la experiencia)
-      */}
       {searchTerm ? (
         <h1 className="text-3xl font-bold mb-6 text-gray-800">
           Resultados para: "{searchTerm}"
         </h1>
       ) : (
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">Catálogo</h1>
+        <div className="flex items-center gap-2 justify-between">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">
+          Catálogo
+        </h1>
+        <div className="flex items-center gap-2">
+          <label htmlFor="pageSize " className="text-lg text-gray-700">Productos por pagina: </label>
+          <select
+            id="pageSize"
+            value={pageSize}
+            onChange={handlePageSizeChange}
+            className="p-2 border border-gray-300 rounded-lg text-lg h-full"
+          >
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+        </div>
+        
       )}
 
       <div className="mb-8">
@@ -117,32 +132,13 @@ export default function CustomerProductsPage() {
       {/* --- Paginación --- */}
        <div className="grid grid-cols-1 sm:grid-cols-3 items-center mt-8 gap-4">
 
-        {/* Dropdown de PageSize (Columna 1) */}
-        <div className="flex items-center gap-2 justify-start">
-          <label htmlFor="pageSize" className="text-sm text-gray-700">Mostrar:</label>
-          <select
-            id="pageSize"
-            value={pageSize}
-            onChange={handlePageSizeChange}
-            className="p-2 border border-gray-300 rounded-lg text-sm h-full"
-          >
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>
-        </div>
-
-        {/* Controles de Paginación (Columna 2) */}
-        {/* Quitamos 'mt-8' que estaba mal copiado.
-          'justify-center' centra los botones.
-        */}
         <div className="flex justify-center items-center gap-4">
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            &larr; Anterior
+            Anterior &larr;
           </button>
           <span className="text-gray-700">Página {currentPage}</span>
           <button
@@ -153,9 +149,6 @@ export default function CustomerProductsPage() {
             Siguiente &rarr;
           </button>
         </div>
-
-        {/* Columna 3 (vacía para centrar la Col 2) */}
-        <div></div>
       </div>
     </div>
   );
