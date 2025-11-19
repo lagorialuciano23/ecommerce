@@ -198,10 +198,12 @@ export default function OrdersPage() {
 
   return (
     <div className="max-w-4xl mx-auto w-full">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Órdenes</h1>
-
+      
       {/* --- Filtros y Búsqueda --- */}
       <div className="mb-4 p-4 bg-white rounded-lg shadow border border-gray-200">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4"> 
+          Administracion de Órdenes
+        </h1>
         <div className="space-y-4">
           {/* Búsqueda */}
           <div>

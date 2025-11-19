@@ -1,7 +1,7 @@
 import { useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../auth/context/useAuth';
-import { LogOut, Menu, X, Shield, ShieldCheck } from 'lucide-react';
+import { LogOut, Menu, X, Crown } from 'lucide-react';
 
 function AdminLayout() {
   const navigate = useNavigate();
@@ -45,10 +45,9 @@ function AdminLayout() {
               )}
             </button>
 
-            {/* Logo/Título con Escudo */}
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md">
-                <ShieldCheck className="w-5 h-5 text-white" />
+                <Crown className="w-5 h-5 text-white" />
               </div>
               <h1 className="hidden md:block text-lg font-bold text-gray-800">
                 Admin Panel
@@ -56,32 +55,32 @@ function AdminLayout() {
             </div>
           </div>
 
-          {/* Centro: Info de Usuario (solo desktop) */}
-          <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
+          {/* user centrado ) */}
+          <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white rounded-lg">
             <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
-              <span className="text-white font-semibold text-sm">
+              <span className="text-white font-semibold text-md">
                 {user?.Username?.[0]?.toUpperCase() || 'U'}
               </span>
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-medium text-gray-800 truncate">
+              <span className="text-md font-medium text-gray-900 truncate">
                 {user?.Username || 'Usuario'}
               </span>
               <span className="text-xs text-gray-500">Administrador</span>
             </div>
           </div>
 
-          {/* Lado Derecho: Avatar Mobile + Logout */}
+          {/* salir */}
           <div className="flex items-center gap-2">
 
-            {/* Avatar Mobile */}
+            {/* mobile */}
             <div className="lg:hidden w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
               <span className="text-white font-semibold text-xs">
                 {user?.Username?.[0]?.toUpperCase() || 'U'}
               </span>
             </div>
 
-            {/* Botón Logout */}
+            {/* botn salir */}
             <button
               onClick={handleLogout}
               className="
