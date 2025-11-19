@@ -26,7 +26,6 @@ export default function Toast({ open, title = 'Listo', message, onClose, duratio
             <div className="text-sm font-semibold text-lg text-gray-900">{title}</div>
           </div>
           {message && <div className="text-sm text-gray-500">{message}</div>}
-        
         </div>
       </div>
     </div>
