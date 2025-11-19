@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { productsService } from '../services/productsService.js';
 import { Link } from 'react-router-dom';
 import AdminProductCard from '../components/AdminProductCard.jsx';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -185,7 +186,7 @@ export default function ProductsPage() {
             disabled={currentPage === 1}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            &larr; Anterior
+            <ChevronLeft/>
           </button>
           <span className="text-gray-700">Página {currentPage}</span>
           <button
@@ -193,7 +194,7 @@ export default function ProductsPage() {
             disabled={!canGoNext}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            Siguiente &rarr;
+            <ChevronRight/>
           </button>
         </div>
 

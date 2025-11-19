@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ordersService } from '../services/orderServices';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Definimos los estados de orden basados en tu backend
 const orderStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
@@ -251,7 +252,7 @@ export default function OrdersPage() {
             disabled={currentPage === 1}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            &larr; Anterior
+            <ChevronLeft/>
           </button>
           <span className="text-gray-700">Página {currentPage}</span>
           <button
@@ -259,7 +260,7 @@ export default function OrdersPage() {
             disabled={!canGoNext}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            Siguiente &rarr;
+            <ChevronRight/>
           </button>
         </div>
 

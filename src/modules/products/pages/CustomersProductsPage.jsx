@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { productsService } from '../services/productsService';
 import ProductCard from '../components/ProductCard';
 import Toast from '../../shared/components/Toast';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function CustomerProductsPage() {
   // Estados para los datos y la UI
@@ -135,12 +136,12 @@ const handleCloseToast = () => {
           Catálogo
         </h1>
         <div className="flex items-center gap-2">
-          <label htmlFor="pageSize " className="text-lg text-gray-700">Productos por pagina: </label>
+          <label htmlFor="pageSize " className="text-lg text-gray-700">Productos por página </label>
           <select
             id="pageSize"
             value={pageSize}
             onChange={handlePageSizeChange}
-            className="p-2 border border-gray-300 rounded-lg text-lg h-full"
+            className="p-2 border border-gray-600  rounded-lg text-lg h-full"
           >
             <option value="10">10</option>
             <option value="15">15</option>
@@ -156,7 +157,7 @@ const handleCloseToast = () => {
       </div>
 
       {/* --- Paginación --- */}
-       <div className="grid grid-cols-1 sm:grid-cols-3 items-center mt-8 gap-4">
+       <div className="flex justify-center items-center gap-4">
 
         <div className="flex justify-center items-center gap-4">
           <button
@@ -164,7 +165,7 @@ const handleCloseToast = () => {
             disabled={currentPage === 1}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            Anterior &larr;
+           <ChevronLeft/>
           </button>
           <span className="text-gray-700">Página {currentPage}</span>
           <button
@@ -172,7 +173,7 @@ const handleCloseToast = () => {
             disabled={!canGoNext}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-            Siguiente &rarr;
+          <ChevronRight/>
           </button>
         </div>
       </div>
