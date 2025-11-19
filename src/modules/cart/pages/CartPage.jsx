@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useCart } from '../context/useCart';
 import { useAuth } from '../../auth/context/useAuth';
@@ -134,12 +134,12 @@ export default function CartPage() {
 
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Tu Carrito de Compras</h1>
-            <Link
-              to="/"
-              className="text-blue-600 hover:text-blue-800"
+            <button
+              onClick={() => navigate('/')}
+              className="text-purple-600 hover:text-purple-800 font-medium"
             >
-              &larr; Seguir comprando
-            </Link>
+              Regresar a la tienda
+            </button>
           </div>
 
           {/* --- Items y Formulario --- */}

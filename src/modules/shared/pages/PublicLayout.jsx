@@ -16,7 +16,7 @@ export default function PublicLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // 3. Estado para controlar qué modal se ve
   const [modalView, setModalView] = useState(null); // 'login', 'register', o null
-  const { toastMessage, clearToast } = useCart();
+  const { toastMessage, clearToast, cartCount } = useCart();
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -64,8 +64,20 @@ export default function PublicLayout() {
               <Link to="/" onClick={handleLinkClick} className="text-sm font-medium text-gray-600 hover:text-gray-900">
                 Productos
               </Link>
-              <Link to="/cart" onClick={handleLinkClick} className="text-sm font-medium text-gray-600 hover:text-gray-900">
-                Carrito de compras
+              <Link
+                to="/cart" onClick={handleLinkClick}
+                className="relative group text-gray-600 hover:text-purple-600 transition-colors"
+                aria-label="Carrito de compras"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                </svg>
+                {/* Indicador visual (Badge) - Solo se muestra si cartCount > 0 */}
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-sm border border-white">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             </div>
           </div>
@@ -114,6 +126,10 @@ export default function PublicLayout() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
+              {/* Badge también en el menú hamburguesa si quieres notificar */}
+              {cartCount > 0 && (
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>
+              )}
             </button>
           </div>
         </nav>
@@ -139,8 +155,13 @@ export default function PublicLayout() {
             <Link to="/" onClick={handleLinkClick} className="block py-2 text-base font-medium text-gray-600 hover:text-gray-900">
               Productos
             </Link>
-            <Link to="/cart" onClick={handleLinkClick} className="block py-2 text-base font-medium text-gray-600 hover:text-gray-900">
-              Carrito de compras
+            <Link to="/cart" onClick={handleLinkClick} className="flex items-center justify-between py-2 text-base font-medium text-gray-600 hover:text-gray-900">
+              <span>Carrito de compras</span>
+              {cartCount > 0 && (
+                <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             {/* Auth Móvil */}
