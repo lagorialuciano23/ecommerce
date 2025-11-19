@@ -2,23 +2,24 @@ import { useState, useMemo, useEffect } from 'react';
 import { AuthContext } from './useAuth';
 
 export function AuthProvider({ children }) {
-  // ✅ CORRECCIÓN: Validamos que el token sea válido
   const [token, setToken] = useState(() => {
-    const savedToken = localStorage.getItem('token');
-    // Solo retornamos el token si existe y NO es la cadena "null"
+    const savedToken = sessionStorage.getItem('token');
+
     return savedToken && savedToken !== 'null' ? savedToken : null;
   });
 
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = localStorage.getItem('user');
-      // Validamos que no sea null, undefined o la cadena "null"
+      const savedUser = sessionStorage.getItem('user');
+
       if (!savedUser || savedUser === 'null') {
         return null;
       }
+
       return JSON.parse(savedUser);
     } catch (error) {
       console.error('Error al obtener el usuario del localStorage:', error);
+
       return null;
     }
   });
@@ -28,17 +29,17 @@ export function AuthProvider({ children }) {
 
   // Sincronizamos el estado con localStorage
   useEffect(() => {
-    // ✅ CORRECCIÓN: Solo guardamos si hay un valor válido
+    // Solo guardamos si hay un valor válido
     if (token) {
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
     } else {
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
     }
 
     if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem('user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('user');
+      sessionStorage.removeItem('user');
     }
   }, [token, user]);
 
@@ -50,7 +51,8 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null);
     setToken(null);
-    // Los removeItem del useEffect limpiarán localStorage
+    // Limpiamos todo el sessionStorage al salir
+    sessionStorage.clear();
   };
 
   const authValue = useMemo(() => ({
