@@ -7,6 +7,14 @@ import { Clock, Package, Truck, CheckCircle, XCircle } from 'lucide-react';
 // Definimos los estados de orden basados en tu backend
 const orderStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
+const statusTranslations = {
+  'PENDING': 'Pendiente',
+  'PROCESSING': 'En Proceso',
+  'SHIPPED': 'Enviado',
+  'DELIVERED': 'Entregado',
+  'CANCELLED': 'Cancelado',
+};
+
 // Función helper para obtener las clases de color según el estado
 const getStatusClasses = (status) => {
   const statusMap = {
@@ -14,14 +22,16 @@ const getStatusClasses = (status) => {
     'PROCESSING': 'bg-blue-100 text-blue-700',
     'SHIPPED': 'bg-indigo-100 text-indigo-700',
     'DELIVERED': 'bg-green-100 text-green-700',
-    'CANCELLED': 'bg-red-100 text-red-700'
+    'CANCELLED': 'bg-red-100 text-red-700',
   };
+
   return statusMap[status] || 'bg-gray-100 text-gray-700';
 };
 
 const getStatusIcon = (status) => {
-  const iconProps = { className: "w-5 h-5" };
-  switch(status) {
+  const iconProps = { className: 'w-5 h-5' };
+
+  switch (status) {
     case 'PENDING': return <Clock {...iconProps} className="w-5 h-5 text-yellow-600" />;
     case 'PROCESSING': return <Package {...iconProps} className="w-5 h-5 text-blue-600" />;
     case 'SHIPPED': return <Truck {...iconProps} className="w-5 h-5 text-indigo-600" />;
@@ -46,32 +56,33 @@ export default function OrdersPage() {
 
   // Efecto para cargar las órdenes
   useEffect(() => {
-  const fetchOrders = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await ordersService.getAll(
-        currentPage,
-        pageSize,
-        filterStatus,
-        searchTerm
-      );
-      setOrders(response);
-      console.log(response);
-      console.log(response[0]?.CreatedAt);
-      
-      // Actualizar canGoNext según la respuesta
-      setCanGoNext(response.length === pageSize);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error al cargar órdenes:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const fetchOrders = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await ordersService.getAll(
+          currentPage,
+          pageSize,
+          filterStatus,
+          searchTerm,
+        );
 
-  fetchOrders();
-}, [currentPage, filterStatus, searchTerm, pageSize]);
+        setOrders(response);
+        console.log(response);
+        console.log(response[0]?.CreatedAt);
+
+        // Actualizar canGoNext según la respuesta
+        setCanGoNext(response.length === pageSize);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error al cargar órdenes:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [currentPage, filterStatus, searchTerm, pageSize]);
 
   // --- Manejadores de eventos ---
   const handleSearch = (e) => {
@@ -136,15 +147,15 @@ export default function OrdersPage() {
     return (
       <div className="space-y-3">
         {orders.map((order) => (
-          <div 
-            key={order.Id} 
+          <div
+            key={order.Id}
             className={`bg-white p-4 rounded-lg shadow border-l-4 hover:shadow-md transition-shadow ${
-            order.Status === 'PENDING' ? 'border-l-yellow-500' :
-            order.Status === 'PROCESSING' ? 'border-l-blue-500' :
-            order.Status === 'SHIPPED' ? 'border-l-indigo-500' :
-            order.Status === 'DELIVERED' ? 'border-l-green-500' :
-            'border-l-red-500'
-          }`}
+              order.Status === 'PENDING' ? 'border-l-yellow-500' :
+                order.Status === 'PROCESSING' ? 'border-l-blue-500' :
+                  order.Status === 'SHIPPED' ? 'border-l-indigo-500' :
+                    order.Status === 'DELIVERED' ? 'border-l-green-500' :
+                      'border-l-red-500'
+            }`}
           >
             {/* Header con título y badge */}
             <div className="flex items-start justify-between mb-3">
@@ -158,21 +169,22 @@ export default function OrdersPage() {
               </div>
               {getStatusIcon(order.Status)}
               <span className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ml-2 ${getStatusClasses(order.Status)}`}>
-                {order.Status}
+                {/* Usamos la traducción o el estado original si no hay traducción */}
+                {statusTranslations[order.Status] || order.Status}
               </span>
             </div>
-            
+
             {/* Información adicional */}
             <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
               <div>
-                <p className="text-sm text-gray-800 mt-1"> Fecha :  
-                {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
-                 day: '2-digit',
-                 month: 'short',
-                 year: 'numeric',
-                 hour: '2-digit',
-                 minute: '2-digit'
-                }) : 'N/A'}
+                <p className="text-sm text-gray-800 mt-1"> Fecha :
+                  {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }) : 'N/A'}
                 </p>
               </div>
               <div className="text-right">
@@ -219,7 +231,7 @@ export default function OrdersPage() {
                 placeholder="ID de cliente, N° orden..."
                 className="flex-1 p-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
-              <button 
+              <button
                 onClick={handleSearch}
                 className="px-3 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-colors flex-shrink-0"
               >
@@ -243,7 +255,7 @@ export default function OrdersPage() {
             >
               <option value="">Todos los estados</option>
               {orderStatuses.map(status => (
-                <option key={status} value={status}>{status}</option>
+                <option key={status} value={status}>{statusTranslations[status]}</option>
               ))}
             </select>
           </div>
