@@ -26,13 +26,7 @@ export default function Toast({ open, title = 'Listo', message, onClose, duratio
             <div className="text-sm font-semibold text-lg text-gray-900">{title}</div>
           </div>
           {message && <div className="text-sm text-gray-500">{message}</div>}
-          <button
-            onClick={onClose}
-            className="mt-3 inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium
-                       bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
-          >
-            <X/>
-          </button>
+        
         </div>
       </div>
     </div>
