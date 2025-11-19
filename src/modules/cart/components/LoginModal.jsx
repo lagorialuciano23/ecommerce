@@ -5,7 +5,7 @@ import { loginService } from '../../auth/services/login';
 import AuthInput from '../../auth/components/Input';
 import AuthSubmitButton from '../../auth/components/Button';
 
-// 1. AÑADIMOS 'open' a las props
+// AÑADIMOS 'open' a las props
 export default function LoginModal({ open, onClose, onLoginSuccess, footer }) {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
@@ -31,6 +31,7 @@ export default function LoginModal({ open, onClose, onLoginSuccess, footer }) {
       saveAuth(userObject, tokenString);
 
       if (onLoginSuccess) onLoginSuccess();
+
       console.log('Login exitoso', userObject);
       console.log('Token', tokenString);
       onClose();
@@ -49,8 +50,7 @@ export default function LoginModal({ open, onClose, onLoginSuccess, footer }) {
   return (
     // Fondo oscuro (overlay)
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"
-      onClick={onClose}
+      className="fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4"
     >
       {/* Contenido de la Modal (Fondo Blanco) */}
       <form

@@ -34,7 +34,7 @@ function CartItem({ item, removeFromCart }) {
 
 // Página principal del carrito
 export default function CartPage() {
-  // --- 1. HOOKS ---
+  // ---  HOOKS ---
   const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
   const { isLoggedIn, user } = useAuth(); // Corregido: 'user' no se usaba
   const navigate = useNavigate();
@@ -45,6 +45,7 @@ export default function CartPage() {
   const [apiError, setApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showAuthToast, setShowAuthToast] = useState(false);
 
   // Formulario para las direcciones
   const {
@@ -53,11 +54,22 @@ export default function CartPage() {
     formState: { errors, isValid },
   } = useForm({ mode: 'onChange' });
 
-  // 2. Definimos costos
+  // Definimos costos
   const shippingCost = 0.00; // Lo ponemos en 0 por ahora
   const finalTotal = cartTotal + shippingCost; // Corregido: esta variable ahora se usa
 
-  // --- 2. LÓGICA DE ENVÍO DE ORDEN ---
+  // Verificar Auth al clickear los campos
+  const handleAuthCheck = (e) => {
+    if (!isLoggedIn) {
+      // 1. Quitamos el foco para que el usuario no pueda escribir
+      e.target.blur();
+      // 2. Abrimos el modal de login
+      setIsModalOpen(true);
+      // 3. Mostramos el Toast de advertencia
+      setShowAuthToast(true);
+    }
+  };
+  // ---  LÓGICA DE ENVÍO DE ORDEN ---
   const submitOrder = async (formData) => {
     setIsLoading(true);
     setApiError(null);
@@ -92,6 +104,7 @@ export default function CartPage() {
   const handleFinalizePurchase = (formData) => {
     if (!isLoggedIn) {
       setIsModalOpen(true);
+      setShowAuthToast(true);
     } else {
       submitOrder(formData);
     }
@@ -142,6 +155,7 @@ export default function CartPage() {
               {/* --- Formulario de Direcciones --- */}
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6 space-y-4">
                 <h2 className="text-xl font-semibold text-gray-800">Datos de Envío</h2>
+                {/*INPUTS CON PROTECCIÓN onFocus*/}
                 <AuthInput
                   label="Dirección de Envío"
                   id="shippingAddress"
@@ -150,6 +164,7 @@ export default function CartPage() {
                   errors={errors}
                   validationRules={{ required: 'La dirección de envío es obligatoria' }}
                   labelClassName="text-gray-800"
+                  onFocus={handleAuthCheck}
                 />
                 <AuthInput
                   label="Dirección de Facturación"
@@ -159,6 +174,7 @@ export default function CartPage() {
                   errors={errors}
                   validationRules={{ required: 'La dirección de facturación es obligatoria' }}
                   labelClassName="text-gray-800"
+                  onFocus={handleAuthCheck}
                 />
                 <div>
                   <label htmlFor="notes" className="block text-gray-800 mb-2">Notas (Opcional)</label>
@@ -167,6 +183,7 @@ export default function CartPage() {
                     {...register('notes')}
                     className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows="2"
+                    onFocus={handleAuthCheck}
                   ></textarea>
                 </div>
               </div>
@@ -256,12 +273,20 @@ export default function CartPage() {
           </div>
         }
       />
-
+      {/* --- Toast de Exito --- */}
       <Toast
         open={showSuccessToast}
         title="¡Compra Exitosa!"
         message="Tu orden ha sido creada."
         onClose={handleToastClose}
+      />
+      {/* Toast de Advertencia de Login */}
+      <Toast
+        open={showAuthToast}
+        title="ATENCIÓN"
+        message="DEBES INICIAR SESION O REGISTRARTE PARA FINALIZAR LA COMPRA"
+        onClose={() => setShowAuthToast(false)}
+        duration={4000}
       />
     </>
   );
