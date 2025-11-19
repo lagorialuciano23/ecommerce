@@ -94,13 +94,13 @@ export default function ProductsPage() {
 
       <div className="
       flex flex-col lg:flex-row
-      justify-between lg:items-center
-      gap-4
+      justify-between lg:items-center bg-white p-4 rounded-lg shadow-md mb-6
+      gap-4 lg:gap-0
       ">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          Administrar Productos
+        <h1 className="text-2xl font-bold text-gray-900 mb-6 lg:mb-0">
+          Administracion de Productos
         </h1>
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="flex flex-col md:flex-row gap-4 mb-6 lg:mb-0">
           <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2">
             <input
               type="text"

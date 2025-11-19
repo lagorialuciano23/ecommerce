@@ -37,7 +37,7 @@ function Register() {
   return (
     <>
       <div
-        className="min-h-screen flex flex-col items-center justify-center
+        className="min-h-screen flex flex-col items-center justify-center text-black
         bg-gradient-to-br from-gray-300 via-gray-300 to-gray-400 bg-cover bg-fixed bg-center"
       >
         <form

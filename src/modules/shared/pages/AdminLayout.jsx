@@ -1,6 +1,7 @@
 import { useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../auth/context/useAuth';
+import { LogOut, Menu, X, Shield, ShieldCheck } from 'lucide-react';
 
 function AdminLayout() {
   const navigate = useNavigate();
@@ -22,48 +23,85 @@ function AdminLayout() {
 
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-white text-gray-800">
-      {/* HEADER - Mobile First */}
+      {/* HEADER MEJORADO */}
       <header className="
-        bg-white border-b border-gray-200 px-4 py-3
-        flex items-center justify-between
-        sticky top-0 z-50 shadow-md
+        bg-white border-b border-gray-200
+        sticky top-0 z-50 shadow-sm
       ">
-        {/* Hamburger Menu - Solo visible en mobile */}
-        <button
-          onClick={toggleSidebar}
-          className="lg:hidden p-2 hover:bg-gray-100 rounded-md transition"
-          aria-label="Toggle menu"
-        >
-          {isSidebarOpen ? (
-            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
+        <div className="px-4 py-3 flex items-center justify-between gap-4">
+          
+          {/* Lado Izquierdo: Hamburger + Logo */}
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Hamburger Menu - Solo mobile */}
+            <button
+              onClick={toggleSidebar}
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isSidebarOpen ? (
+                <X className="w-6 h-6 text-gray-700" />
+              ) : (
+                <Menu className="w-6 h-6 text-gray-700" />
+              )}
+            </button>
 
-        <h1 className="text-base md:text-lg font-semibold text-gray-800">
-          Iniciado sesión como{' '}
-          {user && user.Username ? user.Username : 'User'}
-        </h1>
+            {/* Logo/Título con Escudo */}
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md">
+                <ShieldCheck className="w-5 h-5 text-white" />
+              </div>
+              <h1 className="hidden md:block text-lg font-bold text-gray-800">
+                Admin Panel
+              </h1>
+            </div>
+          </div>
 
-        <button
-          onClick={handleLogout}
-          className="
-            text-xs md:text-sm bg-gray-800 text-white
-            px-3 py-1.5 md:px-4 md:py-2 rounded-md font-medium
-            hover:bg-gray-700 transition
-          "
-        >
-          Salir
-        </button>
+          {/* Centro: Info de Usuario (solo desktop) */}
+          <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
+              <span className="text-white font-semibold text-sm">
+                {user?.Username?.[0]?.toUpperCase() || 'U'}
+              </span>
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-medium text-gray-800 truncate">
+                {user?.Username || 'Usuario'}
+              </span>
+              <span className="text-xs text-gray-500">Administrador</span>
+            </div>
+          </div>
+
+          {/* Lado Derecho: Avatar Mobile + Logout */}
+          <div className="flex items-center gap-2">
+
+            {/* Avatar Mobile */}
+            <div className="lg:hidden w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
+              <span className="text-white font-semibold text-xs">
+                {user?.Username?.[0]?.toUpperCase() || 'U'}
+              </span>
+            </div>
+
+            {/* Botón Logout */}
+            <button
+              onClick={handleLogout}
+              className="
+                flex items-center gap-2
+                bg-gray-800 text-white
+                px-3 md:px-4 py-2 rounded-lg font-medium text-sm
+                hover:bg-gray-700 hover:shadow-md
+                transition-all duration-200
+                active:scale-95
+              "
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Salir</span>
+            </button>
+          </div>
+        </div>
       </header>
 
       <div className="flex">
-        {/* SIDEBAR - Mobile First con overlay */}
+        {/* SIDEBAR - Sin cambios */}
         <>
           {/* Overlay oscuro para mobile */}
           {isSidebarOpen && (
@@ -84,7 +122,7 @@ function AdminLayout() {
             `}
           >
             <div className="p-4">
-              <h2 className="text-gray-600 text-xs font-semibold uppercase mb-3 px-3">
+              <h2 className="text-gray-600 text-base font-semibold uppercase mb-3 px-3">
                 Menu
               </h2>
               <ul className="space-y-1">
