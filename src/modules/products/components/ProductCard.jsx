@@ -74,16 +74,6 @@ export default function ProductCard({ product }) {
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
       </p>
 
-      {/* Stock */}
-      <p className="text-sm text-gray-500 mb-4">
-        Stock: {product.StockQuantity}
-      </p>
-
-      {/* SKU */}
-      <p className="text-sm text-gray-400 mb-2">
-        SKU: {product.Sku}
-      </p>
-
       {/* Controles de Cantidad - mt-auto los empuja al final */}
       <div className="flex items-center justify-center gap-2 mb-4 mt-auto pt-4">
         <button
