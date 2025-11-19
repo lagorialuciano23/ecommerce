@@ -72,6 +72,11 @@ export default function ProductCard({ product, onAddToCart }) {
         {product.Description}
       </p>
 
+      {/* 3. Stock */}
+      <p className="text-sm text-gray-400 mt-1 mb-2 line-clamp-2" title={product.StockQuantity}>
+        Stock: {product.StockQuantity}
+      </p>
+
       {/* 4. Precio */}
       <p className="text-2xl font-bold text-gray-900 mt-2">
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
