@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ordersService } from '../services/orderServices';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Clock, Package, Truck, CheckCircle, XCircle } from 'lucide-react';
 
 // Definimos los estados de orden basados en tu backend
 const orderStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
@@ -16,6 +17,18 @@ const getStatusClasses = (status) => {
     'CANCELLED': 'bg-red-100 text-red-700'
   };
   return statusMap[status] || 'bg-gray-100 text-gray-700';
+};
+
+const getStatusIcon = (status) => {
+  const iconProps = { className: "w-5 h-5" };
+  switch(status) {
+    case 'PENDING': return <Clock {...iconProps} className="w-5 h-5 text-yellow-600" />;
+    case 'PROCESSING': return <Package {...iconProps} className="w-5 h-5 text-blue-600" />;
+    case 'SHIPPED': return <Truck {...iconProps} className="w-5 h-5 text-indigo-600" />;
+    case 'DELIVERED': return <CheckCircle {...iconProps} className="w-5 h-5 text-green-600" />;
+    case 'CANCELLED': return <XCircle {...iconProps} className="w-5 h-5 text-red-600" />;
+    default: return null;
+  }
 };
 
 export default function OrdersPage() {
@@ -46,7 +59,7 @@ export default function OrdersPage() {
       setOrders(response);
       
       // Actualizar canGoNext según la respuesta
-      setCanGoNext(response === pageSize);
+      setCanGoNext(response.length === pageSize);
     } catch (err) {
       setError(err.message);
       console.error('Error al cargar órdenes:', err);
@@ -123,7 +136,13 @@ export default function OrdersPage() {
         {orders.map((order) => (
           <div 
             key={order.Id} 
-            className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow"
+            className={`bg-white p-4 rounded-lg shadow border-l-4 hover:shadow-md transition-shadow ${
+            order.Status === 'PENDING' ? 'border-l-yellow-500' :
+            order.Status === 'PROCESSING' ? 'border-l-blue-500' :
+            order.Status === 'SHIPPED' ? 'border-l-indigo-500' :
+            order.Status === 'DELIVERED' ? 'border-l-green-500' :
+            'border-l-red-500'
+          }`}
           >
             {/* Header con título y badge */}
             <div className="flex items-start justify-between mb-3">
@@ -135,6 +154,7 @@ export default function OrdersPage() {
                   Cliente: {order.CustomerId.substring(0, 8)}...
                 </p>
               </div>
+              {getStatusIcon(order.Status)}
               <span className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ml-2 ${getStatusClasses(order.Status)}`}>
                 {order.Status}
               </span>
