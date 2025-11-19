@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { productsService } from '../services/productsService';
 import ProductCard from '../components/ProductCard';
+import Toast from '../../shared/components/Toast';
 
 export default function CustomerProductsPage() {
   // Estados para los datos y la UI
@@ -18,14 +19,17 @@ export default function CustomerProductsPage() {
 
   const [canGoNext, setCanGoNext] = useState(true);
 
+  //Toast
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
   //NUEVO EFECTO: Sincroniza la URL con el estado local
   // Este efecto se ejecuta CADA VEZ que la URL (searchParams) cambia.
   useEffect(() => {
     const querySearch = searchParams.get('search') || '';
-
     setSearchTerm(querySearch);
   }, [searchParams]);
-
+ 
   // Efecto para cargar los productos
   useEffect(() => {
     const fetchProducts = async () => {
@@ -45,6 +49,8 @@ export default function CustomerProductsPage() {
       } catch (err) {
         setError(err.message);
         console.error('Error al cargar productos:', err);
+        setToastOpen(true);
+        setToastMessage(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -52,6 +58,16 @@ export default function CustomerProductsPage() {
 
     fetchProducts();
   }, [currentPage, searchTerm, pageSize]);
+
+
+const handleAddToCart = (productName) => {
+  setToastMessage(`"${productName}" agregado al carrito ! `);
+  setToastOpen(true);
+};
+
+const handleCloseToast = () => {
+    setToastOpen(false);
+  };
 
   // --- Manejadores de Paginación ---
   const goToNextPage = () => {
@@ -91,7 +107,10 @@ export default function CustomerProductsPage() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
         {products.map((product) => (
-          <ProductCard key={product.Id} product={product} />
+          <ProductCard key={product.Id}
+           product={product}
+           onAddToCart={handleAddToCart} 
+           />
         ))}
       </div>
     );
@@ -99,6 +118,13 @@ export default function CustomerProductsPage() {
 
   return (
     <div className="text-gray-800 container mx-auto">
+
+      <Toast
+        open={toastOpen}
+        title=" Se agrego al carrito ! "
+        message={toastMessage}
+        onClose={handleCloseToast}
+      />
       {searchTerm ? (
         <h1 className="text-3xl font-bold mb-6 text-gray-800">
           Resultados para: "{searchTerm}"

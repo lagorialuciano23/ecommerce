@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../../cart/context/useCart';
 import { Link } from 'react-router-dom';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onAddToCart }) {
   const [quantity, setQuantity] = useState(1); // Inicia en 1 por defecto
   const { addToCart } = useCart(); // Hook del carrito
 
@@ -26,6 +26,9 @@ export default function ProductCard({ product }) {
     // Llama a la función del context
     addToCart(product, quantity);
 
+    if (onAddToCart) {
+      onAddToCart(product.Name);
+    }
     // Resetea la cantidad a 1 después de agregar
     setQuantity(1);
   };
