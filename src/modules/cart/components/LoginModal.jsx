@@ -31,7 +31,8 @@ export default function LoginModal({ open, onClose, onLoginSuccess, footer }) {
       saveAuth(userObject, tokenString);
 
       if (onLoginSuccess) onLoginSuccess();
-
+      console.log('Login exitoso', userObject);
+      console.log('Token', tokenString);
       onClose();
 
     } catch (error) {
