@@ -12,8 +12,8 @@ export const api = axios.create({
 //Este codigo se ejecuta antes de que se haga la peticion
 api.interceptors.request.use(
   (config) => {
-  //Obtenemos el token del almacenamiento local
-    const token = localStorage.getItem('token');
+  //Obtenemos el token de sessionStorage
+    const token = sessionStorage.getItem('token');
 
     //si el token existen lo agregamos a los headers
     if (token) {
