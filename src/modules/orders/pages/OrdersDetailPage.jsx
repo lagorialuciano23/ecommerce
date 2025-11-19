@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ordersService } from '../services/orderServices';
 import Toast from '../../shared/components/Toast';
 import ConfirmModal from '../../shared/components/ConfirmModal';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Componente helper para mostrar un ítem
 function OrderItem({ item }) {
@@ -125,9 +124,9 @@ export default function OrderDetailPage() {
       <div className="mb-6">
         <Link
           to="/admin/orders"
-          className="text-purple-600 hover:text-purple-800"
+          className="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium shadow-sm"
         >
-          &larr; Volver a Órdenes
+          Volver a Órdenes
         </Link>
       </div>
 
@@ -144,28 +143,28 @@ export default function OrderDetailPage() {
             value={order.Status}
             onChange={(e) => handleStatusChange(e.target.value)}
             disabled={isUpdating || isDeleting}
-            className={`text-lg font-medium px-3 py-1 rounded-full border ${
+            className={`bg-white text-lg font-medium px-3 py-1 rounded-full border ${
               order.Status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
                 order.Status === 'DELIVERED' ? 'bg-green-100 text-green-800 border-green-200' :
                   order.Status === 'CANCELLED' ? 'bg-red-100 text-red-800 border-red-200' :
                     'bg-blue-100 text-blue-800 border-blue-200'
             } focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50`}
           >
-            <option value="PENDING">PENDING</option>
-            <option value="PROCESSING">PROCESSING</option>
-            <option value="SHIPPED">SHIPPED</option>
-            <option value="DELIVERED">DELIVERED</option>
-            <option value="CANCELLED">CANCELLED</option>
+            <option value="PENDING" className='bg-white'>Pendiente</option>
+            <option value="PROCESSING" className='bg-white'>En Proceso</option>
+            <option value="SHIPPED" className='bg-white'>Enviado</option>
+            <option value="DELIVERED" className='bg-white'>Entregado</option>
+            <option value="CANCELLED" className='bg-white'>Cancelado</option>
           </select>
           <p className="text-gray-800 mt-2">
-           Fecha de la orden: 
-                {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
-                 day: '2-digit',
-                 month: 'short',
-                 year: 'numeric',
-                 hour: '2-digit',
-                 minute: '2-digit'
-                }) : 'N/A'}
+           Fecha de la orden:
+            {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            }) : 'N/A'}
           </p>
         </div>
       </div>
