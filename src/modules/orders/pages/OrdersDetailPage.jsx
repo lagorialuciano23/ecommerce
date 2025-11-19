@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ordersService } from '../services/orderServices';
 import Toast from '../../shared/components/Toast';
 import ConfirmModal from '../../shared/components/ConfirmModal';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Componente helper para mostrar un ítem
 function OrderItem({ item }) {
@@ -156,8 +157,15 @@ export default function OrderDetailPage() {
             <option value="DELIVERED">DELIVERED</option>
             <option value="CANCELLED">CANCELLED</option>
           </select>
-          <p className="text-gray-600 mt-2">
-           Fecha de la orden:  {new Date(order.Date).toLocaleDateString()}
+          <p className="text-gray-800 mt-2">
+           Fecha de la orden: 
+                {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
+                 day: '2-digit',
+                 month: 'short',
+                 year: 'numeric',
+                 hour: '2-digit',
+                 minute: '2-digit'
+                }) : 'N/A'}
           </p>
         </div>
       </div>

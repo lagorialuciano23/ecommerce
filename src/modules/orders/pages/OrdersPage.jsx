@@ -57,6 +57,8 @@ export default function OrdersPage() {
         searchTerm
       );
       setOrders(response);
+      console.log(response);
+      console.log(response[0]?.CreatedAt);
       
       // Actualizar canGoNext según la respuesta
       setCanGoNext(response.length === pageSize);
@@ -163,8 +165,8 @@ export default function OrdersPage() {
             {/* Información adicional */}
             <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
               <div>
-                <p className="text-sm text-gray-600 mt-1"> Fecha :  
-                {order.CreatedAt ? new Date(order.CreatedAt).toLocaleDateString('es-AR', {
+                <p className="text-sm text-gray-800 mt-1"> Fecha :  
+                {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
                  day: '2-digit',
                  month: 'short',
                  year: 'numeric',
@@ -174,7 +176,7 @@ export default function OrdersPage() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-gray-500">Total</p>
+                <p className="text-xs text-gray-600">Total</p>
                 <p className="text-xl font-bold text-gray-900">
                   ${order.TotalAmount.toFixed(2)}
                 </p>
