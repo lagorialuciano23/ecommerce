@@ -28,9 +28,10 @@ export default function CustomerProductsPage() {
   // Este efecto se ejecuta CADA VEZ que la URL (searchParams) cambia.
   useEffect(() => {
     const querySearch = searchParams.get('search') || '';
+
     setSearchTerm(querySearch);
   }, [searchParams]);
- 
+
   // Efecto para cargar los productos
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,13 +61,12 @@ export default function CustomerProductsPage() {
     fetchProducts();
   }, [currentPage, searchTerm, pageSize]);
 
+  const handleAddToCart = (productName) => {
+    setToastMessage(`"${productName}" agregado al carrito ! `);
+    setToastOpen(true);
+  };
 
-const handleAddToCart = (productName) => {
-  setToastMessage(`"${productName}" agregado al carrito ! `);
-  setToastOpen(true);
-};
-
-const handleCloseToast = () => {
+  const handleCloseToast = () => {
     setToastOpen(false);
   };
 
@@ -109,9 +109,9 @@ const handleCloseToast = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
         {products.map((product) => (
           <ProductCard key={product.Id}
-           product={product}
-           onAddToCart={handleAddToCart} 
-           />
+            product={product}
+            onAddToCart={handleAddToCart}
+          />
         ))}
       </div>
     );
@@ -132,24 +132,24 @@ const handleCloseToast = () => {
         </h1>
       ) : (
         <div className="flex items-center gap-2 justify-between">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
+          <h1 className="text-3xl font-bold mb-6 text-gray-800">
           Catálogo
-        </h1>
-        <div className="flex items-center gap-2">
-          <label htmlFor="pageSize " className="text-lg text-gray-700">Productos por página </label>
-          <select
-            id="pageSize"
-            value={pageSize}
-            onChange={handlePageSizeChange}
-            className="p-2 border border-gray-600  rounded-lg text-lg h-full"
-          >
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>
+          </h1>
+          <div className="flex items-center gap-2">
+            <label htmlFor="pageSize " className="text-lg text-gray-700">Productos por página </label>
+            <select
+              id="pageSize"
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              className="p-2 border border-gray-600  rounded-lg text-lg h-full"
+            >
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
+          </div>
         </div>
-        </div>
-        
+
       )}
 
       <div className="mb-8">
@@ -157,7 +157,7 @@ const handleCloseToast = () => {
       </div>
 
       {/* --- Paginación --- */}
-       <div className="flex justify-center items-center gap-4">
+      <div className="flex justify-center items-center gap-4">
 
         <div className="flex justify-center items-center gap-4">
           <button
@@ -165,7 +165,7 @@ const handleCloseToast = () => {
             disabled={currentPage === 1}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-           <ChevronLeft/>
+            <ChevronLeft/>
           </button>
           <span className="text-gray-700">Página {currentPage}</span>
           <button
@@ -173,7 +173,7 @@ const handleCloseToast = () => {
             disabled={!canGoNext}
             className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
           >
-          <ChevronRight/>
+            <ChevronRight/>
           </button>
         </div>
       </div>

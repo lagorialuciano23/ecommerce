@@ -29,6 +29,7 @@ export default function ProductCard({ product, onAddToCart }) {
     if (onAddToCart) {
       onAddToCart(product.Name);
     }
+
     // Resetea la cantidad a 1 después de agregar
     setQuantity(1);
   };
@@ -37,43 +38,39 @@ export default function ProductCard({ product, onAddToCart }) {
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col text-gray-900 h-full">
 
       {/* 1. Imagen Clickeable */}
-      <Link to={`/products/${product.Id}`}>
-        <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4 overflow-hidden group">
-          {product.ImageUrl ? (
-            // Si hay URL, mostramos la imagen
-            <img
-              src={product.ImageUrl}
-              alt={product.Name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-              // Opcional: manejar errores de imagen
-              onError={(e) => { e.target.style.display = 'none'; }}
-            />
-          ) : (
-            // Si NO hay URL, mostramos el ícono placeholder
-            <svg
-              className="w-12 h-12 text-gray-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M4 7.61c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61V7.61zM16 12.61c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61V8.83c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78zM7 16.61c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61v-3.78c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78zM17 20.39c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61v-3.78c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78z" />
-            </svg>
-          )}
-        </div>
-      </Link>
+      <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4 overflow-hidden group">
+        {product.ImageUrl ? (
+        // Si hay URL, mostramos la imagen
+          <img
+            src={product.ImageUrl}
+            alt={product.Name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            // Opcional: manejar errores de imagen
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        ) : (
+        // Si NO hay URL, mostramos el ícono placeholder
+          <svg
+            className="w-12 h-12 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M4 7.61c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61V7.61zM16 12.61c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61V8.83c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78zM7 16.61c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61v-3.78c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78zM17 20.39c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61v-3.78c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78z" />
+          </svg>
+        )}
+      </div>
 
-      {/* 2. Título Clickeable */}
-      <Link to={`/products/${product.Id}`}>
-        <h3 className="text-lg font-semibold hover:text-blue-400 transition-colors">{product.Name}</h3>
-      </Link>
+      {/* 2. Título */}
+      <h3 className="text-lg font-semibold hover:text-blue-400 transition-colors">{product.Name}</h3>
 
       {/* 3. Descripción */}
-      <p className="text-sm text-gray-400 mt-1 mb-2 line-clamp-2" title={product.Description}>
+      <p className="text-sm text-gray-500 mt-1 mb-2 line-clamp-2" title={product.Description}>
         {product.Description}
       </p>
 
       {/* 3. Stock */}
-      <p className="text-sm text-gray-400 mt-1 mb-2 line-clamp-2" title={product.StockQuantity}>
+      <p className="text-sm text-black mt-1 mb-2 line-clamp-2 font-bold" title={product.StockQuantity}>
         Stock: {product.StockQuantity}
       </p>
 
