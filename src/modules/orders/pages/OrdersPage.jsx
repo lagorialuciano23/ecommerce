@@ -163,9 +163,14 @@ export default function OrdersPage() {
             {/* Información adicional */}
             <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
               <div>
-                <p className="text-xs text-gray-500">Fecha</p>
-                <p className="text-sm text-gray-900">
-                  {order.CreatedAt ? new Date(order.CreatedAt).toLocaleDateString('es-AR') : 'N/A'}
+                <p className="text-sm text-gray-600 mt-1"> Fecha :  
+                {order.CreatedAt ? new Date(order.CreatedAt).toLocaleDateString('es-AR', {
+                 day: '2-digit',
+                 month: 'short',
+                 year: 'numeric',
+                 hour: '2-digit',
+                 minute: '2-digit'
+                }) : 'N/A'}
                 </p>
               </div>
               <div className="text-right">
