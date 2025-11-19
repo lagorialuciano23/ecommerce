@@ -57,16 +57,6 @@ export default function AdminProductCard({ product }) {
 
         {/* Botones */}
         <div className="flex gap-2">
-          {/* Botón "Ver" (público) */}
-          <Link
-            to={`/products/${product.Id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-blue-100 text-blue-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors"
-          >
-            Ver
-          </Link>
-
           {/* Botón "Editar" (admin) */}
           <Link
             to={`/admin/products/edit/${product.Id}`}
