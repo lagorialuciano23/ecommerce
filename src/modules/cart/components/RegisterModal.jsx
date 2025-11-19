@@ -39,8 +39,7 @@ export default function RegisterModal({ open, onClose, onRegisterSuccess, footer
   return (
     <>
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"
-        onClick={onClose}
+        className="fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4"
       >
         <form
           onSubmit={handleSubmit(onSubmit)}

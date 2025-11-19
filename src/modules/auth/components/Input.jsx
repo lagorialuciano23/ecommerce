@@ -11,6 +11,7 @@ export default function Input({
   errors,
   autoComplete,
   labelClassName = 'text-black text-lg',
+  ...props // Propiedades adicionales que se pasarán al input
 }) {
   return (
     <div>
@@ -22,10 +23,12 @@ export default function Input({
         className="
         w-full p-2 rounded-lg bg-gray-300 text-black border-none
         focus:outline-none focus:ring-2 focus:ring-blue-500"
-        // 1. Registra el input con react-hook-form
+        // Registra el input con react-hook-form
         {...register(name, validationRules)}
+        //Pasamos el resto de propiedades al input real (aquí entrará el onFocus)
+        {...props}
       />
-      {/* 2. Muestra el error dinámicamente usando el 'name'
+      {/* Muestra el error dinámicamente usando el 'name'
            (errors['user'] o errors['password'])
       */}
       {errors[name] && (
