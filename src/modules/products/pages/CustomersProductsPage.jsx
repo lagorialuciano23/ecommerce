@@ -28,7 +28,6 @@ export default function CustomerProductsPage() {
   // Este efecto se ejecuta CADA VEZ que la URL (searchParams) cambia.
   useEffect(() => {
     const querySearch = searchParams.get('search') || '';
-
     setSearchTerm(querySearch);
   }, [searchParams]);
 
@@ -40,13 +39,11 @@ export default function CustomerProductsPage() {
       try {
         const response = await productsService.getActiveProducts(
           currentPage,
-          pageSize, // PageSize
+          pageSize,
           searchTerm,
         );
 
-        // Ajustamos cómo guardamos los datos
-        setProducts(response.Items); // <-- response.Items en lugar de response
-        // Ajustamos la lógica del botón "Siguiente"
+        setProducts(response.Items);
         setCanGoNext(response.CurrentPage < response.TotalPages);
       } catch (err) {
         setError(err.message);
@@ -62,7 +59,7 @@ export default function CustomerProductsPage() {
   }, [currentPage, searchTerm, pageSize]);
 
   const handleAddToCart = (productName) => {
-    setToastMessage(`"${productName}" agregado al carrito ! `);
+    setToastMessage(`"${productName}" agregado al carrito!`);
     setToastOpen(true);
   };
 
@@ -76,11 +73,11 @@ export default function CustomerProductsPage() {
   };
 
   const goToPrevPage = () => {
-    setCurrentPage((prev) => Math.max(1, prev - 1)); // No ir por debajo de 1
+    setCurrentPage((prev) => Math.max(1, prev - 1));
   };
 
   const handlePageSizeChange = (e) => {
-    setCurrentPage(1); // Reiniciar a página 1
+    setCurrentPage(1);
     setPageSize(Number(e.target.value));
   };
 
@@ -104,11 +101,11 @@ export default function CustomerProductsPage() {
       return <p className="text-center text-gray-800">No se encontraron productos.</p>;
     }
 
-    // Grilla de Productos
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
         {products.map((product) => (
-          <ProductCard key={product.Id}
+          <ProductCard 
+            key={product.Id}
             product={product}
             onAddToCart={handleAddToCart}
           />
@@ -118,65 +115,71 @@ export default function CustomerProductsPage() {
   };
 
   return (
-    <div className="text-gray-800 container mx-auto">
-
+    <div className="text-gray-800 container mx-auto px-4 py-6">
       <Toast
         open={toastOpen}
-        title=" Se agrego al carrito ! "
+        title="Se agregó al carrito!"
         message={toastMessage}
         onClose={handleCloseToast}
       />
-      {searchTerm ? (
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
-          Resultados para: "{searchTerm}"
-        </h1>
-      ) : (
-        <div className="flex items-center gap-2 justify-between">
-          <h1 className="text-3xl font-bold mb-6 text-gray-800">
-          Catálogo
+
+      {/* Header con título y selector de página */}
+      <div className="mb-6">
+        {searchTerm ? (
+          <h1 className="text-3xl font-bold text-gray-800">
+            Resultados para: "{searchTerm}"
           </h1>
-          <div className="flex items-center gap-2">
-            <label htmlFor="pageSize " className="text-lg text-gray-700">Productos por página </label>
-            <select
-              id="pageSize"
-              value={pageSize}
-              onChange={handlePageSizeChange}
-              className="p-2 border border-gray-600  rounded-lg text-lg h-full"
-            >
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-            </select>
+        ) : (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h1 className="text-3xl font-bold text-gray-800">
+              Catálogo
+            </h1>
+            <div className="flex items-center gap-2">
+              <label htmlFor="pageSize" className="text-sm text-gray-700 whitespace-nowrap">
+                Productos por página:
+              </label>
+              <select
+                id="pageSize"
+                value={pageSize}
+                onChange={handlePageSizeChange}
+                className="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </div>
           </div>
-        </div>
+        )}
+      </div>
 
-      )}
-
+      {/* Contenido de productos */}
       <div className="mb-8">
         {renderContent()}
       </div>
 
       {/* --- Paginación --- */}
-      <div className="flex justify-center items-center gap-4">
-
-        <div className="flex justify-center items-center gap-4">
+      {!isLoading && products.length > 0 && (
+        <div className="flex justify-center items-center gap-4 mt-8">
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+            aria-label="Página anterior"
           >
-            <ChevronLeft/>
+            <ChevronLeft />
           </button>
-          <span className="text-gray-700">Página {currentPage}</span>
+          <span className="text-gray-700 font-medium">Página {currentPage}</span>
           <button
             onClick={goToNextPage}
             disabled={!canGoNext}
-            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+            aria-label="Página siguiente"
           >
-            <ChevronRight/>
+            <ChevronRight />
           </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }
