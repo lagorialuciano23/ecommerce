@@ -11,18 +11,18 @@ export default function ProductCard({ product, onAddToCart }) {
   // animacion para la tarjeta
   const cardSpring = useSpring({
     transform: isHovered 
-      ? 'translateY(-12px) scale(1.02)' 
+      ? 'translateY(-12px) scale(1.01)' 
       : 'translateY(0px) scale(1)',
     boxShadow: isHovered
       ? '0 20px 40px rgba(0, 0, 0, 0.15)'
       : '0 2px 8px rgba(0, 0, 0, 0.08)',
-    config: config.wobbly,
+    config: config.gentle,
   });
 
   // animacion para la img
   const imageSpring = useSpring({
     transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-    config: config.slow,
+    config: config.gentle,
   });
 
   // animacion para el precio
@@ -36,7 +36,7 @@ export default function ProductCard({ product, onAddToCart }) {
   const buttonSpring = useSpring({
     transform: isHovered ? 'translateY(0px)' : 'translateY(4px)',
     opacity: isHovered ? 1 : 0.95,
-    config: config.wobbly,
+    config: config.gentle,
   });
 
   const handleDecrease = () => {

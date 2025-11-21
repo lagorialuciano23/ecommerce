@@ -46,7 +46,7 @@ export const productsService = {
 
   getProductSummary: () => api.get('/products/summary'),
 
-  getActiveProducts: (pageNumber = 1, pageSize = 8, search = '') => {
+  getActiveProducts: (pageNumber = 1, pageSize = 8, search = '', minPrice = '', maxPrice = '') => {
     const params = new URLSearchParams();
 
     params.append('pageNumber', pageNumber);
@@ -54,6 +54,14 @@ export const productsService = {
 
     if (search) {
       params.append('search', search);
+    }
+
+    if(minPrice) {
+      params.append('minPrice', minPrice);
+    }
+
+    if(maxPrice) {
+      params.append('maxPrice', maxPrice);
     }
 
     return api.get(`/products/active?${params.toString()}`);
