@@ -67,7 +67,7 @@ function ProductsForm({ onSuccess, productToEdit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto bg-white p-6 rounded-lg ">
       <FormInput
         id="sku"
         label="SKU"
@@ -162,7 +162,9 @@ function ProductsForm({ onSuccess, productToEdit }) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
+        className="
+        w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-800 
+        disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
       >
         {isSubmitting
           ? (isEditMode ? 'Actualizando...' : 'Creando...')

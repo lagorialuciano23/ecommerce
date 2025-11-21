@@ -1,5 +1,3 @@
-
-
 export default function FormInput({ id, label, type = 'text', register, error, validation = {}, inputProps = {} }) {
   const commonClasses = "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200";
   const errorClasses = "border-red-500 focus:ring-red-500";
