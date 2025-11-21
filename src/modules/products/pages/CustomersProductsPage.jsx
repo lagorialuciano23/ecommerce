@@ -28,11 +28,15 @@ export default function CustomerProductsPage() {
   // Este efecto se ejecuta CADA VEZ que la URL (searchParams) cambia.
   useEffect(() => {
     const querySearch = searchParams.get('search') || '';
+
     setSearchTerm(querySearch);
   }, [searchParams]);
 
   // Efecto para cargar los productos
   useEffect(() => {
+    // Cada vez que este efecto corre (es decir, cambia la página o búsqueda),
+    // llevamos el scroll arriba de todo
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // 'smooth' hace que suba suavemente
     const fetchProducts = async () => {
       setIsLoading(true);
       setError(null);
@@ -104,7 +108,7 @@ export default function CustomerProductsPage() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
         {products.map((product) => (
-          <ProductCard 
+          <ProductCard
             key={product.Id}
             product={product}
             onAddToCart={handleAddToCart}
@@ -131,24 +135,24 @@ export default function CustomerProductsPage() {
           </h1>
         ) : (
           <div className="flex bg-white p-6 rounded-lg border border-gray-200 shadow-md flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <h1 className="text-3xl font-bold text-gray-800">
+            <h1 className="text-3xl font-bold text-gray-800">
                 Catálogo
-              </h1>
-              <div className="flex items-center gap-2">
-                <label htmlFor="pageSize" className="text-md text-gray-700 whitespace-nowrap">
+            </h1>
+            <div className="flex items-center gap-2">
+              <label htmlFor="pageSize" className="text-md text-gray-700 whitespace-nowrap">
                   Productos por página:
-                </label>
-                <select
-                  id="pageSize"
-                  value={pageSize}
-                  onChange={handlePageSizeChange}
-                  className="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                  <option value="20">20</option>
-                </select>
-              </div>
+              </label>
+              <select
+                id="pageSize"
+                value={pageSize}
+                onChange={handlePageSizeChange}
+                className="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </div>
           </div>
         )}
       </div>
