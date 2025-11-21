@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useSpring, animated, useTransition, config } from '@react-spring/web';
 import { useCart } from '../context/useCart';
 import { useAuth } from '../../auth/context/useAuth';
 import { ordersService } from '../../orders/services/orderServices';
@@ -8,13 +9,46 @@ import { ordersService } from '../../orders/services/orderServices';
 import AuthInput from '../../auth/components/Input';
 import AuthSubmitButton from '../../auth/components/Button';
 import LoginModal from '../components/LoginModal';
-import RegisterModal from '../components/RegisterModal'; // Importamos la modal de registro
+import RegisterModal from '../components/RegisterModal';
 import Toast from '../../shared/components/Toast';
 
-// Componente simple para el item del carrito
+// Componente CartItem con animaciones
 function CartItem({ item, removeFromCart }) {
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  // Animación de hover
+  const [isHovered, setIsHovered] = useState(false);
+  const hoverSpring = useSpring({
+    transform: isHovered ? 'translateX(-4px)' : 'translateX(0px)',
+    boxShadow: isHovered 
+      ? '0 4px 12px rgba(0, 0, 0, 0.1)' 
+      : '0 1px 3px rgba(0, 0, 0, 0.05)',
+    config: config.wobbly,
+  });
+
+  // Animación de salida
+  const exitSpring = useSpring({
+    opacity: isRemoving ? 0 : 1,
+    transform: isRemoving ? 'translateX(100%) scale(0.8)' : 'translateX(0%) scale(1)',
+    config: { tension: 200, friction: 20 },
+    onRest: () => {
+      if (isRemoving) {
+        removeFromCart(item.id);
+      }
+    },
+  });
+
+  const handleRemove = () => {
+    setIsRemoving(true);
+  };
+
   return (
-    <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+    <animated.div
+      style={{ ...hoverSpring, ...exitSpring }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200"
+    >
       <div>
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
         <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
@@ -22,54 +56,77 @@ function CartItem({ item, removeFromCart }) {
       <div className="text-right">
         <p className="text-lg font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
         <button
-          onClick={() => removeFromCart(item.id)}
-          className="text-sm text-red-600 hover:text-red-800"
+          onClick={handleRemove}
+          className="text-sm text-red-600 hover:text-red-800 transition-colors"
         >
           Quitar
         </button>
       </div>
-    </div>
+    </animated.div>
+  );
+}
+
+// Componente animado para el total
+function AnimatedTotal({ value }) {
+  const { number } = useSpring({
+    from: { number: 0 },
+    number: value,
+    config: config.slow,
+  });
+
+  return (
+    <animated.span>
+      {number.to(n => `$${n.toFixed(2)}`)}
+    </animated.span>
   );
 }
 
 // Página principal del carrito
 export default function CartPage() {
-  // ---  HOOKS ---
   const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
-  const { isLoggedIn, user } = useAuth(); // Corregido: 'user' no se usaba
+  const { isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
 
-  // Estados de UI
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Estado para la modal de registro
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showAuthToast, setShowAuthToast] = useState(false);
 
-  // Formulario para las direcciones
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({ mode: 'onChange' });
 
-  // Definimos costos
-  const shippingCost = 0.00; // Lo ponemos en 0 por ahora
-  const finalTotal = cartTotal + shippingCost; // Corregido: esta variable ahora se usa
+  const shippingCost = 0.00;
+  const finalTotal = cartTotal + shippingCost;
 
-  // Verificar Auth al clickear los campos
+  // Transiciones para los items del carrito
+  const transitions = useTransition(cartItems, {
+    keys: item => item.id,
+    from: { opacity: 0, transform: 'translateY(-20px)' },
+    enter: { opacity: 1, transform: 'translateY(0px)' },
+    leave: { opacity: 0, transform: 'translateX(100%)' },
+    config: config.gentle,
+  });
+
+  // Animación del panel de sumario
+  const summarySpring = useSpring({
+    from: { opacity: 0, transform: 'translateY(20px)' },
+    to: { opacity: 1, transform: 'translateY(0px)' },
+    config: config.gentle,
+  });
+
   const handleAuthCheck = (e) => {
     if (!isLoggedIn) {
-      // 1. Quitamos el foco para que el usuario no pueda escribir
       e.target.blur();
-      // 2. Abrimos el modal de login
       setIsModalOpen(true);
-      // 3. Mostramos el Toast de advertencia
       setShowAuthToast(true);
     }
   };
-  // ---  LÓGICA DE ENVÍO DE ORDEN ---
+
   const submitOrder = async (formData) => {
     setIsLoading(true);
     setApiError(null);
@@ -112,50 +169,48 @@ export default function CartPage() {
 
   const handleToastClose = () => {
     setShowSuccessToast(false);
-    navigate('/'); // Redirige a la pagina principal
+    navigate('/');
   };
 
-  // --- Handlers para las Modales ---
   const handleLoginSuccess = () => {
     setIsModalOpen(false);
-    handleSubmit(submitOrder)(); // Llama a submitOrder con los datos del form
+    handleSubmit(submitOrder)();
   };
 
   const handleRegisterSuccess = () => {
     setIsRegisterModalOpen(false);
-    setIsModalOpen(true); // Abre el login después de registrarse
+    setIsModalOpen(true);
   };
 
   return (
     <>
-      {/* Corregido: Quitamos 'bg-gray-100' para tener fondo blanco uniforme */}
       <div className="min-h-screen p-4 md:p-8">
         <div className="max-w-2xl mx-auto">
 
-          <div className="flex justify-between items-center mb-6">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Tu Carrito de Compras</h1>
             <button
               onClick={() => navigate('/')}
-              className="text-purple-600 hover:text-purple-800 font-medium"
+              className="text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               Regresar a la tienda
             </button>
           </div>
 
-          {/* --- Items y Formulario --- */}
           {cartItems.length > 0 ? (
             <form onSubmit={handleSubmit(handleFinalizePurchase)}>
-              {/* --- Lista de Items --- */}
+              {/* Lista de Items con animaciones */}
               <div className="space-y-4 mb-6">
-                {cartItems.map(item => (
-                  <CartItem key={item.id} item={item} removeFromCart={removeFromCart} />
+                {transitions((style, item) => (
+                  <animated.div key={item.id} style={style}>
+                    <CartItem item={item} removeFromCart={removeFromCart} />
+                  </animated.div>
                 ))}
               </div>
 
-              {/* --- Formulario de Direcciones --- */}
+              {/* Formulario de Direcciones */}
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6 space-y-4">
                 <h2 className="text-xl font-semibold text-gray-800">Datos de Envío</h2>
-                {/*INPUTS CON PROTECCIÓN onFocus*/}
                 <AuthInput
                   label="Dirección de Envío"
                   id="shippingAddress"
@@ -181,20 +236,23 @@ export default function CartPage() {
                   <textarea
                     id="notes"
                     {...register('notes')}
-                    className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 rounded-lg bg-gray-100 text-black border-none focus:outline-none focus:ring-2 focus:ring-purple-500"
                     rows="2"
                     onFocus={handleAuthCheck}
                   ></textarea>
                 </div>
               </div>
 
-              {/* --- Resumen y Total (Corregido: Mostrando el total) --- */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              {/* Sumario con animaciones */}
+              <animated.div 
+                style={summarySpring}
+                className="bg-white p-6 rounded-lg shadow-sm border border-gray-200"
+              >
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">Sumario de Orden</h2>
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal:</span>
-                    <span>${cartTotal.toFixed(2)}</span>
+                    <AnimatedTotal value={cartTotal} />
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Envío:</span>
@@ -202,7 +260,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-gray-900 font-bold text-lg mt-2 pt-2 border-t border-gray-200">
                     <span>Total:</span>
-                    <span>${finalTotal.toFixed(2)}</span>
+                    <AnimatedTotal value={finalTotal} />
                   </div>
                 </div>
 
@@ -216,7 +274,7 @@ export default function CartPage() {
                   <button
                     type="button"
                     onClick={clearCart}
-                    className="text-sm text-red-600 hover:text-red-800"
+                    className="text-sm text-red-600 hover:text-red-800 transition-colors"
                   >
                     Vaciar Carrito
                   </button>
@@ -224,11 +282,10 @@ export default function CartPage() {
                     isLoading={isLoading}
                     isValid={isValid && cartItems.length > 0}
                     text="Finalizar Compra"
-                    // Estilo morado para el botón principal
                     className="cursor-pointer bg-purple-600 text-white rounded-lg p-2.5 transition-colors duration-200 hover:bg-purple-700 disabled:bg-gray-300"
                   />
                 </div>
-              </div>
+              </animated.div>
             </form>
           ) : (
             <p className="text-center text-gray-600">Tu carrito está vacío.</p>
@@ -237,7 +294,6 @@ export default function CartPage() {
         </div>
       </div>
 
-      {/* --- MODALES --- */}
       <LoginModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -273,14 +329,14 @@ export default function CartPage() {
           </div>
         }
       />
-      {/* --- Toast de Exito --- */}
+
       <Toast
         open={showSuccessToast}
         title="¡Compra Exitosa!"
         message="Tu orden ha sido creada."
         onClose={handleToastClose}
       />
-      {/* Toast de Advertencia de Login */}
+
       <Toast
         open={showAuthToast}
         title="ATENCIÓN"

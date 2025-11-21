@@ -46,10 +46,10 @@ export default function PublicLayout() {
   };
 
   return (
-    <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-white text-gray-800 overflow-hidden">
+    <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-gray-100 text-gray-800 overflow-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
-        <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
+      <header className="sticky top-0 z-50 p-2 bg-white shadow-md border-b border-gray-200">
+        <nav className="container mx-auto px-4 py-2 flex justify-between items-center">
 
           {/* Título o Logo */}
           <div className="flex items-center gap-6">
@@ -61,12 +61,12 @@ export default function PublicLayout() {
             </Link>
             {/* Links de Desktop (ocultos en móvil) */}
             <div className="hidden md:flex items-center gap-6">
-              <Link to="/" onClick={handleLinkClick} className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <Link to="/" onClick={handleLinkClick} className="text-sm font-medium text-gray-900 hover:text-gray-900">
                 Productos
               </Link>
               <Link
                 to="/cart" onClick={handleLinkClick}
-                className="relative group text-gray-600 hover:text-purple-600 transition-colors"
+                className="relative group text-gray-900 hover:text-purple-600 transition-colors"
                 aria-label="Carrito de compras"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">

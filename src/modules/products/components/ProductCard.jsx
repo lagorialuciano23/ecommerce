@@ -1,89 +1,131 @@
 import { useState } from 'react';
+import { useSpring, animated, config } from '@react-spring/web';
 import { useCart } from '../../cart/context/useCart';
-import { Link } from 'react-router-dom';
+
 
 export default function ProductCard({ product, onAddToCart }) {
-  const [quantity, setQuantity] = useState(1); // Inicia en 1 por defecto
-  const { addToCart } = useCart(); // Hook del carrito
+  const [quantity, setQuantity] = useState(1);
+  const [isHovered, setIsHovered] = useState(false);
+  const { addToCart } = useCart();
+
+  // animacion para la tarjeta
+  const cardSpring = useSpring({
+    transform: isHovered 
+      ? 'translateY(-12px) scale(1.02)' 
+      : 'translateY(0px) scale(1)',
+    boxShadow: isHovered
+      ? '0 20px 40px rgba(0, 0, 0, 0.15)'
+      : '0 2px 8px rgba(0, 0, 0, 0.08)',
+    config: config.wobbly,
+  });
+
+  // animacion para la img
+  const imageSpring = useSpring({
+    transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+    config: config.slow,
+  });
+
+  // animacion para el precio
+  const priceSpring = useSpring({
+    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+    color: isHovered ? '#9333ea' : '#111827',
+    config: config.gentle,
+  });
+
+  // animacion para el boton
+  const buttonSpring = useSpring({
+    transform: isHovered ? 'translateY(0px)' : 'translateY(4px)',
+    opacity: isHovered ? 1 : 0.95,
+    config: config.wobbly,
+  });
 
   const handleDecrease = () => {
-    // No permite bajar de 1
     setQuantity((prev) => Math.max(1, prev - 1));
   };
 
   const handleIncrease = () => {
-    // Usamos el StockQuantity (con PascalCase) como límite
     const stockLimit = product.StockQuantity;
-
-    // Solo aumentamos si la cantidad actual es MENOR al stock
     setQuantity((prev) => Math.min(stockLimit, prev + 1));
   };
 
   const handleAddToCart = () => {
-    // Verifica que la cantidad sea 1 o más
     if (quantity < 1) return;
-
-    // Llama a la función del context
     addToCart(product, quantity);
-
     if (onAddToCart) {
       onAddToCart(product.Name);
     }
-
-    // Resetea la cantidad a 1 después de agregar
     setQuantity(1);
   };
 
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col text-gray-900 h-full">
+  // determinar color del badge de stock
+  const getStockBadgeColor = () => {
+    if (product.StockQuantity === 0) return 'bg-red-100 text-red-700';
+    if (product.StockQuantity <= 20) return 'bg-yellow-100 text-yellow-700';
+    if (product.StockQuantity <= 100) return 'bg-blue-100 text-blue-700';
+    return 'bg-green-100 text-green-700';
+  };
 
-      {/* 1. Imagen Clickeable */}
-      <div className="w-full h-48 bg-gray-700 rounded-md flex items-center justify-center mb-4 overflow-hidden group">
+  return (
+    <animated.div
+      style={cardSpring}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="bg-white rounded-lg border border-gray-200 p-4 flex flex-col text-gray-900 h-full relative"
+    >
+      {/* stock badge*/}
+      <div className="absolute top-2 right-2 z-10">
+        <span className={`${getStockBadgeColor()} px-3 py-1 rounded-full text-xs font-semibold`}>
+          Stock: {product.StockQuantity}
+        </span>
+      </div>
+
+      {/* animacion para la img */}
+      <div className="w-full h-48 bg-gray-100 rounded-md flex items-center justify-center mb-4 overflow-hidden">
         {product.ImageUrl ? (
-        // Si hay URL, mostramos la imagen
-          <img
+          <animated.img
+            style={imageSpring}
             src={product.ImageUrl}
             alt={product.Name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-            // Opcional: manejar errores de imagen
+            className="w-full h-full object-cover"
             onError={(e) => { e.target.style.display = 'none'; }}
           />
         ) : (
-        // Si NO hay URL, mostramos el ícono placeholder
           <svg
-            className="w-12 h-12 text-gray-500"
+            className="w-12 h-12 text-gray-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path d="M4 7.61c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61V7.61zM16 12.61c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61V8.83c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78zM7 16.61c0 1.88-2 3.61-4 3.61s-4-1.73-4-3.61v-3.78c0-1.88 2-3.61 4-3.61s4 1.73 4 3.61v3.78zM17 20.39c0 1.88 2 3.61 4 3.61s4-1.73 4-3.61v-3.78c0-1.88-2-3.61-4-3.61s-4 1.73-4 3.61v3.78z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
           </svg>
         )}
       </div>
 
-      {/* 2. Título */}
-      <h3 className="text-lg font-semibold hover:text-blue-400 transition-colors">{product.Name}</h3>
+      {/* Título */}
+      <h3 className="text-lg font-semibold text-gray-900 mb-2 min-h-[3.5rem] line-clamp-2">
+        {product.Name}
+      </h3>
 
-      {/* 3. Descripción */}
-      <p className="text-sm text-gray-500 mt-1 mb-2 line-clamp-2" title={product.Description}>
+      {/* Descripción */}
+      <p className="text-sm text-gray-600 mb-4 line-clamp-2" title={product.Description}>
         {product.Description}
       </p>
 
-      {/* 3. Stock */}
-      <p className="text-sm text-black mt-1 mb-2 line-clamp-2 font-bold" title={product.StockQuantity}>
-        Stock: {product.StockQuantity}
-      </p>
-
-      {/* 4. Precio */}
-      <p className="text-2xl font-bold text-gray-900 mt-2">
+      {/* precio con animacion */}
+      <animated.p style={priceSpring} className="text-2xl font-bold mb-4">
         ${(product.CurrentUnitPrice || 0).toFixed(2)}
-      </p>
+      </animated.p>
 
-      {/* Controles de Cantidad - mt-auto los empuja al final */}
-      <div className="flex items-center justify-center gap-2 mb-4 mt-auto pt-4">
+      {/* controles para umentar*/}
+      <div className="flex items-center justify-center gap-3 mb-4 mt-auto">
         <button
           onClick={handleDecrease}
-          className="px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-300"
+          className="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-purple-500 hover:text-purple-500 transition-colors flex items-center justify-center font-semibold text-lg"
         >
           -
         </button>
@@ -92,22 +134,23 @@ export default function ProductCard({ product, onAddToCart }) {
         </span>
         <button
           onClick={handleIncrease}
-          className="px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-300"
+          className="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-purple-500 hover:text-purple-500 transition-colors flex items-center justify-center font-semibold text-lg"
         >
           +
         </button>
       </div>
 
-      {/* Botón Agregar */}
-      <button
+      {/* animacion con spring*/}
+      <animated.button
+        style={buttonSpring}
         onClick={handleAddToCart}
-        disabled={quantity < 1 || product.StockQuantity === 0} // Deshabilitado si no hay stock
-        className="cursor-pointer bg-purple-600 text-white rounded-lg px-4 py-2 text-sm font-medium
+        disabled={quantity < 1 || product.StockQuantity === 0}
+        className="bg-purple-600 text-white rounded-lg px-4 py-3 text-sm font-semibold
            transition-colors duration-200 hover:bg-purple-700
            disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
       >
-        {product.StockQuantity === 0 ? 'Sin Stock' : 'Agregar'}
-      </button>
-    </div>
+        {product.StockQuantity === 0 ? 'Sin Stock' : 'Agregar al Carrito'}
+      </animated.button>
+    </animated.div>
   );
 }

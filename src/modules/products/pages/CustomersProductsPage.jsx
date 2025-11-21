@@ -130,25 +130,25 @@ export default function CustomerProductsPage() {
             Resultados para: "{searchTerm}"
           </h1>
         ) : (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-3xl font-bold text-gray-800">
-              Catálogo
-            </h1>
-            <div className="flex items-center gap-2">
-              <label htmlFor="pageSize" className="text-sm text-gray-700 whitespace-nowrap">
-                Productos por página:
-              </label>
-              <select
-                id="pageSize"
-                value={pageSize}
-                onChange={handlePageSizeChange}
-                className="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-              </select>
-            </div>
+          <div className="flex bg-white p-6 rounded-lg border border-gray-200 shadow-md flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h1 className="text-3xl font-bold text-gray-800">
+                Catálogo
+              </h1>
+              <div className="flex items-center gap-2">
+                <label htmlFor="pageSize" className="text-md text-gray-700 whitespace-nowrap">
+                  Productos por página:
+                </label>
+                <select
+                  id="pageSize"
+                  value={pageSize}
+                  onChange={handlePageSizeChange}
+                  className="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="20">20</option>
+                </select>
+              </div>
           </div>
         )}
       </div>
