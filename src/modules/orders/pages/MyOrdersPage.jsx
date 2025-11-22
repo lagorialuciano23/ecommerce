@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import { ordersService } from '../services/orderServices';
 import { Link } from 'react-router-dom';
-import { Package, Calendar, ChevronRight } from 'lucide-react';
+import { Package, Calendar } from 'lucide-react';
+
+// Diccionario de traducciones para los estados
+const statusTranslations = {
+  'PENDING': 'Pendiente',
+  'PROCESSING': 'En Proceso',
+  'SHIPPED': 'Enviado',
+  'DELIVERED': 'Entregado',
+  'CANCELLED': 'Cancelado',
+};
 
 export default function MyOrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -61,7 +70,7 @@ export default function MyOrdersPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.Status)}`}>
-                      {order.Status}
+                      {statusTranslations[order.Status] || order.Status}
                     </span>
                     <span className="text-sm text-gray-500 flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
@@ -69,7 +78,7 @@ export default function MyOrdersPage() {
                     </span>
                   </div>
                   <p className="font-semibold text-gray-900">Orden #{order.Id.substring(0, 8)}</p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="font-bold text-sm text-gray-600 mt-1">
                     {order.Items.length} {order.Items.length === 1 ? 'producto' : 'productos'}
                     <span className="mx-2">•</span>
                     Total: <span className="font-bold">${order.TotalAmount.toFixed(2)}</span>
@@ -80,7 +89,7 @@ export default function MyOrdersPage() {
                   <h4 className="text-sm font-medium text-gray-700 mb-3">Productos:</h4>
                   <ul className="space-y-2">
                     {order.Items.map((item, index) => (
-                      <li key={index} className="flex justify-between text-sm items-center bg-gray-50 p-2 rounded">
+                      <li key={index} className="flex justify-between text-sm items-center bg-gray-50 p-2 rounded gap-4">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-900">{item.Quantity}x</span>
                           <span className="text-gray-700">{item.Name}</span>
