@@ -1,5 +1,5 @@
 import Login from './modules/auth/pages/Login';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import ProductsPage from './modules/products/pages/ProductsPage.jsx';
 import NotFoundPage from './modules/shared/pages/NotFoundPage.jsx';
 import { ProtectedRoute } from './modules/auth/helpers/ProtectedRoute.jsx';
@@ -14,6 +14,8 @@ import CreateProductsPage from './modules/products/pages/CreateProductsPage.jsx'
 import EditProductPage from './modules/products/pages/EditProductPage.jsx';
 import OrdersDetailPage from './modules/orders/pages/OrdersDetailPage.jsx';
 import ProductDetailPage from './modules/products/pages/ProductDetailPage.jsx';
+import { UserProtectedRoute } from './modules/auth/helpers/UserProtectedRoute.jsx';
+import MyOrdersPage from './modules/orders/pages/MyOrdersPage.jsx';
 function App() {
   return (
     <Routes>
@@ -45,6 +47,15 @@ function App() {
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/:id" element={<OrdersDetailPage />} />
       </Route>
+      {/* RUTA PROTEGIDA PARA CLIENTES */}
+      <Route
+        path="my-orders"
+        element={
+          <UserProtectedRoute>
+            <MyOrdersPage />
+          </UserProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

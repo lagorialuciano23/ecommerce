@@ -99,9 +99,18 @@ export default function PublicLayout() {
           {/* Auth (Desktop) - CORREGIDO PARA USAR MODALES */}
           <div className="hidden md:flex items-center gap-2">
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition">
-                Salir
-              </button>
+              <div>
+                <Link
+                  to="/my-orders"
+                  className="text-sm font-medium text-gray-600 hover:text-purple-600 transition-colors"
+                >
+                  Mis Compras
+                </Link>
+                <button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition">
+                  Salir
+                </button>
+              </div>
+
             ) : (
               <>
                 <button
@@ -167,9 +176,17 @@ export default function PublicLayout() {
             {/* Auth Móvil */}
             <div className="border-t border-gray-200 pt-4 space-y-3">
               {isLoggedIn ? (
-                <button onClick={handleLogout} className="w-full px-4 py-2 rounded-lg bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition">
-                  Salir
-                </button>
+                <div>
+                  <Link
+                    to="/my-orders"
+                    className="text-sm font-medium text-gray-600 hover:text-purple-600 transition-colors"
+                  >
+                    Mis Compras
+                  </Link>
+                  <button onClick={handleLogout} className="w-full px-4 py-2 rounded-lg bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition">
+                    Salir
+                  </button>
+                </div>
               ) : (
                 <>
                   <button

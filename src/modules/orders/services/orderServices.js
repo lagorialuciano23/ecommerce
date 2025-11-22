@@ -70,4 +70,13 @@ export const ordersService = {
   delete: (id) => {
     return api.delete(`/orders/${id}`);
   },
+
+  getMyOrders: (pageNumber = 1, pageSize = 10) => {
+    const params = new URLSearchParams();
+
+    params.append('pageNumber', pageNumber);
+    params.append('pageSize', pageSize);
+
+    return api.get(`/orders/my-orders?${params.toString()}`);
+  },
 };
