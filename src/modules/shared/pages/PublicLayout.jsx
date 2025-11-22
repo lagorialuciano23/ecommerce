@@ -174,36 +174,36 @@ export default function PublicLayout() {
             </Link>
 
             {/* Auth Móvil */}
-            <div className="border-t border-gray-200 pt-4 space-y-3">
-              {isLoggedIn ? (
-                <div>
-                  <Link
-                    to="/my-orders"
-                    className="text-sm font-medium text-gray-600 hover:text-purple-600 transition-colors"
-                  >
-                    Mis Compras
-                  </Link>
-                  <button onClick={handleLogout} className="w-full px-4 py-2 rounded-lg bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition">
-                    Salir
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <button
-                    onClick={() => { setModalView('login'); setIsMobileMenuOpen(false); }}
-                    className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
-                  >
-                    Iniciar Sesión
-                  </button>
-                  <button
-                    onClick={() => { setModalView('register'); setIsMobileMenuOpen(false); }}
-                    className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition"
-                  >
-                    Registrarse
-                  </button>
-                </>
-              )}
-            </div>
+            {isLoggedIn ? (
+              <div className='flex flex-col gap-2'>
+                <Link
+                  to="/my-orders"
+                  className="text-md font-medium text-gray-600 hover:text-purple-600 transition-colors w-full"
+                >
+                  Mis Compras
+                </Link>
+                <button onClick={handleLogout} className="
+                  px-4 py-2 rounded-lg bg-gray-200 
+                  text-gray-800 text-md font-medium hover:bg-gray-300 transition">
+                  Salir
+                </button>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={() => { setModalView('login'); setIsMobileMenuOpen(false); }}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
+                >
+                  Iniciar Sesión
+                </button>
+                <button
+                  onClick={() => { setModalView('register'); setIsMobileMenuOpen(false); }}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition"
+                >
+                  Registrarse
+                </button>
+              </>
+            )}
           </div>
         )}
       </header>
