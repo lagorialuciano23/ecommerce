@@ -69,9 +69,10 @@ function CartItem({ item, removeFromCart }) {
 // Componente animado para el total
 function AnimatedTotal({ value }) {
   const { number } = useSpring({
-    from: { number: 0 },
+    from: { number: value * 0.5 },
     number: value,
-    config: config.slow,
+    config: { duration: 1000 },
+    delay: 500,
   });
 
   return (
@@ -116,7 +117,8 @@ export default function CartPage() {
   const summarySpring = useSpring({
     from: { opacity: 0, transform: 'translateY(20px)' },
     to: { opacity: 1, transform: 'translateY(0px)' },
-    config: config.gentle,
+    config: { tension: 200, friction: 20 },
+    delay: 500,
   });
 
   const handleAuthCheck = (e) => {
