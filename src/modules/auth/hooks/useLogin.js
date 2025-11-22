@@ -25,6 +25,9 @@ export function useLogin() {
     try {
       const responseData = await loginService(data.user, data.password);
 
+      console.log('Respuesta completa del backend:', responseData);
+      console.log('Token recibido:', responseData.token);
+
       const tokenString = responseData.token.Result || responseData.token;
       const userObject = responseData.user || { username: data.user };
 

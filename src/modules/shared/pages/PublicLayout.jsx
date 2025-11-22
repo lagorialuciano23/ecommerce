@@ -99,7 +99,7 @@ export default function PublicLayout() {
           {/* Auth (Desktop) - CORREGIDO PARA USAR MODALES */}
           <div className="hidden md:flex items-center gap-2">
             {isLoggedIn ? (
-              <div>
+              <div className="flex items-center gap-4">
                 <Link
                   to="/my-orders"
                   className="text-sm font-medium text-gray-600 hover:text-purple-600 transition-colors"

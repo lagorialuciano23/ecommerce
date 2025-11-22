@@ -15,9 +15,12 @@ api.interceptors.request.use(
   //Obtenemos el token de sessionStorage
     const token = sessionStorage.getItem('token');
 
-    //si el token existen lo agregamos a los headers
-    if (token) {
+    // Validar que el token sea válido antes de enviarlo
+    if (token && token !== 'null' && token !== 'undefined') {
+      console.log('Enviando token:', token.substring(0, 20) + '...'); // Log parcial
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.warn('No hay token válido para enviar');
     }
 
     return config;

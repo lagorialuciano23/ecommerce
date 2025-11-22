@@ -5,7 +5,11 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => {
     const savedToken = sessionStorage.getItem('token');
 
-    return savedToken && savedToken !== 'null' ? savedToken : null;
+    if (!savedToken || savedToken === 'null' || savedToken === 'undefined') {
+      return null;
+    }
+
+    return savedToken;
   });
 
   const [user, setUser] = useState(() => {
@@ -44,6 +48,12 @@ export function AuthProvider({ children }) {
   }, [token, user]);
 
   const login = (userData, userToken) => {
+    if (!userToken || typeof userToken !== 'string') {
+      console.error('Token inválido recibido:', userToken);
+
+      return;
+    }
+
     setUser(userData);
     setToken(userToken);
   };

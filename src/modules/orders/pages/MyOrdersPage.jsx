@@ -12,6 +12,8 @@ export default function MyOrdersPage() {
       try {
         const response = await ordersService.getMyOrders();
 
+        // --- AGREGAR ESTE LOG ---
+        console.log('Respuesta de Mis Compras:', response);
         setOrders(response.Items || []);
       } catch (error) {
         console.error('Error cargando mis órdenes:', error);

@@ -14,17 +14,24 @@ import CreateProductsPage from './modules/products/pages/CreateProductsPage.jsx'
 import EditProductPage from './modules/products/pages/EditProductPage.jsx';
 import OrdersDetailPage from './modules/orders/pages/OrdersDetailPage.jsx';
 import ProductDetailPage from './modules/products/pages/ProductDetailPage.jsx';
-import { UserProtectedRoute } from './modules/auth/helpers/UserProtectedRoute.jsx';
 import MyOrdersPage from './modules/orders/pages/MyOrdersPage.jsx';
+
 function App() {
   return (
     <Routes>
       {/* --- RUTAS PÚBLICAS (con Layout Público) --- */}
       <Route path="/" element={<PublicLayout />}>
-        {/* La ruta raíz ahora es la tienda de clientes */}
         <Route index element={<CustomerProductsPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="products/:id" element={<ProductDetailPage />} />
+        <Route
+          path="my-orders"
+          element={
+            <ProtectedRoute>
+              <MyOrdersPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       {/* --- RUTAS DE AUTENTICACIÓN (Públicas, sin layout) --- */}
@@ -47,15 +54,6 @@ function App() {
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/:id" element={<OrdersDetailPage />} />
       </Route>
-      {/* RUTA PROTEGIDA PARA CLIENTES */}
-      <Route
-        path="my-orders"
-        element={
-          <UserProtectedRoute>
-            <MyOrdersPage />
-          </UserProtectedRoute>
-        }
-      />
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
