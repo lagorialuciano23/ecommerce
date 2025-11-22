@@ -76,12 +76,22 @@ export default function MyOrdersPage() {
                   </p>
                 </div>
 
-                {/* Botón Detalle */}
-                {/* NOTA: Podrías crear una página de detalle pública o reutilizar un modal.
-                    Por ahora, no ponemos link de detalle para simplificar, o podrías linkear a una vista de resumen. */}
-                {/* <button className="text-purple-600 hover:text-purple-800 text-sm font-medium flex items-center">
-                  Ver detalles <ChevronRight className="w-4 h-4 ml-1" />
-                </button> */}
+                <div className="border-t border-gray-100 pt-4 mt-2">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Productos:</h4>
+                  <ul className="space-y-2">
+                    {order.Items.map((item, index) => (
+                      <li key={index} className="flex justify-between text-sm items-center bg-gray-50 p-2 rounded">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-gray-900">{item.Quantity}x</span>
+                          <span className="text-gray-700">{item.Name}</span>
+                        </div>
+                        <span className="text-gray-600 font-medium">
+                        ${item.Subtotal.toFixed(2)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           ))}
