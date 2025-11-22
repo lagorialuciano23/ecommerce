@@ -15,6 +15,7 @@ import EditProductPage from './modules/products/pages/EditProductPage.jsx';
 import OrdersDetailPage from './modules/orders/pages/OrdersDetailPage.jsx';
 import ProductDetailPage from './modules/products/pages/ProductDetailPage.jsx';
 import MyOrdersPage from './modules/orders/pages/MyOrdersPage.jsx';
+import { UserProtectedRoute } from './modules/auth/helpers/UserProtectedRoute';
 
 function App() {
   return (
@@ -27,9 +28,9 @@ function App() {
         <Route
           path="my-orders"
           element={
-            <ProtectedRoute>
+            <UserProtectedRoute>
               <MyOrdersPage />
-            </ProtectedRoute>
+            </UserProtectedRoute>
           }
         />
       </Route>
