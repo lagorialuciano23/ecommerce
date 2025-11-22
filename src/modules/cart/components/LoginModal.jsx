@@ -20,23 +20,38 @@ export default function LoginModal({ open, onClose, onLoginSuccess, footer }) {
   const onSubmit = async (data) => {
     setIsLoading(true);
     setApiError(null);
+    
     try {
-      // Usamos el servicio de login
       const responseData = await loginService(data.user, data.password);
+     
+      // Extraer token
+      const tokenString = responseData.token;
+      
+      // Extraer usuario con roles correctamente
+      const userObject = {
+        id: responseData.user.Id,
+        username: responseData.user.Username,
+        email: responseData.user.Email,
+        roles: responseData.user.Roles || [] // el problem es q era con R no con r
+      };
 
-      // La lógica de tu hook 'useLogin'
-      const tokenString = responseData.token.Result || responseData.token;
-      const userObject = responseData.user || { username: data.user };
+      console.log('Login exitoso - Usuario');
+      console.log('Token:', tokenString);
+     
+      console.log('User:', userObject.username);
+      console.log('Email:', userObject.email);
+      console.log('Id:', userObject.id);
+      console.log('Roles:', userObject.roles); // Debería mostrar: ["Admin"] xq es array
 
+      // guardar auth
       saveAuth(userObject, tokenString);
 
       if (onLoginSuccess) onLoginSuccess();
 
-      console.log('Login exitoso', userObject);
-      console.log('Token', tokenString);
       onClose();
 
     } catch (error) {
+      console.error('Error en login:', error);
       setApiError(error.message);
     } finally {
       setIsLoading(false);

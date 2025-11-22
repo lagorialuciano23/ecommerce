@@ -6,8 +6,8 @@ export const ProtectedRoute = ({ children, redirectPath = '/login' }) => {
   const { isLoggedIn, user } = useAuth();
 
   // 2. Verificamos si el usuario es Admin
-  // (Usamos 'Roles' con mayúscula, como lo envía C#)
-  const isAdmin = user?.Roles?.includes('Admin');
+  // (Usamos 'roles' con minúscula, como lo envía C#)
+  const isAdmin = user?.roles?.includes('Admin');
 
   // 3. Si no está logueado O NO es Admin, redirigimos
   if (!isLoggedIn || !isAdmin) {
