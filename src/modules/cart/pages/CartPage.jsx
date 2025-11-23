@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useSpring, useTransition, config } from '@react-spring/web';
+import { useSpring, useTransition, config, animated } from '@react-spring/web';
 import { useCart } from '../context/useCart';
 import { useAuth } from '../../auth/context/useAuth';
 import { ordersService } from '../../orders/services/orderServices';
