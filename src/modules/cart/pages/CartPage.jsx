@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useSpring, animated, useTransition, config } from '@react-spring/web';
+import { useSpring, useTransition, config } from '@react-spring/web';
 import { useCart } from '../context/useCart';
 import { useAuth } from '../../auth/context/useAuth';
 import { ordersService } from '../../orders/services/orderServices';
@@ -20,8 +20,8 @@ function CartItem({ item, removeFromCart }) {
   const [isHovered, setIsHovered] = useState(false);
   const hoverSpring = useSpring({
     transform: isHovered ? 'translateX(-4px)' : 'translateX(0px)',
-    boxShadow: isHovered 
-      ? '0 4px 12px rgba(0, 0, 0, 0.1)' 
+    boxShadow: isHovered
+      ? '0 4px 12px rgba(0, 0, 0, 0.1)'
       : '0 1px 3px rgba(0, 0, 0, 0.05)',
     config: config.wobbly,
   });
@@ -133,7 +133,18 @@ export default function CartPage() {
     setIsLoading(true);
     setApiError(null);
 
-    const customerId = user.Id;
+    // --- CORRECCIÓN AQUÍ ---
+    // Intentamos leer 'id' (como lo guarda el frontend ahora) O 'Id' (por si acaso)
+    const customerId = user?.id || user?.Id;
+    // --- FIN DE LA CORRECCIÓN ---
+
+    if (!customerId) {
+      console.error('Error crítico: No se encontró el ID del usuario en la sesión.', user);
+      setApiError('Error de sesión. Por favor, vuelva a iniciar sesión.');
+      setIsLoading(false);
+
+      return;
+    }
 
     const orderItemsPayload = cartItems.map(item => ({
       ProductId: item.id,
@@ -246,7 +257,7 @@ export default function CartPage() {
               </div>
 
               {/* Sumario con animaciones */}
-              <animated.div 
+              <animated.div
                 style={summarySpring}
                 className="bg-white p-6 rounded-lg shadow-sm border border-gray-200"
               >

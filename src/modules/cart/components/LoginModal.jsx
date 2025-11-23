@@ -20,30 +20,34 @@ export default function LoginModal({ open, onClose, onLoginSuccess, footer }) {
   const onSubmit = async (data) => {
     setIsLoading(true);
     setApiError(null);
-    
+
     try {
       const responseData = await loginService(data.user, data.password);
-     
-      // Extraer token
-      const tokenString = responseData.token;
-      
-      // Extraer usuario con roles correctamente
+
+      // 1. Extraer el usuario crudo del backend
+      const rawUser = responseData.user;
+
+      // 2. Mapeo "Defensivo": Intentamos leer PascalCase O camelCase
       const userObject = {
-        id: responseData.user.Id,
-        username: responseData.user.Username,
-        email: responseData.user.Email,
-        roles: responseData.user.Roles || [] // el problem es q era con R no con r
+        // Intentamos .Id (C# default) O .id (JS standard)
+        id: rawUser.Id || rawUser.id,
+        username: rawUser.Username || rawUser.username,
+        email: rawUser.Email || rawUser.email,
+        roles: rawUser.Roles || rawUser.roles || [],
       };
 
-      console.log('Login exitoso - Usuario');
-      console.log('Token:', tokenString);
-     
-      console.log('User:', userObject.username);
-      console.log('Email:', userObject.email);
-      console.log('Id:', userObject.id);
-      console.log('Roles:', userObject.roles); // Debería mostrar: ["Admin"] xq es array
+      // 3. Validación de seguridad para desarrollo
+      if (!userObject.id) {
+        console.error('¡ALERTA CRÍTICA! El ID del usuario es undefined. Respuesta del backend:', rawUser);
+        throw new Error('Error al iniciar sesión: No se pudo obtener el ID del usuario.');
+      }
 
-      // guardar auth
+      console.log('Login exitoso. Usuario:', userObject);
+
+      // 4. Guardar en AuthContext
+      // (Asegurate de que responseData.token sea el string, o .token.Result si viene wrappeado)
+      const tokenString = responseData.token.Result || responseData.token;
+
       saveAuth(userObject, tokenString);
 
       if (onLoginSuccess) onLoginSuccess();
