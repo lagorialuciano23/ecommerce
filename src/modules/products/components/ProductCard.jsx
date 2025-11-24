@@ -116,11 +116,11 @@ export default function ProductCard({ product, onAddToCart }) {
         {product.Description}
       </p>
 
-      {/* precio con animacion */}
+     {/* precio con animacion */}
       <animated.p style={priceSpring} className="text-2xl font-bold mb-4">
-        ${(product.CurrentUnitPrice || 0).toFixed(2)}
-      </animated.p>
-
+        ${(product.CurrentUnitPrice || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      </animated.p> 
+      
       {/* controles para umentar*/}
       <div className="flex items-center justify-center gap-3 mb-4 mt-auto">
         <button
