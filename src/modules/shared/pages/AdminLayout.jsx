@@ -59,12 +59,12 @@ function AdminLayout() {
           <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white rounded-lg">
             <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
               <span className="text-white font-semibold text-md">
-                {user?.Username?.[0]?.toUpperCase() || 'U'}
+                {user?.username?.[0]?.toUpperCase() || 'U'}
               </span>
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-md font-medium text-gray-900 truncate">
-                {user?.Username || 'Usuario'}
+                {user?.username || 'Usuario'}
               </span>
               <span className="text-xs text-gray-500">Administrador</span>
             </div>
@@ -76,7 +76,7 @@ function AdminLayout() {
             {/* mobile */}
             <div className="lg:hidden w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
               <span className="text-white font-semibold text-xs">
-                {user?.Username?.[0]?.toUpperCase() || 'U'}
+                {user?.username?.[0]?.toUpperCase() || 'U'}
               </span>
             </div>
 

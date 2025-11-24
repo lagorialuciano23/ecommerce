@@ -17,7 +17,6 @@ export function useLogin() {
     try {
       const responseData = await loginService(data.user, data.password);
 
-      console.log('========== DEBUG LOGIN ==========');
       console.log('Respuesta completa:', responseData);
       console.log('Usuario RAW:', responseData.user);
 
@@ -37,7 +36,7 @@ export function useLogin() {
 
       // Validación de seguridad
       if (!userObject.id) {
-        console.error('¡ALERTA! El ID del usuario es undefined. Respuesta:', rawUser);
+        console.error('El ID del usuario es undefined. Respuesta:', rawUser);
         throw new Error('Error al iniciar sesión: No se pudo obtener el ID del usuario.');
       }
 
