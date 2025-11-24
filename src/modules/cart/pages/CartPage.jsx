@@ -13,10 +13,9 @@ import RegisterModal from '../components/RegisterModal';
 import Toast from '../../shared/components/Toast';
 
 // Componente CartItem con animaciones
-function CartItem({ item, removeFromCart }) {
+function CartItem({ item, removeFromCart, updateQuantity }) {
   const [isRemoving, setIsRemoving] = useState(false);
 
-  // Animación de hover
   const [isHovered, setIsHovered] = useState(false);
   const hoverSpring = useSpring({
     transform: isHovered ? 'translateX(-4px)' : 'translateX(0px)',
@@ -26,7 +25,6 @@ function CartItem({ item, removeFromCart }) {
     config: config.wobbly,
   });
 
-  // Animación de salida
   const exitSpring = useSpring({
     opacity: isRemoving ? 0 : 1,
     transform: isRemoving ? 'translateX(100%) scale(0.8)' : 'translateX(0%) scale(1)',
@@ -42,6 +40,20 @@ function CartItem({ item, removeFromCart }) {
     setIsRemoving(true);
   };
 
+  const handleDecrement = (e) => {
+    e.preventDefault(); // Prevenir submit del formulario
+    if (item.quantity > 1) {
+      updateQuantity(item.id, item.quantity - 1);
+    } else {
+      handleRemove();
+    }
+  };
+
+  const handleIncrement = (e) => {
+    e.preventDefault(); // Prevenir submit del formulario
+    updateQuantity(item.id, item.quantity + 1);
+  };
+
   return (
     <animated.div
       style={{ ...hoverSpring, ...exitSpring }}
@@ -49,18 +61,42 @@ function CartItem({ item, removeFromCart }) {
       onMouseLeave={() => setIsHovered(false)}
       className="flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200"
     >
-      <div>
+      <div className="flex-1">
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-        <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
+        <p className="text-sm text-gray-500 mt-1">Precio unitario: ${item.price.toFixed(2)}</p>
       </div>
-      <div className="text-right">
-        <p className="text-lg font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
-        <button
-          onClick={handleRemove}
-          className="text-sm text-red-600 hover:text-red-800 transition-colors"
-        >
-          Quitar
-        </button>
+      
+      <div className="flex items-center gap-6">
+        {/* Controles de cantidad */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleDecrement}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+          >
+            -
+          </button>
+          <span className="w-12 text-center font-medium text-gray-800">{item.quantity}</span>
+          <button
+            type="button"
+            onClick={handleIncrement}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+          >
+            +
+          </button>
+        </div>
+
+        {/* Precio total y botón eliminar */}
+        <div className="text-right min-w-[120px]">
+          <p className="text-lg font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="text-sm text-red-600 hover:text-red-800 transition-colors mt-1"
+          >
+            Eliminar
+          </button>
+        </div>
       </div>
     </animated.div>
   );
@@ -84,7 +120,7 @@ function AnimatedTotal({ value }) {
 
 // Página principal del carrito
 export default function CartPage() {
-  const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
+  const { cartItems, removeFromCart, clearCart, cartTotal, updateQuantity } = useCart();
   const { isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -133,10 +169,7 @@ export default function CartPage() {
     setIsLoading(true);
     setApiError(null);
 
-    // --- CORRECCIÓN AQUÍ ---
-    // Intentamos leer 'id' (como lo guarda el frontend ahora) O 'Id' (por si acaso)
     const customerId = user?.id || user?.Id;
-    // --- FIN DE LA CORRECCIÓN ---
 
     if (!customerId) {
       console.error('Error crítico: No se encontró el ID del usuario en la sesión.', user);
@@ -216,7 +249,7 @@ export default function CartPage() {
               <div className="space-y-4 mb-6">
                 {transitions((style, item) => (
                   <animated.div key={item.id} style={style}>
-                    <CartItem item={item} removeFromCart={removeFromCart} />
+                    <CartItem item={item} removeFromCart={removeFromCart} updateQuantity={updateQuantity} />
                   </animated.div>
                 ))}
               </div>

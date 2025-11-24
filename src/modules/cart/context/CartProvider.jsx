@@ -29,6 +29,7 @@ export function CartProvider({ children }) {
   const clearToast = () => {
     setToastMessage(null);
   };
+
   /**
    * Añade un producto al carrito.
    * Si ya existe, incrementa la cantidad.
@@ -36,7 +37,7 @@ export function CartProvider({ children }) {
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
       const stockLimit = product.StockQuantity;
-      const existingItem = prevItems.find(item => item.id === product.Id); // Usamos Id (mayúscula)
+      const existingItem = prevItems.find(item => item.id === product.Id);
       const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
 
       if (currentQuantityInCart >= stockLimit) {
@@ -51,7 +52,6 @@ export function CartProvider({ children }) {
       let newTotalQuantity = currentQuantityInCart + quantity;
 
       if (newTotalQuantity > stockLimit) {
-        // Si nos pasamos, ajustamos la cantidad al límite
         const quantityLeft = stockLimit - currentQuantityInCart;
 
         setToastMessage({
@@ -62,14 +62,12 @@ export function CartProvider({ children }) {
       }
 
       if (existingItem) {
-        // Si existe, actualiza la cantidad
         return prevItems.map(item =>
           item.id === product.Id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: newTotalQuantity }
             : item,
         );
       } else {
-        // Si no existe, lo añade
         return [
           ...prevItems,
           {
@@ -77,9 +75,38 @@ export function CartProvider({ children }) {
             name: product.Name,
             price: product.CurrentUnitPrice,
             quantity,
+            stockLimit, // Guardamos el límite de stock
           },
         ];
       }
+    });
+  };
+
+  /**
+   * Actualiza la cantidad de un producto específico en el carrito.
+   * Si la nueva cantidad es 0 o menor, elimina el producto.
+   */
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    setCartItems(prevItems => {
+      return prevItems.map(item => {
+        if (item.id === productId) {
+          // Si hay un límite de stock guardado, respetarlo
+          if (item.stockLimit && newQuantity > item.stockLimit) {
+            setToastMessage({
+              title: 'Stock Límite',
+              message: `Solo hay ${item.stockLimit} unidades disponibles.`,
+            });
+            return { ...item, quantity: item.stockLimit };
+          }
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
     });
   };
 
@@ -110,6 +137,7 @@ export function CartProvider({ children }) {
   const cartValue = useMemo(() => ({
     cartItems,
     addToCart,
+    updateQuantity, // ← Nueva función
     removeFromCart,
     clearCart,
     cartTotal,

@@ -203,13 +203,16 @@ export default function DashboardHome() {
             textColor="text-red-900"
             icon={Ban}
           />
-        </div><div className="w-full h-[400px] mt-8">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">Estado de las Órdenes</h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={chartData}
-              margin={{
-                top: 5,
+        </div>
+      </div>
+      
+      <div className="w-full h-[400px] mt-8 mb-8 bg-white p-6 rounded-2xl shadow-lg">
+        <h3 className="text-2xl font-semibold text-gray-900 mb-4 text-center">Estado de las Órdenes</h3>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={chartData}
+            margin={{
+              top: 5,
                 right: 30,
                 left: 20,
                 bottom: 40,
@@ -232,7 +235,7 @@ export default function DashboardHome() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      
     </div>
   );
 }

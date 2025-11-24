@@ -211,23 +211,8 @@ export default function CustomerProductsPage() {
 
       {/* --- BARRA DE FILTROS --- */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6">
-        <div className="flex flex-col md:flex-row gap-4 items-end">
+        <div className="flex flex-col w-full md:flex-row gap-6 items-end">
           
-          {/* Buscador */}
-          <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Buscar
-            </label>
-            <input
-              type="text"
-              placeholder="Nombre, SKU, descripción..."
-              value={tempFilters.search}
-              onChange={(e) => setTempFilters({...tempFilters, search: e.target.value})}
-              onKeyPress={handleKeyPress}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-          </div>
-
           {/* Precio Mínimo */}
           <div className="w-full md:w-32">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -246,7 +231,7 @@ export default function CustomerProductsPage() {
           
           {/* Precio Máximo */}
           <div className="w-full md:w-32">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1 ">
               Precio Máx
             </label>
             <input 
@@ -284,7 +269,7 @@ export default function CustomerProductsPage() {
           </div>
           
           {/* Selector Page Size */}
-          <div className="w-full md:w-auto">
+          <div className="w-full md:w-auto md:ml-auto">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Mostrar
             </label>
