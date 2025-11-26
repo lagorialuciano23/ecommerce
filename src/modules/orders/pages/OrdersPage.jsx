@@ -160,11 +160,14 @@ export default function OrdersPage() {
             {/* Header con título y badge */}
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
-                <h3 className="text-base font-semibold text-gray-900 truncate">
-                  Orden #{order.Id.substring(0, 8)}...
+                <h3 className="text-lg font-semibold text-gray-900 truncate">
+                  Nombre del cliente: {order.CustomerName}
                 </h3>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Cliente: {order.CustomerId.substring(0, 8)}...
+                 <p className="text-medium text-gray-500 mt-0.5">
+                  ID del cliente: {order.CustomerId.substring(0, 8)}...
+                </p>
+                <p className="text-medium text-gray-500 mt-0.5">
+                  ID de la orden: {order.Id.substring(0, 8)}...
                 </p>
               </div>
               {getStatusIcon(order.Status)}

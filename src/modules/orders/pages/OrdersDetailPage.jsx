@@ -7,7 +7,7 @@ import ConfirmModal from '../../shared/components/ConfirmModal';
 // Componente helper para mostrar un ítem
 function OrderItem({ item }) {
   return (
-    <div className="flex justify-between items-center py-3 px-4 bg-white rounded-lg border border-gray-200 shadow-sm"> {/* <-- CLASES CAMBIADAS */}
+    <div className="flex justify-between items-center py-3 px-4 bg-white rounded-lg border border-gray-200 shadow-sm">
       <div>
         <p className="font-semibold text-gray-800">{item.Name}</p>
         <p className="text-sm text-gray-500">ID Producto: {item.ProductId.substring(0, 8)}...</p>
@@ -21,12 +21,11 @@ function OrderItem({ item }) {
 }
 
 export default function OrderDetailPage() {
-  const { id } = useParams(); // Obtiene el ID de la URL
+  const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  // Nuevos estados para los botones
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteToast, setShowDeleteToast] = useState(false);
@@ -38,8 +37,7 @@ export default function OrderDetailPage() {
       setError(null);
       try {
         const response = await ordersService.getById(id);
-
-        setOrder(response); // La respuesta ya es el objeto de la orden
+        setOrder(response);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -48,20 +46,13 @@ export default function OrderDetailPage() {
     };
 
     fetchOrder();
-  }, [id]); // Se ejecuta cada vez que el ID de la URL cambia
+  }, [id]);
 
-  // --- 4. NUEVOS HANDLERS ---
-
-  /**
-   * Manejador para cambiar el estado de la orden (Modificar)
-   */
   const handleStatusChange = async (newStatus) => {
     setIsUpdating(true);
     setError(null);
     try {
-      // El servicio 'updateStatus' ya existe
       await ordersService.updateStatus(order.Id, newStatus);
-      // Actualizamos el estado local para ver el cambio instantáneamente
       setOrder(prevOrder => ({ ...prevOrder, Status: newStatus }));
     } catch (err) {
       setError(err.message);
@@ -70,40 +61,27 @@ export default function OrderDetailPage() {
     }
   };
 
-  /**
-   * Manejador para INICIAR el borrado (abre la modal)
-   */
   const handleDelete = () => {
-    // 3. Ya no usamos window.confirm, solo abrimos la modal
     setIsConfirmModalOpen(true);
   };
 
-  /**
-   * Manejador para CONFIRMAR el borrado (se llama desde la modal)
-   */
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     setError(null);
-    setIsConfirmModalOpen(false); // Cerramos la modal
+    setIsConfirmModalOpen(false);
 
     try {
       await ordersService.delete(order.Id);
-      // Mostramos el toast de éxito
       setShowDeleteToast(true);
     } catch (err) {
       setError(err.message);
-      setIsDeleting(false); // Si hay error, reactivamos los botones
+      setIsDeleting(false);
     }
   };
 
-  // --- 4. AÑADIR HANDLER PARA CERRAR EL TOAST ---
-  /**
-   * Se llama cuando el toast se cierra.
-   * Cierra el toast y navega a la lista de órdenes.
-   */
   const handleDeleteToastClose = () => {
     setShowDeleteToast(false);
-    navigate('/admin/orders'); // <-- Navegamos DESPUÉS de cerrar el toast
+    navigate('/admin/orders');
   };
 
   if (isLoading) {
@@ -118,9 +96,10 @@ export default function OrderDetailPage() {
     return <p className="text-center text-white">No se encontró la orden.</p>;
   }
 
-  // Si todo está bien, renderizamos los detalles
   return (
-    <div className="container mx-auto">
+    <div className="max-w-6xl mx-auto px-4"> {/* ← Contenedor con ancho máximo */}
+      
+      {/* Botón Volver */}
       <div className="mb-6">
         <Link
           to="/admin/orders"
@@ -130,42 +109,62 @@ export default function OrderDetailPage() {
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          {/* Título de la Orden*/}
-          <h1 className="text-3xl font-bold text-gray-900">Orden #{order.Id.substring(0, 8)}...</h1>
-          <p className="text-gray-500">Cliente ID: {order.CustomerId.substring(0, 8)}...</p>
-        </div>
-        <div className="text-right">
-          {/* Status (Corregido - ahora espera "PENDING") */}
-          <select
-            value={order.Status}
-            onChange={(e) => handleStatusChange(e.target.value)}
-            disabled={isUpdating || isDeleting}
-            className={`bg-white text-lg font-medium px-3 py-1 rounded-full border ${
-              order.Status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+      {/* Header con IDs y Estado */}
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow border border-gray-200 mb-6"> {/* ← Card con ancho completo */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          
+          {/* IDs del lado izquierdo */}
+          <div className="flex-1 min-w-0 space-y-2">
+            <div className="flex items-start gap-2">
+              <span className="text-sm font-medium text-gray-500 flex-shrink-0">ID Orden:</span>
+              <code className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded break-all">
+                {order.Id}
+              </code>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-sm font-medium text-gray-500 flex-shrink-0">Cliente ID:</span>
+              <code className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded break-all">
+                {order.CustomerId}
+              </code>
+            </div>
+          </div>
+
+          {/* Estado y Fecha del lado derecho */}
+          <div className="flex flex-col items-end gap-3 flex-shrink-0">
+            {/* Select de Estado */}
+            <select
+              value={order.Status}
+              onChange={(e) => handleStatusChange(e.target.value)}
+              disabled={isUpdating || isDeleting}
+              className={`text-sm font-medium px-3 py-2 rounded-full border ${
+                order.Status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+                order.Status === 'PROCESSING' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                order.Status === 'SHIPPED' ? 'bg-indigo-100 text-indigo-800 border-indigo-200' :
                 order.Status === 'DELIVERED' ? 'bg-green-100 text-green-800 border-green-200' :
-                  order.Status === 'CANCELLED' ? 'bg-red-100 text-red-800 border-red-200' :
-                    'bg-blue-100 text-blue-800 border-blue-200'
-            } focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50`}
-          >
-            <option value="PENDING" className='bg-white'>Pendiente</option>
-            <option value="PROCESSING" className='bg-white'>En Proceso</option>
-            <option value="SHIPPED" className='bg-white'>Enviado</option>
-            <option value="DELIVERED" className='bg-white'>Entregado</option>
-            <option value="CANCELLED" className='bg-white'>Cancelado</option>
-          </select>
-          <p className="text-gray-800 mt-2">
-           Fecha de la orden:
-            {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            }) : 'N/A'}
-          </p>
+                'bg-red-100 text-red-800 border-red-200'
+              } focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50`}
+            >
+              <option value="PENDING" className="bg-white">Pendiente</option>
+              <option value="PROCESSING" className="bg-white">En Proceso</option>
+              <option value="SHIPPED" className="bg-white">Enviado</option>
+              <option value="DELIVERED" className="bg-white">Entregado</option>
+              <option value="CANCELLED" className="bg-white">Cancelado</option>
+            </select>
+
+            {/* Fecha */}
+            <div className="text-right">
+              <p className="text-xs text-gray-500">Fecha de la orden:</p>
+              <p className="text-sm font-medium text-gray-900">
+                {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                }) : 'N/A'}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -210,28 +209,31 @@ export default function OrderDetailPage() {
             <p className="text-gray-600">{order.BillingAddress}</p>
           </div>
 
+          {/* Acciones Admin */}
           <div className="bg-white p-6 rounded-lg shadow border border-gray-200">
             <h2 className="text-xl font-semibold mb-4 text-gray-900">Acciones de Admin</h2>
             <button
-              onClick={handleDelete} // Este botón ahora solo abre la modal
+              onClick={handleDelete}
               disabled={isDeleting || isUpdating}
-              className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {isDeleting ? 'Eliminando...' : 'Eliminar Orden'}
             </button>
             {error && (
-              <p className="text-center text-red-600 mt-4">{error}</p>
+              <p className="text-center text-red-600 mt-4 text-sm">{error}</p>
             )}
           </div>
         </div>
       </div>
+
       <Toast
         open={showDeleteToast}
         title="¡Orden Eliminada!"
         message="La orden ha sido eliminada y el stock repuesto."
         onClose={handleDeleteToastClose}
-        duration={2000} // Duración corta, ya que redirigimos
+        duration={2000}
       />
+      
       <ConfirmModal
         open={isConfirmModalOpen}
         title="Confirmar Eliminación"
