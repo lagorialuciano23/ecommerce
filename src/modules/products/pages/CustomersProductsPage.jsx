@@ -209,7 +209,6 @@ export default function CustomerProductsPage() {
 
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Catálogo</h1>
 
-      {/* --- BARRA DE FILTROS --- */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6">
         <div className="flex flex-col w-full md:flex-row gap-6 items-end">
           
