@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { CartContext } from './useCart';
 
-// Función helper para leer del sessionStorage de forma segura
+// Función helper para leer del localStorage de forma segura
 function getInitialCart() {
   try {
-    const cart = sessionStorage.getItem('cart');
+    const cart = localStorage.getItem('cart');
 
     return cart ? JSON.parse(cart) : [];
   } catch (e) {
@@ -19,9 +19,9 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState(getInitialCart);
   const [toastMessage, setToastMessage] = useState(null);
 
-  // 2. Efecto que GUARDA en sessionStorage CADA VEZ que cartItems cambia
+  // 2. Efecto que GUARDA en localStorage CADA VEZ que cartItems cambia
   useEffect(() => {
-    sessionStorage.setItem('cart', JSON.stringify(cartItems));
+    localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
   // --- Funciones para modificar el carrito ---
@@ -89,6 +89,7 @@ export function CartProvider({ children }) {
   const updateQuantity = (productId, newQuantity) => {
     if (newQuantity <= 0) {
       removeFromCart(productId);
+
       return;
     }
 
@@ -101,10 +102,13 @@ export function CartProvider({ children }) {
               title: 'Stock Límite',
               message: `Solo hay ${item.stockLimit} unidades disponibles.`,
             });
+
             return { ...item, quantity: item.stockLimit };
           }
+
           return { ...item, quantity: newQuantity };
         }
+
         return item;
       });
     });

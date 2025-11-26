@@ -3,7 +3,7 @@ import { AuthContext } from './useAuth';
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => {
-    const savedToken = sessionStorage.getItem('token');
+    const savedToken = localStorage.getItem('token');
 
     if (!savedToken || savedToken === 'null' || savedToken === 'undefined') {
       return null;
@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = sessionStorage.getItem('user');
+      const savedUser = localStorage.getItem('user');
 
       if (!savedUser || savedUser === 'null') {
         return null;
@@ -35,15 +35,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // Solo guardamos si hay un valor válido
     if (token) {
-      sessionStorage.setItem('token', token);
+      localStorage.setItem('token', token);
     } else {
-      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
     }
 
     if (user) {
-      sessionStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user));
     } else {
-      sessionStorage.removeItem('user');
+      localStorage.removeItem('user');
     }
   }, [token, user]);
 
@@ -61,8 +61,8 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null);
     setToken(null);
-    // Limpiamos todo el sessionStorage al salir
-    sessionStorage.clear();
+    // Limpiamos todo el localStorage al salir
+    localStorage.clear();
   };
 
   const authValue = useMemo(() => ({

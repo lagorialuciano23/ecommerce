@@ -205,7 +205,7 @@ export default function DashboardHome() {
           />
         </div>
       </div>
-      
+
       <div className="w-full h-[400px] mt-8 mb-8 bg-white p-6 rounded-2xl shadow-lg">
         <h3 className="text-2xl font-semibold text-gray-900 mb-4 text-center">Estado de las Órdenes</h3>
         <ResponsiveContainer width="100%" height="100%">
@@ -213,29 +213,29 @@ export default function DashboardHome() {
             data={chartData}
             margin={{
               top: 5,
-                right: 30,
-                left: 20,
-                bottom: 40,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis allowDecimals={false} /> {/* allowDecimals={false} para que no muestre 1.5 ordenes */}
-              <Tooltip
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-              />
-              <Legend />
-              <Bar dataKey="cantidad" name="Cantidad de Órdenes" radius={[4, 4, 0, 0]}>
-                {
-                  chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))
-                }
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      
+              right: 30,
+              left: 20,
+              bottom: 40,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis allowDecimals={false} /> {/* allowDecimals={false} para que no muestre 1.5 ordenes */}
+            <Tooltip
+              contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+            />
+            <Legend />
+            <Bar dataKey="cantidad" name="Cantidad de Órdenes" radius={[4, 4, 0, 0]}>
+              {
+                chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))
+              }
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
     </div>
   );
 }
