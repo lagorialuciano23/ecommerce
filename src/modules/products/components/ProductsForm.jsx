@@ -35,7 +35,7 @@ function ProductsForm({ onSuccess, productToEdit }) {
         sku: data.sku || null,
         internalCode: data.internalCode || null,
         name: data.name || null,
-        description: data.description || null,
+        description: data.description || '',
         currentUnitPrice: parseFloat(data.currentUnitPrice),
         stockQuantity: parseInt(data.stockQuantity, 10),
         imageUrl: data.imageUrl || null,
