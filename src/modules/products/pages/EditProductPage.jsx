@@ -7,8 +7,8 @@ import ProductsForm from '../components/ProductsForm'; // Reutilizamos el form
 const mapApiToForm = (product) => {
   return {
     id: product.Id, // Mantenemos el Id para el 'update'
-    sku: product.Sku,
-    internalCode: product.InternalCode,
+    sku: product.Sku ? product.Sku.replace(/^SKU-/, '') : '',
+    internalCode: product.InternalCode ? product.InternalCode.replace(/^INT-/, '') : '',
     name: product.Name,
     description: product.Description,
     currentUnitPrice: product.CurrentUnitPrice,

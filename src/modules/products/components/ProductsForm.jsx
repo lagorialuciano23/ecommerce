@@ -32,8 +32,9 @@ function ProductsForm({ onSuccess, productToEdit }) {
     try {
       // convertir los tipos de datos apropiadamente
       const productData = {
-        sku: data.sku || null,
-        internalCode: data.internalCode || null,
+        // Concatenamos manualmente los prefijos
+        sku: data.sku ? `SKU-${data.sku}` : null,
+        internalCode: data.internalCode ? `INT-${data.internalCode}` : null,
         name: data.name || null,
         description: data.description || '',
         currentUnitPrice: parseFloat(data.currentUnitPrice),
@@ -70,11 +71,17 @@ function ProductsForm({ onSuccess, productToEdit }) {
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto bg-white p-6 rounded-lg ">
       <FormInput
         id="sku"
-        label="SKU"
+        label="Número de SKU (se agregará SKU- autom.)"
         register={register}
         error={errors.sku}
-        validation={{ required: 'El SKU es requerido' }}
-        inputProps={{ placeholder: 'SKU-...' }}
+        validation={{
+          required: 'El número de SKU es requerido',
+          pattern: {
+            value: /^[0-9]+$/, // Regex: Solo dígitos del 0 al 9
+            message: 'Solo se permiten números en el SKU',
+          },
+        }}
+        inputProps={{ placeholder: 'Ej: 12345' }}
       />
 
       <FormInput
@@ -92,10 +99,17 @@ function ProductsForm({ onSuccess, productToEdit }) {
 
       <FormInput
         id="internalCode"
-        label="Código Interno"
+        label="Número de Código Interno (se agregará INT- autom.)"
         register={register}
         error={errors.internalCode}
-        inputProps={{ placeholder: 'INT-...' }}
+        validation={{
+          // Puedes hacerlo requerido u opcional según tu lógica
+          pattern: {
+            value: /^[0-9]+$/,
+            message: 'Solo se permiten números en el Código Interno',
+          },
+        }}
+        inputProps={{ placeholder: 'Ej: 98765' }}
       />
 
       <FormInput
