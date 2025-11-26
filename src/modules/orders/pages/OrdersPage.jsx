@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Clock, Package, Truck, CheckCircle, XCircle } from 'lucide-react';
 
-// Definimos los estados de orden basados en tu backend
 const orderStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
 const statusTranslations = {
@@ -15,7 +14,6 @@ const statusTranslations = {
   'CANCELLED': 'Cancelado',
 };
 
-// Función helper para obtener las clases de color según el estado
 const getStatusClasses = (status) => {
   const statusMap = {
     'PENDING': 'bg-yellow-100 text-yellow-700',
@@ -42,19 +40,15 @@ const getStatusIcon = (status) => {
 };
 
 export default function OrdersPage() {
-  // Estados para los datos y la UI
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Estados para los filtros y paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10); // Default 10
+  const [pageSize, setPageSize] = useState(10);
   const [filterStatus, setFilterStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [canGoNext, setCanGoNext] = useState(true);
 
-  // Efecto para cargar las órdenes
   useEffect(() => {
     const fetchOrders = async () => {
       setIsLoading(true);
@@ -68,10 +62,6 @@ export default function OrdersPage() {
         );
 
         setOrders(response);
-        console.log(response);
-        console.log(response[0]?.CreatedAt);
-
-        // Actualizar canGoNext según la respuesta
         setCanGoNext(response.length === pageSize);
       } catch (err) {
         setError(err.message);
@@ -84,7 +74,6 @@ export default function OrdersPage() {
     fetchOrders();
   }, [currentPage, filterStatus, searchTerm, pageSize]);
 
-  // --- Manejadores de eventos ---
   const handleSearch = (e) => {
     e.preventDefault();
     setCurrentPage(1);
@@ -96,10 +85,10 @@ export default function OrdersPage() {
   };
 
   const handlePageSizeChange = (e) => {
-    setCurrentPage(1); // Reiniciar a página 1
+    setCurrentPage(1);
     setPageSize(Number(e.target.value));
   };
-  // --- Manejadores de Paginación ---
+
   const goToNextPage = () => {
     setCurrentPage((prev) => prev + 1);
   };
@@ -108,7 +97,6 @@ export default function OrdersPage() {
     setCurrentPage((prev) => Math.max(1, prev - 1));
   };
 
-  // --- Renderizado ---
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -143,44 +131,49 @@ export default function OrdersPage() {
       );
     }
 
-    // LISTA DE ÓRDENES (diseño mejorado para mobile)
     return (
       <div className="space-y-3">
         {orders.map((order) => (
           <div
             key={order.Id}
-            className={`bg-white p-4 rounded-lg shadow border-l-4 hover:shadow-md transition-shadow ${
+            className={`bg-white mb-4 p-4 rounded-lg shadow-sm border-l-4 
+                       hover:shadow-md hover:scale-[1.02] transition-all duration-200 ${
               order.Status === 'PENDING' ? 'border-l-yellow-500' :
-                order.Status === 'PROCESSING' ? 'border-l-blue-500' :
-                  order.Status === 'SHIPPED' ? 'border-l-indigo-500' :
-                    order.Status === 'DELIVERED' ? 'border-l-green-500' :
-                      'border-l-red-500'
+              order.Status === 'PROCESSING' ? 'border-l-blue-500' :
+              order.Status === 'SHIPPED' ? 'border-l-indigo-500' :
+              order.Status === 'DELIVERED' ? 'border-l-green-500' :
+              'border-l-red-500'
             }`}
           >
-            {/* Header con título y badge */}
+            {/* Header con nombre y badge */}
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-gray-900 truncate">
-                  Nombre del cliente: {order.CustomerName}
+                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
+                  {order.CustomerName || 'Cliente Desconocido'}
                 </h3>
-                 <p className="text-medium text-gray-500 mt-0.5">
-                  ID del cliente: {order.CustomerId.substring(0, 8)}...
-                </p>
-                <p className="text-medium text-gray-500 mt-0.5">
-                  ID de la orden: {order.Id.substring(0, 8)}...
-                </p>
+                <div className="space-y-0.5">
+                  <p className="text-xs text-gray-500">
+                    ID Cliente: <span className="font-mono text-gray-700">{order.CustomerId.substring(0, 13)}...</span>
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    ID Orden: <span className="font-mono text-gray-700">{order.Id.substring(0, 13)}...</span>
+                  </p>
+                </div>
               </div>
-              {getStatusIcon(order.Status)}
-              <span className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ml-2 ${getStatusClasses(order.Status)}`}>
-                {/* Usamos la traducción o el estado original si no hay traducción */}
-                {statusTranslations[order.Status] || order.Status}
-              </span>
+              
+              <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+                {getStatusIcon(order.Status)}
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap ${getStatusClasses(order.Status)}`}>
+                  {statusTranslations[order.Status] || order.Status}
+                </span>
+              </div>
             </div>
 
-            {/* Información adicional */}
-            <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100">
+            {/* Fecha y Total */}
+            <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
               <div>
-                <p className="text-sm text-gray-800 mt-1"> Fecha :
+                <p className="text-xs text-gray-500 mb-0.5">Fecha de orden</p>
+                <p className="text-sm font-medium text-gray-800">
                   {order.Date ? new Date(order.Date).toLocaleDateString('es-AR', {
                     day: '2-digit',
                     month: 'short',
@@ -191,7 +184,7 @@ export default function OrdersPage() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-gray-600">Total</p>
+                <p className="text-xs text-gray-500 mb-0.5">Total</p>
                 <p className="text-xl font-bold text-gray-900">
                   ${order.TotalAmount.toFixed(2)}
                 </p>
@@ -201,7 +194,9 @@ export default function OrdersPage() {
             {/* Botón de acción */}
             <Link
               to={`/admin/orders/${order.Id}`}
-              className="block w-full text-center bg-purple-100 text-purple-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors"
+              className="block w-full text-center bg-purple-50 text-purple-700 px-4 py-2.5 rounded-md text-sm font-medium 
+                         hover:bg-purple-100 transition-colors duration-200
+                         focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
             >
               Ver Detalles
             </Link>
@@ -212,17 +207,17 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto w-full">
+    <div className="max-w-4xl mx-auto w-full px-4">
       
-      {/* --- Filtros y Búsqueda --- */}
-      <div className="mb-4 p-4 bg-white rounded-lg shadow border border-gray-200">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4"> 
-          Administracion de Órdenes
+      {/* Filtros y Búsqueda */}
+      <div className="mb-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4"> 
+          Administración de Órdenes
         </h1>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Búsqueda */}
           <div>
-            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1.5">
               Buscar
             </label>
             <div className="flex gap-2">
@@ -231,7 +226,7 @@ export default function OrdersPage() {
                 id="search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="ID de cliente, N° orden..."
+                placeholder="Nombre, ID de cliente, N° orden..."
                 className="flex-1 p-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
               <button
@@ -247,7 +242,7 @@ export default function OrdersPage() {
 
           {/* Filtro por Estado */}
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1.5">
               Estado de Orden
             </label>
             <select
@@ -265,20 +260,19 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      {/* --- Contenido (Lista o Errores) --- */}
+      {/* Contenido */}
       {renderContent()}
 
-      {/* --- Paginación --- */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 items-center mt-8 gap-4">
-
-        {/* Dropdown de PageSize (Columna 1) */}
+      {/* Paginación */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 items-center mt-6 gap-4">
+        {/* Dropdown de PageSize */}
         <div className="flex items-center gap-2 justify-start">
           <label htmlFor="pageSize" className="text-sm text-gray-700">Mostrar:</label>
           <select
             id="pageSize"
             value={pageSize}
             onChange={handlePageSizeChange}
-            className="p-2 border border-gray-300 rounded-lg text-sm h-full"
+            className="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
             <option value="10">10</option>
             <option value="15">15</option>
@@ -286,29 +280,26 @@ export default function OrdersPage() {
           </select>
         </div>
 
-        {/* Controles de Paginación (Columna 2) */}
-        {/* Quitamos 'mt-8' que estaba mal copiado.
-          'justify-center' centra los botones.
-        */}
+        {/* Controles de Paginación */}
         <div className="flex justify-center items-center gap-4">
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+            className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
           >
-            <ChevronLeft/>
+            <ChevronLeft className="w-5 h-5" />
           </button>
-          <span className="text-gray-700">Página {currentPage}</span>
+          <span className="text-sm font-medium text-gray-700">Página {currentPage}</span>
           <button
             onClick={goToNextPage}
             disabled={!canGoNext}
-            className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400"
+            className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 px-4 py-2 rounded-md transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
           >
-            <ChevronRight/>
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Columna 3 (vacía para centrar la Col 2) */}
+        {/* Espacio vacío para centrar */}
         <div></div>
       </div>
     </div>
