@@ -34,9 +34,6 @@ api.interceptors.request.use(
 //Este codigo se ejecuta despues de recibir cada respuesta
 api.interceptors.response.use(
   (response) => {
-    // Axios pone la respuesta del backend dentro de 'response.data'
-    // Devolvemos 'response.data' para no tener que escribir 'response.data'
-    // en cada llamada (ej. en los hooks o páginas)
     return response.data;
   },
   (error) => {
@@ -47,21 +44,34 @@ api.interceptors.response.use(
     };
 
     if (error.response) {
-      // El backend respondió. 'error.response.data' es { message, code }
-      if (typeof error.response.data === 'object' && error.response.data !== null) {
-        errorResponse.message = error.response.data.message || error.message;
-        errorResponse.code = error.response.data.code || 'BACKEND_ERROR';
-      } else {
-        // Si el backend mandó solo texto (ej. un 500 HTML)
-        errorResponse.message = error.response.data || error.message;
+      const data = error.response.data;
+
+      // CASO 1: Error de validación automática de .NET (El que te está pasando)
+      // El formato es: { status: 400, errors: { "Campo": ["Error"] } }
+      if (data && data.errors) {
+        // Extraemos todos los mensajes de los arrays dentro de 'errors'
+        const allErrors = Object.values(data.errors).flat();
+
+        // Los unimos en un solo texto
+        errorResponse.message = allErrors.join('. ');
+        errorResponse.code = 'VALIDATION_ERROR';
+      }
+      // CASO 2: Error controlado por tu Middleware (BadRequestException)
+      // El formato es: { message: "Texto", code: "CODIGO" }
+      else if (typeof data === 'object' && data !== null && data.message) {
+        errorResponse.message = data.message;
+        errorResponse.code = data.code || 'BACKEND_ERROR';
+      }
+      // CASO 3: Backend mandó un string plano o algo desconocido
+      else {
+        errorResponse.message = error.message; // "Request failed with status code 400"
       }
     } else if (error.request) {
-      // La petición se hizo pero no hubo respuesta (API caída)
       errorResponse.message = 'No se pudo conectar con el servidor. Revisa que la API esté funcionando.';
       errorResponse.code = 'CONNECTION_ERROR';
     }
 
-    // Rechazamos la promesa con el OBJETO de error
+    // Rechazamos la promesa con el OBJETO de error formateado
     return Promise.reject(errorResponse);
   },
 );
