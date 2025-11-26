@@ -42,6 +42,7 @@ function CartItem({ item, removeFromCart, updateQuantity }) {
 
   const handleDecrement = (e) => {
     e.preventDefault(); // Prevenir submit del formulario
+
     if (item.quantity > 1) {
       updateQuantity(item.id, item.quantity - 1);
     } else {
@@ -65,7 +66,7 @@ function CartItem({ item, removeFromCart, updateQuantity }) {
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
         <p className="text-sm text-gray-500 mt-1">Precio unitario: ${item.price.toFixed(2)}</p>
       </div>
-      
+
       <div className="flex items-center gap-6">
         {/* Controles de cantidad */}
         <div className="flex items-center gap-2">
@@ -198,7 +199,19 @@ export default function CartPage() {
       setShowSuccessToast(true);
     } catch (error) {
       console.error('Error al crear la orden:', error);
-      setApiError(error.message);
+
+      // 1. Si es el error de "Cliente no encontrado" (Código específico)
+      if (error.code === 'EntityNotFoundException') {
+        setApiError('Error de cuenta: Tu usuario no tiene un perfil de cliente asociado. Por favor, regístrate con una cuenta nueva.');
+      }
+      // 2. Si es un objeto con mensaje (lo que devuelve tu interceptor)
+      else if (error.message) {
+        setApiError(error.message);
+      }
+      // 3. Fallback para cualquier otra cosa
+      else {
+        setApiError('Ocurrió un error inesperado al procesar la orden.');
+      }
     } finally {
       setIsLoading(false);
     }

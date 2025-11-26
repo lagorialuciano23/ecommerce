@@ -112,6 +112,7 @@ function ProductsForm({ onSuccess, productToEdit }) {
         type="textarea"
         register={register}
         error={errors.description}
+        //validation={{ required: 'La descripción es requerida' }}
       />
 
       <FormInput
@@ -163,7 +164,7 @@ function ProductsForm({ onSuccess, productToEdit }) {
         type="submit"
         disabled={isSubmitting}
         className="
-        w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-800 
+        w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-800
         disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
       >
         {isSubmitting
