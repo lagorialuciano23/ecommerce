@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { useCart } from '../../cart/context/useCart';
+import { Plus , Minus } from 'lucide-react';
 
 
 export default function ProductCard({ product, onAddToCart }) {
@@ -12,7 +13,7 @@ export default function ProductCard({ product, onAddToCart }) {
   const cardSpring = useSpring({
     transform: isHovered 
       ? 'translateY(-12px) scale(1.01)' 
-      : 'translateY(0px) scale(1)',
+      : 'translateY(0px) scale(1)', 
     boxShadow: isHovered
       ? '0 20px 40px rgba(0, 0, 0, 0.15)'
       : '0 2px 8px rgba(0, 0, 0, 0.08)',
@@ -54,7 +55,6 @@ export default function ProductCard({ product, onAddToCart }) {
     if (onAddToCart) {
       onAddToCart(product.Name);
     }
-    setQuantity(1);
   };
 
   // determinar color del badge de stock
@@ -127,7 +127,7 @@ export default function ProductCard({ product, onAddToCart }) {
           onClick={handleDecrease}
           className="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-purple-500 hover:text-purple-500 transition-colors flex items-center justify-center font-semibold text-lg"
         >
-          -
+          <Minus size={20} />
         </button>
         <span className="text-lg font-bold w-12 text-center">
           {quantity}
@@ -136,7 +136,7 @@ export default function ProductCard({ product, onAddToCart }) {
           onClick={handleIncrease}
           className="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-purple-500 hover:text-purple-500 transition-colors flex items-center justify-center font-semibold text-lg"
         >
-          +
+          <Plus size={20} />
         </button>
       </div>
 
