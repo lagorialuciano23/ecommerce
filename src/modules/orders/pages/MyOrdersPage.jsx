@@ -84,11 +84,11 @@ export default function MyOrdersPage() {
                   <p className="font-semibold text-gray-900 mb-2">
                     ID de la orden: #{order.Id}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-base text-gray-600">
                     {order.Items.length} {order.Items.length === 1 ? 'producto' : 'productos'}
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Total: <span className="font-bold text-lg text-gray-900">${order.TotalAmount.toFixed(2)}</span>
+                  <p className="text-base text-gray-600 mt-1">
+                    Total de la orden : <span className="font-bold text-lg text-gray-600">${order.TotalAmount.toFixed(2)}</span>
                   </p>
                 </div>
 
@@ -97,12 +97,12 @@ export default function MyOrdersPage() {
                   <h4 className="text-base font-bold text-gray-900 mb-2">Productos comprados:</h4>
                   <ul className="space-y-2">
                     {order.Items.map((item, index) => (
-                      <li key={index} className="flex justify-between text-sm items-center bg-gray-50 p-3 rounded">
+                      <li key={index} className="flex justify-between text-base items-center bg-gray-50 p-3 rounded">
                         <div className="flex items-center gap-2 flex-1 min-w-0">
                           <span className="font-medium text-gray-900 flex-shrink-0">{item.Quantity}x</span>
                           <span className="text-gray-700 truncate">{item.Name}</span>
                         </div>
-                        <span className="text-gray-900 font-semibold ml-4 flex-shrink-0">
+                        <span className="text-gray-600 font-semibold ml-4 flex-shrink-0">
                           ${item.Subtotal.toFixed(2)}
                         </span>
                       </li>
