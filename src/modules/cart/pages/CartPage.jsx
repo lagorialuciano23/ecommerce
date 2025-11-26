@@ -5,6 +5,7 @@ import { useSpring, useTransition, config, animated } from '@react-spring/web';
 import { useCart } from '../context/useCart';
 import { useAuth } from '../../auth/context/useAuth';
 import { ordersService } from '../../orders/services/orderServices';
+import { Trash2, Minus, Plus, ArrowLeft } from 'lucide-react';
 
 import AuthInput from '../../auth/components/Input';
 import AuthSubmitButton from '../../auth/components/Button';
@@ -75,7 +76,7 @@ function CartItem({ item, removeFromCart, updateQuantity }) {
             onClick={handleDecrement}
             className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
           >
-            -
+            <Minus />
           </button>
           <span className="w-12 text-center font-medium text-gray-800">{item.quantity}</span>
           <button
@@ -83,19 +84,19 @@ function CartItem({ item, removeFromCart, updateQuantity }) {
             onClick={handleIncrement}
             className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
           >
-            +
+            <Plus />
           </button>
         </div>
 
         {/* Precio total y botón eliminar */}
-        <div className="text-right min-w-[120px]">
+        <div className="flex items-center gap-2 justify-end min-w-[120px]">
           <p className="text-lg font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
           <button
             type="button"
             onClick={handleRemove}
             className="text-sm text-red-600 hover:text-red-800 transition-colors mt-1"
           >
-            Eliminar
+            <Trash2 />
           </button>
         </div>
       </div>
@@ -252,7 +253,10 @@ export default function CartPage() {
               onClick={() => navigate('/')}
               className="text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
-              Regresar a la tienda
+              <div className="flex items-center gap-2 justify-end">
+                <ArrowLeft className="w-6 h-6" />
+                Regresar a la tienda
+              </div>
             </button>
           </div>
 
@@ -329,20 +333,23 @@ export default function CartPage() {
                   </p>
                 )}
 
-                <div className="flex justify-between items-center">
-                  <button
-                    type="button"
-                    onClick={clearCart}
-                    className="text-sm text-red-600 hover:text-red-800 transition-colors"
-                  >
-                    Vaciar Carrito
-                  </button>
+                <div className="flex justify-between items-center mt-4 gap-4">
+
                   <AuthSubmitButton
                     isLoading={isLoading}
                     isValid={isValid && cartItems.length > 0}
                     text="Finalizar Compra"
                     className="cursor-pointer bg-purple-600 text-white rounded-lg p-2.5 transition-colors duration-200 hover:bg-purple-700 disabled:bg-gray-300"
                   />
+
+                  <button
+                    type="button"
+                    onClick={clearCart}
+                    className="text-sm text-red-600 hover:text-red-800 transition-colors"
+
+                  >
+                    <Trash2 stroke="red" />
+                  </button>
                 </div>
               </animated.div>
             </form>

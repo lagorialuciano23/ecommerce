@@ -29,8 +29,8 @@ export default function CustomerProductsPage() {
     maxPrice: ''
   });
 
-  const [searchParams, setSearchParams] = useSearchParams(); 
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+
   // Toast states
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -90,14 +90,14 @@ export default function CustomerProductsPage() {
   // 3. Manejar la acción de Filtrar
   const handleFilter = () => {
     const params = {};
-    
+
     if (tempFilters.search) params.search = tempFilters.search;
     if (tempFilters.minPrice) params.minPrice = tempFilters.minPrice;
     if (tempFilters.maxPrice) params.maxPrice = tempFilters.maxPrice;
-    
+
     // Al filtrar, volvemos a la página 1
     params.page = 1;
-    
+
     setSearchParams(params);
   };
 
@@ -127,14 +127,14 @@ export default function CustomerProductsPage() {
   const handlePageSizeChange = (e) => {
     const newSize = Number(e.target.value);
     setPageSize(newSize);
-    
+
     // Mantener filtros actuales pero resetear a página 1
     const params = {};
     if (appliedFilters.search) params.search = appliedFilters.search;
     if (appliedFilters.minPrice) params.minPrice = appliedFilters.minPrice;
     if (appliedFilters.maxPrice) params.maxPrice = appliedFilters.maxPrice;
     params.page = 1;
-    
+
     setSearchParams(params);
   };
 
@@ -160,7 +160,7 @@ export default function CustomerProductsPage() {
         </div>
       );
     }
-    
+
     if (error) {
       return (
         <div className="text-center p-8 bg-red-100 text-red-700 rounded-lg">
@@ -168,7 +168,7 @@ export default function CustomerProductsPage() {
         </div>
       );
     }
-    
+
     if (products.length === 0) {
       return (
         <div className="text-center py-12">
@@ -188,10 +188,10 @@ export default function CustomerProductsPage() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
         {products.map((product) => (
-          <ProductCard 
-            key={product.Id} 
-            product={product} 
-            onAddToCart={handleAddToCart} 
+          <ProductCard
+            key={product.Id}
+            product={product}
+            onAddToCart={handleAddToCart}
           />
         ))}
       </div>
@@ -200,54 +200,54 @@ export default function CustomerProductsPage() {
 
   return (
     <div className="text-gray-800 container mx-auto px-4 py-6">
-      <Toast 
-        open={toastOpen} 
-        title="Notificación" 
-        message={toastMessage} 
-        onClose={() => setToastOpen(false)} 
+      <Toast
+        open={toastOpen}
+        title="Notificación"
+        message={toastMessage}
+        onClose={() => setToastOpen(false)}
       />
 
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Catálogo</h1>
+      <h1 className="text-4xl font-bold text-gray-800 mb-6">Catálogo de productos </h1>
 
-      <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6">
+      <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6 mt-6">
         <div className="flex flex-col w-full md:flex-row gap-6 items-end">
-          
-          {/* Precio Mínimo */}
+
+          {/* Precio Minimo */}
           <div className="w-full md:w-32">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Precio Mín
+              Precio Min
             </label>
-            <input 
-              type="number" 
+            <input
+              type="number"
               min="0"
               placeholder="0"
               value={tempFilters.minPrice}
-              onChange={(e) => setTempFilters({...tempFilters, minPrice: e.target.value})}
-              onKeyPress={handleKeyPress}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-          </div>
-          
-          {/* Precio Máximo */}
-          <div className="w-full md:w-32">
-            <label className="block text-sm font-medium text-gray-700 mb-1 ">
-              Precio Máx
-            </label>
-            <input 
-              type="number" 
-              min="0"
-              placeholder="∞"
-              value={tempFilters.maxPrice}
-              onChange={(e) => setTempFilters({...tempFilters, maxPrice: e.target.value})}
+              onChange={(e) => setTempFilters({ ...tempFilters, minPrice: e.target.value })}
               onKeyPress={handleKeyPress}
               className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
-          {/* Botones de acción */}
+          {/* Precio Maximo */}
+          <div className="w-full md:w-32">
+            <label className="block text-sm font-medium text-gray-700 mb-1 ">
+              Precio Max
+            </label>
+            <input
+              type="number"
+              min="0"
+              placeholder="∞"
+              value={tempFilters.maxPrice}
+              onChange={(e) => setTempFilters({ ...tempFilters, maxPrice: e.target.value })}
+              onKeyPress={handleKeyPress}
+              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+
+          {/* Botones de accion */}
           <div className="flex gap-2 w-full md:w-auto">
-            {/* Botón Aplicar Filtros */}
-            <button 
+            {/* Boton Aplicar Filtros */}
+            <button
               onClick={handleFilter}
               className="flex-1 md:flex-initial bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors flex items-center justify-center gap-2"
             >
@@ -255,7 +255,7 @@ export default function CustomerProductsPage() {
               Filtrar
             </button>
 
-            {/* Botón Limpiar (solo si hay filtros) */}
+            {/* Boton Limpiar (solo si hay filtros) */}
             {hasActiveFilters && (
               <button
                 onClick={handleClearFilters}
@@ -266,8 +266,8 @@ export default function CustomerProductsPage() {
               </button>
             )}
           </div>
-          
-          {/* Selector Page Size */}
+
+          {/* selector Page Size */}
           <div className="w-full md:w-auto md:ml-auto">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Mostrar
@@ -312,7 +312,7 @@ export default function CustomerProductsPage() {
         {renderContent()}
       </div>
 
-      {/* Paginación */}
+      {/* Paginacion */}
       {!isLoading && products.length > 0 && (
         <div className="flex justify-center items-center gap-4 mt-8">
           <button

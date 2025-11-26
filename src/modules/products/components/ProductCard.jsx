@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { useCart } from '../../cart/context/useCart';
-import { Plus , Minus } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 
 
 export default function ProductCard({ product, onAddToCart }) {
@@ -11,9 +11,9 @@ export default function ProductCard({ product, onAddToCart }) {
 
   // animacion para la tarjeta
   const cardSpring = useSpring({
-    transform: isHovered 
-      ? 'translateY(-12px) scale(1.01)' 
-      : 'translateY(0px) scale(1)', 
+    transform: isHovered
+      ? 'translateY(-12px) scale(1.01)'
+      : 'translateY(0px) scale(1)',
     boxShadow: isHovered
       ? '0 20px 40px rgba(0, 0, 0, 0.15)'
       : '0 2px 8px rgba(0, 0, 0, 0.08)',
@@ -106,21 +106,21 @@ export default function ProductCard({ product, onAddToCart }) {
         )}
       </div>
 
-      {/* Título */}
+      {/* Titulo */}
       <h3 className="text-lg font-semibold text-gray-900 mb-2 min-h-[3.5rem] line-clamp-2">
         {product.Name}
       </h3>
 
-      {/* Descripción */}
+      {/* Descrip */}
       <p className="text-sm text-gray-600 mb-4 line-clamp-2" title={product.Description}>
-        {product.Description}
+        {product.Description.substring(0, 20)}...
       </p>
 
-     {/* precio con animacion */}
+      {/* preio con animacion */}
       <animated.p style={priceSpring} className="text-2xl font-bold mb-4">
         ${(product.CurrentUnitPrice || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-      </animated.p> 
-      
+      </animated.p>
+
       {/* controles para umentar*/}
       <div className="flex items-center justify-center gap-3 mb-4 mt-auto">
         <button
