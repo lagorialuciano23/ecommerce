@@ -47,7 +47,7 @@ export default function MyOrdersPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4">
       <h1 className="text-3xl font-bold text-gray-900 mb-6">Mis Compras</h1>
 
       {isLoading ? (
@@ -63,39 +63,47 @@ export default function MyOrdersPage() {
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
-            <div key={order.Id} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div key={order.Id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
 
-                {/* Info Izquierda */}
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.Status)}`}>
-                      {statusTranslations[order.Status] || order.Status}
-                    </span>
-                    <span className="text-sm text-gray-500 flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(order.Date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="font-semibold text-gray-900">Orden #{order.Id.substring(0, 8)}</p>
-                  <p className="font-bold text-sm text-gray-600 mt-1">
+              {/* header: estado y fecha */}
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.Status)}`}>
+                  {statusTranslations[order.Status] || order.Status}
+                </span>
+                <span className="text-sm text-gray-500 flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
+                  {new Date(order.Date).toLocaleDateString()}
+                </span>
+              </div>
+
+              {/* Contenido */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+                {/*  col 1: ID y Resumen*/}
+                <div className="lg:col-span-1">
+                  <p className="font-semibold text-gray-900 mb-2">
+                    ID de la orden: #{order.Id}
+                  </p>
+                  <p className="text-sm text-gray-600">
                     {order.Items.length} {order.Items.length === 1 ? 'producto' : 'productos'}
-                    <span className="mx-2">•</span>
-                    Total: <span className="font-bold">${order.TotalAmount.toFixed(2)}</span>
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Total: <span className="font-bold text-lg text-gray-900">${order.TotalAmount.toFixed(2)}</span>
                   </p>
                 </div>
 
-                <div className="border-t border-gray-100 pt-4 mt-2">
-                  <h4 className="text-sm font-medium text-gray-700 mb-3">Productos:</h4>
+                {/* col 2-3: lista de Productos */}
+                <div className="lg:col-span-2">
+                  <h4 className="text-base font-bold text-gray-900 mb-2">Productos comprados:</h4>
                   <ul className="space-y-2">
                     {order.Items.map((item, index) => (
-                      <li key={index} className="flex justify-between text-sm items-center bg-gray-50 p-2 rounded gap-4">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-900">{item.Quantity}x</span>
-                          <span className="text-gray-700">{item.Name}</span>
+                      <li key={index} className="flex justify-between text-sm items-center bg-gray-50 p-3 rounded">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <span className="font-medium text-gray-900 flex-shrink-0">{item.Quantity}x</span>
+                          <span className="text-gray-700 truncate">{item.Name}</span>
                         </div>
-                        <span className="text-gray-600 font-medium">
-                        ${item.Subtotal.toFixed(2)}
+                        <span className="text-gray-900 font-semibold ml-4 flex-shrink-0">
+                          ${item.Subtotal.toFixed(2)}
                         </span>
                       </li>
                     ))}
