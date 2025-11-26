@@ -1,81 +1,98 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { AuthContext } from './useAuth';
 
+// Helper simple para decodificar JWT sin librerías externas (opcional)
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  // eslint-disable-next-line no-unused-vars
+  } catch (e) {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => {
-    const savedToken = localStorage.getItem('token');
+  // 1. Estado de carga inicial
+  const [isLoading, setIsLoading] = useState(true);
 
-    if (!savedToken || savedToken === 'null' || savedToken === 'undefined') {
-      return null;
-    }
-
-    return savedToken;
-  });
-
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('user');
 
-      if (!savedUser || savedUser === 'null') {
-        return null;
-      }
-
-      return JSON.parse(savedUser);
+      return savedUser ? JSON.parse(savedUser) : null;
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      console.error('Error al obtener el usuario del localStorage:', error);
-
       return null;
     }
   });
 
-  // El usuario ESTÁ logueado si existe un token válido
-  const isLoggedIn = !!token;
-
-  // Sincronizamos el estado con localStorage
-  useEffect(() => {
-    // Solo guardamos si hay un valor válido
-    if (token) {
-      localStorage.setItem('token', token);
-    } else {
-      localStorage.removeItem('token');
-    }
-
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [token, user]);
-
-  const login = (userData, userToken) => {
-    if (!userToken || typeof userToken !== 'string') {
-      console.error('Token inválido recibido:', userToken);
-
-      return;
-    }
-
-    setUser(userData);
-    setToken(userToken);
-  };
-
-  const logout = () => {
+  // 2. Función de Logout memorizada
+  const logout = useCallback(() => {
     setUser(null);
     setToken(null);
-    // Limpiamos todo el localStorage al salir
-    localStorage.clear();
-  };
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  }, []);
 
+  // 3. Efecto de Inicialización y Verificación de Token
+  useEffect(() => {
+    const initAuth = () => {
+      const storedToken = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+
+      if (storedToken && storedUser) {
+        // Verificar expiración del token
+        const decoded = parseJwt(storedToken);
+        const currentTime = Date.now() / 1000;
+
+        if (decoded && decoded.exp < currentTime) {
+          console.warn('Token expirado, cerrando sesión...');
+          logout();
+        } else {
+          // Todo ok, aseguramos que el estado esté sincronizado
+          setToken(storedToken);
+          setUser(JSON.parse(storedUser));
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    initAuth();
+  }, [logout]);
+
+  const login = useCallback((userData, userToken) => {
+    setUser(userData);
+    setToken(userToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('token', userToken);
+  }, []);
+
+  // 4. Helpers de Roles (Derivados del estado)
+  // Verificamos si user y user.roles existen, y normalizamos a minúsculas para evitar errores de "Admin" vs "admin"
+  const hasRole = useCallback((roleName) => {
+    return user?.roles?.some(r => r.toLowerCase() === roleName.toLowerCase()) ?? false;
+  }, [user]);
+
+  const isAdmin = useMemo(() => hasRole('Admin'), [hasRole]);
+
+  // 5. Valor del Contexto
   const authValue = useMemo(() => ({
-    isLoggedIn,
+    isLoggedIn: !!token,
     token,
     user,
     login,
     logout,
-  }), [isLoggedIn, token, user]);
+    isLoading, // Exponemos isLoading
+    hasRole,   // Exponemos función genérica
+    isAdmin,    // Exponemos booleano directo
+  }), [token, user, login, logout, isLoading, hasRole, isAdmin]);
 
   return (
     <AuthContext.Provider value={authValue}>
-      {children}
+      {/* Opcional: No renderizar children hasta que termine de cargar para evitar redirects falsos */}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 }

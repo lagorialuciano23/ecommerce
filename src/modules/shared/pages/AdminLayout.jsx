@@ -5,7 +5,7 @@ import { LogOut, Menu, X, Crown } from 'lucide-react';
 
 function AdminLayout() {
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = () => {
@@ -29,7 +29,7 @@ function AdminLayout() {
         sticky top-0 z-50 shadow-sm
       ">
         <div className="px-4 py-3 flex items-center justify-between gap-4">
-          
+
           {/* Lado Izquierdo: Hamburger + Logo */}
           <div className="flex items-center gap-3 min-w-0">
             {/* Hamburger Menu - Solo mobile */}
@@ -49,9 +49,9 @@ function AdminLayout() {
               <div className="w-9 h-9 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md">
                 <Crown className="w-5 h-5 text-white" />
               </div>
-              <h1 className="hidden md:block text-lg font-bold text-gray-800">
-                Admin Panel
-              </h1>
+              {isAdmin && (
+                <h1 className="badge-admin">ADMIN Panel</h1>
+              )}
             </div>
           </div>
 
