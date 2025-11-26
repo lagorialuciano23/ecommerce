@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
     }
   });
 
-  // 2. Función de Logout memorizada
+  // Función de Logout memorizada
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
@@ -35,7 +35,24 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
   }, []);
 
-  // 3. Efecto de Inicialización y Verificación de Token
+  // --- EFECTO PARA SINCRONIZAR PESTAÑAS ---
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      // Si la clave 'token' cambia a null (alguien hizo logout en otra pestaña)
+      if (event.key === 'token' && event.newValue === null) {
+        console.log('Sesión cerrada en otra pestaña. Cerrando sesión aquí...');
+        logout(); // Cerramos sesión en esta pestaña también
+      }
+    };
+
+    // Escuchamos el evento
+    window.addEventListener('storage', handleStorageChange);
+
+    // Limpiamos el evento al desmontar
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [logout]);
+
+  // Efecto de Inicialización y Verificación de Token
   useEffect(() => {
     const initAuth = () => {
       const storedToken = localStorage.getItem('token');
@@ -69,7 +86,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('token', userToken);
   }, []);
 
-  // 4. Helpers de Roles (Derivados del estado)
+  // Helpers de Roles (Derivados del estado)
   // Verificamos si user y user.roles existen, y normalizamos a minúsculas para evitar errores de "Admin" vs "admin"
   const hasRole = useCallback((roleName) => {
     return user?.roles?.some(r => r.toLowerCase() === roleName.toLowerCase()) ?? false;
@@ -91,7 +108,6 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={authValue}>
-      {/* Opcional: No renderizar children hasta que termine de cargar para evitar redirects falsos */}
       {!isLoading && children}
     </AuthContext.Provider>
   );
