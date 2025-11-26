@@ -137,7 +137,7 @@ function ProductsForm({ onSuccess, productToEdit }) {
           required: 'La cantidad en stock es requerida',
           min: { value: 0, message: 'El stock no puede ser negativo' },
         }}
-        inputProps={{ step: '1' }}
+        inputProps={{ step: '1', min: 0 }}
       />
       <div className="mb-4">
         <label htmlFor="isActive" className="flex items-center gap-2 text-sm font-medium text-gray-700">
