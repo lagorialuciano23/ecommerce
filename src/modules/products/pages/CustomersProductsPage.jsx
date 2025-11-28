@@ -10,36 +10,31 @@ export default function CustomerProductsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados de paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [canGoNext, setCanGoNext] = useState(true);
-
-  // Estados de filtros APLICADOS (los que se envían al backend)
   const [appliedFilters, setAppliedFilters] = useState({
     search: '',
     minPrice: '',
     maxPrice: ''
   });
 
-  // Estados temporales para los inputs (lo que el usuario escribe)
   const [tempFilters, setTempFilters] = useState({
     search: '',
     minPrice: '',
     maxPrice: ''
   });
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
-  // Toast states
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // 1. Sincronizar URL con Estado (solo al montar o cambiar URL externamente)
   useEffect(() => {
     const querySearch = searchParams.get('search') || '';
-    const queryMin = searchParams.get('minPrice') || '';
-    const queryMax = searchParams.get('maxPrice') || '';
+    const queryMin = minPrice || '';
+    const queryMax = maxPrice || '';
     const queryPage = parseInt(searchParams.get('page')) || 1;
 
     setAppliedFilters({
@@ -55,9 +50,8 @@ export default function CustomerProductsPage() {
     });
 
     setCurrentPage(queryPage);
-  }, [searchParams]);
+  }, [minPrice, maxPrice, searchParams]);
 
-  // 2. Fetch de Productos
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     const fetchProducts = async () => {
@@ -87,21 +81,19 @@ export default function CustomerProductsPage() {
     fetchProducts();
   }, [currentPage, pageSize, appliedFilters]);
 
-  // 3. Manejar la acción de Filtrar
   const handleFilter = () => {
     const params = {};
 
     if (tempFilters.search) params.search = tempFilters.search;
     if (tempFilters.minPrice) params.minPrice = tempFilters.minPrice;
     if (tempFilters.maxPrice) params.maxPrice = tempFilters.maxPrice;
+    if (tempFilters.page) params.page = tempFilters.page;
 
-    // Al filtrar, volvemos a la página 1
     params.page = 1;
 
     setSearchParams(params);
   };
 
-  // 4. Limpiar filtros
   const handleClearFilters = () => {
     setTempFilters({
       search: '',
@@ -111,7 +103,6 @@ export default function CustomerProductsPage() {
     setSearchParams({ page: 1 });
   };
 
-  // 5. Detectar Enter en inputs
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleFilter();
