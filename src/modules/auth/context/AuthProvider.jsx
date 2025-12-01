@@ -1,18 +1,18 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { AuthContext } from './useAuth';
 
-// Helper simple para decodificar JWT sin librerías externas (opcional)
+// Helper simple para decodificar JWT sin librerías externas
 function parseJwt(token) {
   try {
     return JSON.parse(atob(token.split('.')[1]));
-  // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
   } catch (e) {
     return null;
   }
 }
 
 export function AuthProvider({ children }) {
-  // 1. Estado de carga inicial
+  // Estado de carga inicial
   const [isLoading, setIsLoading] = useState(true);
 
   const [token, setToken] = useState(() => localStorage.getItem('token'));
@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
       const savedUser = localStorage.getItem('user');
 
       return savedUser ? JSON.parse(savedUser) : null;
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       return null;
     }
@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
   }, []);
 
-  // --- EFECTO PARA SINCRONIZAR PESTAÑAS ---
+  // SINCRONIZAR PESTAÑAS
   useEffect(() => {
     const handleStorageChange = (event) => {
       // Si la clave 'token' cambia a null (alguien hizo logout en otra pestaña)
