@@ -89,10 +89,11 @@ function ProductsForm({ onSuccess, productToEdit }) {
         label="URL de la Imagen (opcional)"
         register={register}
         error={errors.imageUrl}
-        validation={{ pattern: {
-          value: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i,
-          message: 'Por favor, ingresa una URL válida',
-        },
+        validation={{
+          pattern: {
+            value: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i,
+            message: 'Por favor, ingresa una URL válida',
+          },
         }}
         inputProps={{ placeholder: 'https://ejemplo.com/imagen.png' }}
       />
@@ -126,7 +127,7 @@ function ProductsForm({ onSuccess, productToEdit }) {
         type="textarea"
         register={register}
         error={errors.description}
-        //validation={{ required: 'La descripción es requerida' }}
+        validation={{ required: 'La descripción es requerida' }}
       />
 
       <FormInput
