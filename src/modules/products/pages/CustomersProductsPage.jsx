@@ -190,6 +190,7 @@ export default function CustomerProductsPage() {
             />
           </div>
 
+          {/* Botones de filtrado y limpieza */}
           <div className="flex gap-2 w-full md:w-auto">
             <button
               onClick={handleFilter}
