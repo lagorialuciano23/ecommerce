@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { productsService } from '../services/productsService';
 import ProductCard from '../components/ProductCard';
 import Toast from '../../shared/components/Toast';
@@ -13,6 +12,7 @@ export default function CustomerProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [canGoNext, setCanGoNext] = useState(true);
+
   const [appliedFilters, setAppliedFilters] = useState({
     search: '',
     minPrice: '',
@@ -25,32 +25,8 @@ export default function CustomerProductsPage() {
     maxPrice: ''
   });
 
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-
-  useEffect(() => {
-    const querySearch = searchParams.get('search') || '';
-    const queryMin = minPrice || '';
-    const queryMax = maxPrice || '';
-    const queryPage = parseInt(searchParams.get('page')) || 1;
-
-    setAppliedFilters({
-      search: querySearch,
-      minPrice: queryMin,
-      maxPrice: queryMax
-    });
-
-    setTempFilters({
-      search: querySearch,
-      minPrice: queryMin,
-      maxPrice: queryMax
-    });
-
-    setCurrentPage(queryPage);
-  }, [minPrice, maxPrice, searchParams]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -82,25 +58,19 @@ export default function CustomerProductsPage() {
   }, [currentPage, pageSize, appliedFilters]);
 
   const handleFilter = () => {
-    const params = {};
-
-    if (tempFilters.search) params.search = tempFilters.search;
-    if (tempFilters.minPrice) params.minPrice = tempFilters.minPrice;
-    if (tempFilters.maxPrice) params.maxPrice = tempFilters.maxPrice;
-    if (tempFilters.page) params.page = tempFilters.page;
-
-    params.page = 1;
-
-    setSearchParams(params);
+    setAppliedFilters({ ...tempFilters });
+    setCurrentPage(1);
   };
 
   const handleClearFilters = () => {
-    setTempFilters({
+    const emptyFilters = {
       search: '',
       minPrice: '',
       maxPrice: ''
-    });
-    setSearchParams({ page: 1 });
+    };
+    setTempFilters(emptyFilters);
+    setAppliedFilters(emptyFilters);
+    setCurrentPage(1);
   };
 
   const handleKeyPress = (e) => {
@@ -109,7 +79,6 @@ export default function CustomerProductsPage() {
     }
   };
 
-  // Manejadores de eventos
   const handleAddToCart = (productName) => {
     setToastMessage(`"${productName}" agregado al carrito!`);
     setToastOpen(true);
@@ -118,31 +87,19 @@ export default function CustomerProductsPage() {
   const handlePageSizeChange = (e) => {
     const newSize = Number(e.target.value);
     setPageSize(newSize);
-
-    // Mantener filtros actuales pero resetear a página 1
-    const params = {};
-    if (appliedFilters.search) params.search = appliedFilters.search;
-    if (appliedFilters.minPrice) params.minPrice = appliedFilters.minPrice;
-    if (appliedFilters.maxPrice) params.maxPrice = appliedFilters.maxPrice;
-    params.page = 1;
-
-    setSearchParams(params);
+    setCurrentPage(1);
   };
 
   const goToNextPage = () => {
-    const params = Object.fromEntries(searchParams);
-    setSearchParams({ ...params, page: currentPage + 1 });
+    setCurrentPage((prev) => prev + 1);
   };
 
   const goToPrevPage = () => {
-    const params = Object.fromEntries(searchParams);
-    setSearchParams({ ...params, page: Math.max(1, currentPage - 1) });
+    setCurrentPage((prev) => Math.max(1, prev - 1));
   };
 
-  // Verificar si hay filtros activos
   const hasActiveFilters = appliedFilters.search || appliedFilters.minPrice || appliedFilters.maxPrice;
 
-  // Renderizado del contenido
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -203,7 +160,6 @@ export default function CustomerProductsPage() {
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6 mt-6">
         <div className="flex flex-col w-full md:flex-row gap-6 items-end">
 
-          {/* Precio Minimo */}
           <div className="w-full md:w-32">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Precio Min
@@ -219,7 +175,6 @@ export default function CustomerProductsPage() {
             />
           </div>
 
-          {/* Precio Maximo */}
           <div className="w-full md:w-32">
             <label className="block text-sm font-medium text-gray-700 mb-1 ">
               Precio Max
@@ -235,9 +190,7 @@ export default function CustomerProductsPage() {
             />
           </div>
 
-          {/* Botones de accion */}
           <div className="flex gap-2 w-full md:w-auto">
-            {/* Boton Aplicar Filtros */}
             <button
               onClick={handleFilter}
               className="flex-1 md:flex-initial bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors flex items-center justify-center gap-2"
@@ -246,7 +199,6 @@ export default function CustomerProductsPage() {
               Filtrar
             </button>
 
-            {/* Boton Limpiar (solo si hay filtros) */}
             {hasActiveFilters && (
               <button
                 onClick={handleClearFilters}
@@ -258,7 +210,6 @@ export default function CustomerProductsPage() {
             )}
           </div>
 
-          {/* selector Page Size */}
           <div className="w-full md:w-auto md:ml-auto">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Mostrar
@@ -275,7 +226,6 @@ export default function CustomerProductsPage() {
           </div>
         </div>
 
-        {/* Indicador de filtros activos */}
         {hasActiveFilters && (
           <div className="mt-3 flex flex-wrap gap-2">
             <span className="text-sm text-gray-600">Filtros activos:</span>
@@ -298,12 +248,10 @@ export default function CustomerProductsPage() {
         )}
       </div>
 
-      {/* Contenido */}
       <div className="mb-8">
         {renderContent()}
       </div>
 
-      {/* Paginacion */}
       {!isLoading && products.length > 0 && (
         <div className="flex justify-center items-center gap-4 mt-8">
           <button
