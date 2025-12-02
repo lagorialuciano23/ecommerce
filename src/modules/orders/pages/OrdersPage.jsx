@@ -47,6 +47,7 @@ export default function OrdersPage() {
   const [pageSize, setPageSize] = useState(10);
   const [filterStatus, setFilterStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [localSearch, setLocalSearch] = useState('');
   const [canGoNext, setCanGoNext] = useState(true);
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function OrdersPage() {
   const handleSearch = (e) => {
     e.preventDefault();
     setCurrentPage(1);
+    setSearchTerm(localSearch);
   };
 
   const handleStatusChange = (e) => {
@@ -137,13 +139,12 @@ export default function OrdersPage() {
           <div
             key={order.Id}
             className={`bg-white mb-4 p-4 rounded-lg shadow-sm border-l-4 
-                       hover:shadow-md hover:scale-[1.02] transition-all duration-200 ${
-              order.Status === 'PENDING' ? 'border-l-yellow-500' :
-              order.Status === 'PROCESSING' ? 'border-l-blue-500' :
-              order.Status === 'SHIPPED' ? 'border-l-indigo-500' :
-              order.Status === 'DELIVERED' ? 'border-l-green-500' :
-              'border-l-red-500'
-            }`}
+                       hover:shadow-md hover:scale-[1.02] transition-all duration-200 ${order.Status === 'PENDING' ? 'border-l-yellow-500' :
+                order.Status === 'PROCESSING' ? 'border-l-blue-500' :
+                  order.Status === 'SHIPPED' ? 'border-l-indigo-500' :
+                    order.Status === 'DELIVERED' ? 'border-l-green-500' :
+                      'border-l-red-500'
+              }`}
           >
             {/* Header con nombre y badge */}
             <div className="flex items-start justify-between mb-3">
@@ -160,7 +161,7 @@ export default function OrdersPage() {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2 ml-3 flex-shrink-0">
                 {getStatusIcon(order.Status)}
                 <span className={`text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap ${getStatusClasses(order.Status)}`}>
@@ -208,10 +209,10 @@ export default function OrdersPage() {
 
   return (
     <div className="max-w-4xl mx-auto w-full px-4">
-      
+
       {/* Filtros y Búsqueda */}
       <div className="mb-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4"> 
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">
           Administración de Órdenes
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -220,24 +221,26 @@ export default function OrdersPage() {
             <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1.5">
               Buscar
             </label>
-            <div className="flex gap-2">
+            {/* Envolvemos en un form y agregamos onSubmit */}
+            <form onSubmit={handleSearch} className="flex gap-2">
               <input
                 type="text"
                 id="search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                // Vinculamos al estado LOCAL
+                value={localSearch}
+                onChange={(e) => setLocalSearch(e.target.value)}
                 placeholder="Nombre, ID de cliente, N° orden..."
                 className="flex-1 p-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
               <button
-                onClick={handleSearch}
+                type="submit"
                 className="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors flex-shrink-0"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
-            </div>
+            </form>
           </div>
 
           {/* Filtro por Estado */}
